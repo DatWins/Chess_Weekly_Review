@@ -11,5 +11,18 @@
     "players": "Mamedyarov, Alonso Rosell, Lobanov, Kistrup, Sjugirov, Buckels, Kuzubov",
     "filekey": "nf3b3bb2",
     "tags": ["Fighting", "Upset"]
+  },
+  {
+    "num": 2,
+    "twic": 1667,
+    "slug": "twic1667_kan",
+    "title": "Kan Sicilian: Black's View",
+    "dek": "Six practical games with 1.e4 c5 2.Nf3 a6 – the queenside expansion, the ...e5 centre, and when to break with ...d5.",
+    "theme": "Kan/O'Kelly Sicilian (B28)",
+    "date": "2026-10-23",
+    "games": 6,
+    "players": "Serradell Munoz, Tselmuun, Mistrekov, Hrybacz, Gopal Krishna, Afandi, Valiyeva, Khuduzade, Pineda, Santanna, Ahmed Mustafa, Sobek",
+    "filekey": "kan",
+    "tags": ["Fighting", "Upset"]
   }
 ]
