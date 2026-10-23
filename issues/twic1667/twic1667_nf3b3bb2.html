@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TWIC 1667 – Nf3/b3/Bb2 Seven Key Games</title>
+<style>
+:root{
+  --fs:21px;
+  --paper:#fbfaf7; --ink:#1d1f22; --muted:#5d6670; --line:#e2e0da; --side:#f2f0eb;
+  --main:#1f4fa3; --var:#2b2f36; --hl:#ffe08a; --hlink:#e8eefb;
+  --light:#dee3e6; --dark:#8ca2ad; --lm:rgba(155,199,0,.45); --sel:rgba(20,85,30,.5);
+  --btn:#ffffff; --btnb:#cfd5db;
+}
+:root[data-theme="dark"]{
+  --paper:#16191d; --ink:#e4e6e9; --muted:#9aa3ad; --line:#2c3238; --side:#1d2126;
+  --main:#86b4ff; --var:#d5d9de; --hl:#6b5a1e; --hlink:#25324a;
+  --btn:#232930; --btnb:#3a434c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif;font-size:var(--fs);line-height:1.6}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--side);border-bottom:1px solid var(--line);font-family:system-ui,"Segoe UI",sans-serif;font-size:15px}
+.top a.lib{color:var(--main);text-decoration:none;font-weight:600;white-space:nowrap}
+.top .t{font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{font:inherit;font-family:system-ui,"Segoe UI",sans-serif;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:7px;padding:6px 12px;cursor:pointer;min-width:40px}
+button:hover{border-color:var(--main)}
+button:disabled{opacity:.35;cursor:default}
+/* layout */
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr) auto;align-items:start}
+nav.toc{position:sticky;top:49px;height:calc(100vh - 49px);overflow:auto;padding:18px 14px;border-right:1px solid var(--line);background:var(--side);font-family:system-ui,"Segoe UI",sans-serif;font-size:15px}
+nav.toc .h{font-weight:700;color:var(--muted);text-transform:uppercase;font-size:12px;letter-spacing:.06em;margin-bottom:8px}
+nav.toc a{display:block;padding:7px 10px;border-radius:6px;color:var(--ink);text-decoration:none;cursor:pointer}
+nav.toc a:hover,nav.toc a.on{background:var(--hlink);color:var(--main)}
+main{padding:28px 40px 120px;max-width:44em;margin:0 auto;width:100%}
+aside.bp{position:sticky;top:49px;padding:16px 20px;border-left:1px solid var(--line);height:calc(100vh - 49px);overflow:auto;width:calc(var(--bw) + 70px)}
+:root{--bw:min(44vw, calc(100vh - 290px), 680px)}
+/* article */
+.kicker{font-family:system-ui,"Segoe UI",sans-serif;font-size:.7em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+h1{font-family:system-ui,"Segoe UI",sans-serif;font-size:2.3em;line-height:1.1;margin:.2em 0 .15em}
+.dek{color:var(--main);font-size:1.2em;margin:.2em 0}
+.byline{font-family:system-ui,"Segoe UI",sans-serif;font-size:.75em;font-weight:700;letter-spacing:.03em;margin-top:.6em}
+.byline span{font-weight:400;color:var(--muted)}
+h2{font-family:system-ui,"Segoe UI",sans-serif;font-size:1.25em;margin:1.8em 0 .5em;padding-top:.4em;border-top:2px solid var(--line)}
+h3{font-family:system-ui,"Segoe UI",sans-serif;font-size:.95em;margin:.2em 0}
+p{margin:.65em 0}
+p.first::first-line{font-variant:small-caps}
+.gamehead{font-size:.9em;line-height:1.5;margin:.4em 0 .8em;color:var(--muted)}
+.gamehead b{color:var(--ink)}
+/* moves */
+a.mv{cursor:pointer;border-radius:4px;padding:0 2px;color:var(--var);text-decoration:none;border-bottom:1px dotted var(--muted)}
+a.mv:hover{background:var(--hlink)}
+a.mv.cur{background:var(--hl);border-bottom-color:transparent}
+p.ml{font-weight:700;font-size:1.12em;margin:1em 0 .4em}
+p.ml a.mv{color:var(--main);border-bottom:none}
+p.ml.key{font-size:1.25em}
+.lines{border-left:3px solid var(--line);padding-left:1em;margin:1em 0}
+.tip{font-family:system-ui,"Segoe UI",sans-serif;font-size:.75em;color:var(--muted);display:block;margin-top:.3em}
+.note{font-size:.85em;color:var(--muted);font-style:italic}
+/* static diagrams */
+figure.dia{margin:1.2em 0;cursor:pointer;width:max-content;max-width:100%}
+figure.dia figcaption{font-family:system-ui,"Segoe UI",sans-serif;font-size:.75em;font-weight:600;color:var(--main);margin-top:4px}
+figure.dia:hover .bd{outline:3px solid var(--main)}
+.problems{display:flex;gap:28px;flex-wrap:wrap}
+.pmeta{font-size:.78em;color:var(--muted);line-height:1.4}
+/* boards */
+.bwrap{display:grid;grid-template-columns:auto 1fr;grid-template-rows:1fr auto;width:max-content}
+.bd{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);aspect-ratio:1;border:2px solid #5b6f79;user-select:none}
+.sq{position:relative}
+.sq.l{background:var(--light)} .sq.d{background:var(--dark)}
+.sq.lm::after{content:"";position:absolute;inset:0;background:var(--lm)}
+.sq.sel::after{content:"";position:absolute;inset:0;background:var(--sel)}
+.sq.tg::before{content:"";position:absolute;left:36%;top:36%;width:28%;height:28%;border-radius:50%;background:rgba(20,85,30,.45);z-index:2}
+.pc{position:absolute;inset:0;background-size:100% 100%;z-index:1}
+.rk{display:grid;grid-template-rows:repeat(8,minmax(0,1fr));line-height:1;font-family:system-ui,sans-serif;color:var(--muted);text-align:center;padding-right:5px}
+.fl{grid-column:2;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));line-height:1.4;font-family:system-ui,sans-serif;color:var(--muted);text-align:center}
+.rk span{display:flex;align-items:center}
+.sb .bd{width:min(290px,80vw)} .sb .rk,.sb .fl{font-size:12px}
+#live .bd{width:var(--bw);cursor:pointer} #live .rk,#live .fl{font-size:14px}
+/* board panel */
+.bhead{font-family:system-ui,"Segoe UI",sans-serif;font-size:15px;color:var(--muted);margin-bottom:8px;min-height:1.4em;display:flex;justify-content:space-between;gap:10px}
+.bhead b{color:var(--ink);font-size:17px}
+.ctrls{display:flex;gap:6px;margin:12px 0 0 22px;flex-wrap:wrap}
+.ctrls button{font-size:18px;padding:5px 12px}
+.choose{margin:12px 0 0 22px;font-family:system-ui,"Segoe UI",sans-serif;font-size:15px}
+.choose button{margin:4px 6px 0 0;font-size:16px}
+.choose button.mainc{font-weight:700;color:var(--main)}
+.path{margin:12px 0 0 22px;font-size:17px;line-height:1.7}
+.path a.mv{border-bottom:none}
+.path a.mv.cur{font-weight:700}
+.path .u{font-style:italic;color:#b5602a}
+.msg{margin:8px 0 0 22px;font-family:system-ui,"Segoe UI",sans-serif;font-size:14px;color:var(--muted)}
+/* narrow screens (phones, tablets): compact board on top, text scrolls underneath */
+.tog{display:none}
+@media (max-width:1100px){
+  .top{height:49px;padding:0 10px;gap:6px}
+  .top button{padding:5px 9px;min-width:0}
+  .tog{display:inline-block}
+  .wrap{grid-template-columns:1fr}
+  nav.toc{display:none}
+  aside.bp{order:-1;position:sticky;top:49px;z-index:10;height:auto;width:auto;border-left:0;border-bottom:1px solid var(--line);background:var(--paper);padding:8px 12px 10px}
+  :root{--bw:min(calc(100vw - 56px), 38vh, 560px);--bw:min(calc(100vw - 56px), 38svh, 560px)}
+  .bhead{font-size:13px;margin-bottom:4px;align-items:baseline}
+  .bhead #who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .bhead b{font-size:15px;white-space:nowrap}
+  #live{display:flex;justify-content:center}
+  #live .rk,#live .fl{font-size:11px}
+  .ctrls,.choose,.msg{margin-left:0;justify-content:center;text-align:center}
+  .ctrls{margin-top:8px;gap:6px}
+  .ctrls button{font-size:17px;padding:4px 0;flex:1;max-width:64px}
+  .choose{margin-top:6px;font-size:14px}
+  .choose button{font-size:15px;padding:3px 10px}
+  .msg{margin-top:4px;font-size:12px}
+  .path{display:none}
+  main{padding:16px 16px 80px}
+  body.hideb #live,body.hideb .bhead{display:none}
+}
+@media (max-width:480px){ .top .t{display:none} .top a.lib{flex:1} }
+/* phone turned sideways: board beside the text, buttons beside the board */
+@media (max-width:1100px) and (orientation:landscape) and (max-height:600px){
+  .wrap{grid-template-columns:minmax(0,1fr) auto}
+  aside.bp{order:0;top:49px;height:calc(100vh - 49px);height:calc(100svh - 49px);overflow:auto;border-bottom:0;border-left:1px solid var(--line);
+    display:grid;grid-template-columns:auto 120px;column-gap:10px;align-content:start;padding:6px 10px}
+  :root{--bw:calc(100vh - 49px - 46px);--bw:calc(100svh - 49px - 46px)}
+  .bhead{grid-column:1/-1}
+  #live{grid-column:1;grid-row:2/span 3}
+  .ctrls,.choose,.msg{grid-column:2;justify-content:flex-start;text-align:left}
+  .ctrls{display:grid;grid-template-columns:1fr 1fr;margin-top:0}
+  .ctrls button{max-width:none}
+  .choose button{display:block;width:100%;margin:4px 0 0}
+  main{padding:14px 16px 60px}
+}
+main p b a.mv,main p b{color:var(--main);font-weight:700}figure.pic{margin:1.4em 0}figure.dia img.orig{width:290px;max-width:100%;display:block}figure.pic img{max-width:100%;border-radius:6px;display:block}
+</style>
+<style>.pc.wP{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==')}
+.pc.wB{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjM5LS45NyAxMC4xMS40MyAxMy41LTIgMy4zOSAyLjQzIDEwLjExIDEuMDMgMTMuNSAyIDAgMCAxLjY1LjU0IDMgMi0uNjguOTctMS42NS45OS0zIC41LTMuMzktLjk3LTEwLjExLjQ2LTEzLjUtMS0zLjM5IDEuNDYtMTAuMTEuMDMtMTMuNSAxLTEuMzU0LjQ5LTIuMzIzLjQ3LTMtLjUgMS4zNTQtMS45NCAzLTIgMy0yeiIvPjxwYXRoIGQ9Ik0xNSAzMmMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyeiIvPjxwYXRoIGQ9Ik0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIvPjwvZz48cGF0aCBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PC9nPjwvc3ZnPg==')}
+.pc.wN{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMiAxMGMxMC41IDEgMTYuNSA4IDE2IDI5SDE1YzAtOSAxMC02LjUgOC0yMSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yNCAxOGMuMzggMi45MS01LjU1IDcuMzctOCA5LTMgMi0yLjgyIDQuMzQtNSA0LTEuMDQyLS45NCAxLjQxLTMuMDQgMC0zLTEgMCAuMTkgMS4yMy0xIDItMSAwLTQuMDAzIDEtNC00IDAtMiA2LTEyIDYtMTJzMS44OS0xLjkgMi0zLjVjLS43My0uOTk0LS41LTItLjUtMyAxLTEgMyAyLjUgMyAyLjVoMnMuNzgtMS45OTIgMi41LTNjMSAwIDEgMyAxIDMiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNOS41IDI1LjVhLjUuNSAwIDEgMS0xIDAgLjUuNSAwIDEgMSAxIDB6bTUuNDMzLTkuNzVhLjUgMS41IDMwIDEgMS0uODY2LS41LjUgMS41IDMwIDEgMSAuODY2LjV6IiBmaWxsPSIjMDAwIi8+PC9nPjwvc3ZnPg==')}
+.pc.wR{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM5aDI3di0zSDl2M3ptMy0zdi00aDIxdjRIMTJ6bS0xLTIyVjloNHYyaDVWOWg1djJoNVY5aDR2NSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMzQgMTRsLTMgM0gxNGwtMy0zIi8+PHBhdGggZD0iTTMxIDE3djEyLjVIMTRWMTciIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTMxIDI5LjVsMS41IDIuNWgtMjBsMS41LTIuNSIvPjxwYXRoIGQ9Ik0xMSAxNGgyMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjwvZz48L3N2Zz4=')}
+.pc.wQ{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik04IDEyYTIgMiAwIDEgMS00IDAgMiAyIDAgMSAxIDQgMHptMTYuNS00LjVhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAwek00MSAxMmEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDB6TTE2IDguNWEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDB6TTMzIDlhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAweiIvPjxwYXRoIGQ9Ik05IDI2YzguNS0xLjUgMjEtMS41IDI3IDBsMi0xMi03IDExVjExbC01LjUgMTMuNS0zLTE1LTMgMTUtNS41LTE0VjI1TDcgMTRsMiAxMnoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTkgMjZjMCAyIDEuNSAyIDIuNSA0IDEgMS41IDEgMSAuNSAzLjUtMS41IDEtMS41IDIuNS0xLjUgMi41LTEuNSAxLjUuNSAyLjUuNSAyLjUgNi41IDEgMTYuNSAxIDIzIDAgMCAwIDEuNS0xIDAtMi41IDAgMCAuNS0xLjUtMS0yLjUtLjUtMi41LS41LTIgLjUtMy41IDEtMiAyLjUtMiAyLjUtNC04LjUtMS41LTE4LjUtMS41LTI3IDB6IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0xMS41IDMwYzMuNS0xIDE4LjUtMSAyMiAwTTEyIDMzLjVjNi0xIDE1LTEgMjEgMCIgZmlsbD0ibm9uZSIvPjwvZz48L3N2Zz4=')}
+.pc.wK{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjZNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTIyLjUgMjVzNC41LTcuNSAzLTEwLjVjMCAwLTEtMi41LTMtMi41cy0zIDIuNS0zIDIuNWMtMS41IDMgMyAxMC41IDMgMTAuNSIgZmlsbD0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMTEuNSAzN2M1LjUgMy41IDE1LjUgMy41IDIxIDB2LTdzOS00LjUgNi0xMC41Yy00LTYuNS0xMy41LTMuNS0xNiA0VjI3di0zLjVjLTMuNS03LjUtMTMtMTAuNS0xNi00LTMgNiA1IDEwIDUgMTBWMzd6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTExLjUgMzBjNS41LTMgMTUuNS0zIDIxIDBtLTIxIDMuNWM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwIi8+PC9nPjwvc3ZnPg==')}
+.pc.bP{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==')}
+.pc.bB{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIGZpbGw9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjM5LS45NyAxMC4xMS40MyAxMy41LTIgMy4zOSAyLjQzIDEwLjExIDEuMDMgMTMuNSAyIDAgMCAxLjY1LjU0IDMgMi0uNjguOTctMS42NS45OS0zIC41LTMuMzktLjk3LTEwLjExLjQ2LTEzLjUtMS0zLjM5IDEuNDYtMTAuMTEuMDMtMTMuNSAxLTEuMzU0LjQ5LTIuMzIzLjQ3LTMtLjUgMS4zNTQtMS45NCAzLTIgMy0yeiIvPjxwYXRoIGQ9Ik0xNSAzMmMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyeiIvPjxwYXRoIGQ9Ik0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIvPjwvZz48cGF0aCBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1IiBzdHJva2U9IiNlY2VjZWMiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48L2c+PC9zdmc+')}
+.pc.bN{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMiAxMGMxMC41IDEgMTYuNSA4IDE2IDI5SDE1YzAtOSAxMC02LjUgOC0yMSIgZmlsbD0iIzAwMCIvPjxwYXRoIGQ9Ik0yNCAxOGMuMzggMi45MS01LjU1IDcuMzctOCA5LTMgMi0yLjgyIDQuMzQtNSA0LTEuMDQyLS45NCAxLjQxLTMuMDQgMC0zLTEgMCAuMTkgMS4yMy0xIDItMSAwLTQuMDAzIDEtNC00IDAtMiA2LTEyIDYtMTJzMS44OS0xLjkgMi0zLjVjLS43My0uOTk0LS41LTItLjUtMyAxLTEgMyAyLjUgMyAyLjVoMnMuNzgtMS45OTIgMi41LTNjMSAwIDEgMyAxIDMiIGZpbGw9IiMwMDAiLz48cGF0aCBkPSJNOS41IDI1LjVhLjUuNSAwIDEgMS0xIDAgLjUuNSAwIDEgMSAxIDB6bTUuNDMzLTkuNzVhLjUgMS41IDMwIDEgMS0uODY2LS41LjUgMS41IDMwIDEgMSAuODY2LjV6IiBmaWxsPSIjZWNlY2VjIiBzdHJva2U9IiNlY2VjZWMiLz48cGF0aCBkPSJNMjQuNTUgMTAuNGwtLjQ1IDEuNDUuNS4xNWMzLjE1IDEgNS42NSAyLjQ5IDcuOSA2Ljc1UzM1Ljc1IDI5LjA2IDM1LjI1IDM5bC0uMDUuNWgyLjI1bC4wNS0uNWMuNS0xMC4wNi0uODgtMTYuODUtMy4yNS0yMS4zNC0yLjM3LTQuNDktNS43OS02LjY0LTkuMTktNy4xNmwtLjUxLS4xeiIgZmlsbD0iI2VjZWNlYyIgc3Ryb2tlPSJub25lIi8+PC9nPjwvc3ZnPg==')}
+.pc.bR{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM5aDI3di0zSDl2M3ptMy41LTdsMS41LTIuNWgxN2wxLjUgMi41aC0yMHptLS41IDR2LTRoMjF2NEgxMnoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTE0IDI5LjV2LTEzaDE3djEzSDE0eiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMTQgMTYuNUwxMSAxNGgyM2wtMyAyLjVIMTR6TTExIDE0VjloNHYyaDVWOWg1djJoNVY5aDR2NUgxMXoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTEyIDM1LjVoMjFtLTIwLTRoMTltLTE4LTJoMTdtLTE3LTEzaDE3TTExIDE0aDIzIiBmaWxsPSJub25lIiBzdHJva2U9IiNlY2VjZWMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjwvZz48L3N2Zz4=')}
+.pc.bQ{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIHN0cm9rZT0ibm9uZSI+PGNpcmNsZSBjeD0iNiIgY3k9IjEyIiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSI5IiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMjIuNSIgY3k9IjgiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjkiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzOSIgY3k9IjEyIiByPSIyLjc1Ii8+PC9nPjxwYXRoIGQ9Ik05IDI2YzguNS0xLjUgMjEtMS41IDI3IDBsMi41LTEyLjVMMzEgMjVsLS4zLTE0LjEtNS4yIDEzLjYtMy0xNC41LTMgMTQuNS01LjItMTMuNkwxNCAyNSA2LjUgMTMuNSA5IDI2eiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNOSAyNmMwIDIgMS41IDIgMi41IDQgMSAxLjUgMSAxIC41IDMuNS0xLjUgMS0xLjUgMi41LTEuNSAyLjUtMS41IDEuNS41IDIuNS41IDIuNSA2LjUgMSAxNi41IDEgMjMgMCAwIDAgMS41LTEgMC0yLjUgMCAwIC41LTEuNS0xLTIuNS0uNS0yLjUtLjUtMiAuNS0zLjUgMS0yIDIuNS0yIDIuNS00LTguNS0xLjUtMTguNS0xLjUtMjcgMHoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTExIDM4LjVhMzUgMzUgMSAwIDAgMjMgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMTEgMjlhMzUgMzUgMSAwIDEgMjMgMG0tMjEuNSAyLjVoMjBtLTIxIDNhMzUgMzUgMSAwIDAgMjIgMG0tMjMgM2EzNSAzNSAxIDAgMCAyNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlY2VjZWMiLz48L2c+PC9zdmc+')}
+.pc.bK{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjYiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjIuNSAyNXM0LjUtNy41IDMtMTAuNWMwIDAtMS0yLjUtMy0yLjVzLTMgMi41LTMgMi41Yy0xLjUgMyAzIDEwLjUgMyAxMC41IiBmaWxsPSIjMDAwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0xMS41IDM3YzUuNSAzLjUgMTUuNSAzLjUgMjEgMHYtN3M5LTQuNSA2LTEwLjVjLTQtNi41LTEzLjUtMy41LTE2IDRWMjd2LTMuNWMtMy41LTcuNS0xMy0xMC41LTE2LTQtMyA2IDUgMTAgNSAxMFYzN3oiIGZpbGw9IiMwMDAiLz48cGF0aCBkPSJNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTMyIDI5LjVzOC41LTQgNi4wMy05LjY1QzM0LjE1IDE0IDI1IDE4IDIyLjUgMjQuNWwuMDEgMi4xLS4wMS0yLjFDMjAgMTggOS45MDYgMTQgNi45OTcgMTkuODVjLTIuNDk3IDUuNjUgNC44NTMgOSA0Ljg1MyA5IiBzdHJva2U9IiNlY2VjZWMiLz48cGF0aCBkPSJNMTEuNSAzMGM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwbS0yMSAzLjVjNS41LTMgMTUuNS0zIDIxIDAiIHN0cm9rZT0iI2VjZWNlYyIvPjwvZz48L3N2Zz4=')}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="lib" href="#top" title="Back to the article library">← Library</a>
+  <span class="t">TWIC 1667 – Nf3/b3/Bb2 Seven Key Games — Tatev Abrahamyan</span>
+  <button id="fminus" title="Smaller text">A−</button>
+  <button id="fplus" title="Larger text">A+</button>
+  <button id="dark" title="Dark mode">Dark</button>
+  <button id="bTog" class="tog" title="Show or hide the board">Hide board</button>
+</div>
+<div class="wrap">
+  <nav class="toc">
+    <div class="h">Contents</div>
+    <a data-t="game1">1. Mamedyarov – Duncan</a>
+    <a data-t="game2">2. Alonso Rosell – Yakubboev</a>
+    <a data-t="game3">3. Lobanov – Lisenkov</a>
+    <a data-t="game4">4. Kistrup – Szpar</a>
+    <a data-t="game5">5. Sjugirov – Suleimen</a>
+    <a data-t="game6">6. Buckels – Genov</a>
+    <a data-t="game7">7. Kuzubov – Delchev</a>
+  </nav>
+  <main>
+<header class="art-head" id="top">
+<div class="kicker">TWIC 1667 · White's Nf3/b3/Bb2 System</div>
+<h1>Seven Key Games: Middlegame Plans</h1>
+<p class="dek">From isolation pawn structures to kingside storms – how the world's best players handle the Nf3/b3/Bb2 setup.</p>
+</header>
+<section id="intro">
+<p class="first">Each week The Week In Chess packages the world's tournament output into a single collection. This selection examines seven games from TWIC 1667 in which White employed the Nf3/b3/Bb2 system – a flexible, semi-hypermodern approach that can lead to quiet positional grind or sharp kingside attack depending on how White steers the game.</p>
+<p>White's three-move signature – the knight to f3, pawn to b3, bishop to b2 – creates a battery on the long diagonal that is one of chess's most enduring strategic weapons. The games here illustrate the six main middlegame themes that arise once the setup is complete:</p>
+<ul>
+<li><b>The isolated d5 pawn:</b> After cxd5 exd5 or …cxd5, Black is left with a lone pawn White targets with the knight-and-queen blockade.</li>
+<li><b>The Nc3-Na4-Nc5 tour:</b> The knight manoeuvre that instals a blockader on c5 and trades off Black's dark-squared bishop.</li>
+<li><b>The Qa1 battery:</b> Queen retreating to a1 forms the long-diagonal battery and supports a c-file invasion.</li>
+<li><b>The c-file highway:</b> Rooks doubled on the c-file, often invading c7, are a recurring motif.</li>
+<li><b>Kingside storm (g4-g5, f4-f5, Rf3-h3):</b> Two distinct attacking patterns – the g4 advance and the Zukertort Rf3-h3 swing – both exploiting the Bb2's diagonal.</li>
+<li><b>The a4-a5 clamp:</b> Queenside expansion that fixes Black's pawns before White pushes d4-d5 to open the diagonal.</li>
+</ul>
+<p>Use the arrows or keyboard (← / →) to step through moves. Click any move to jump to that position. The ← key goes back; → goes forward.</p>
+</section>
+<section id="game1"><h2>Mamedyarov – Duncan</h2><div class="gamehead"><div><b>Mamedyarov, S</b> (2710) – <b>Duncan, C</b> (2179)</div><div>41st ECC Open 2026, rd 1.1 &nbsp; 1-0</div><div>Nf3/b3/Bb2: Isolated d5 pawn model</div></div><p class="ml"><a class="mv" data-id="g0_1">1.c4</a> <a class="mv" data-id="g0_2">e6</a> <a class="mv" data-id="g0_3">2.Nf3</a> <a class="mv" data-id="g0_4">d5</a> <a class="mv" data-id="g0_5">3.g3</a> <a class="mv" data-id="g0_6">a6</a> <a class="mv" data-id="g0_7">4.b3</a> <a class="mv" data-id="g0_8">Nf6</a> <a class="mv" data-id="g0_9">5.Bg2</a> <a class="mv" data-id="g0_10">c5</a> <a class="mv" data-id="g0_11">6.cxd5</a> <a class="mv" data-id="g0_12">exd5</a> <a class="mv" data-id="g0_13">7.O-O</a> <a class="mv" data-id="g0_14">Nc6</a> <a class="mv" data-id="g0_15">8.Bb2</a> <a class="mv" data-id="g0_16">Be7</a> <a class="mv" data-id="g0_17">9.d4</a> <a class="mv" data-id="g0_18">O-O</a> <a class="mv" data-id="g0_19">10.Nc3</a> <a class="mv" data-id="g0_20">Be6</a> <a class="mv" data-id="g0_21">11.Rc1</a> <a class="mv" data-id="g0_22">Rc8</a> <a class="mv" data-id="g0_23">12.dxc5</a> <a class="mv" data-id="g0_24">Bxc5</a> <a class="mv" data-id="g0_25">13.Na4</a> <a class="mv" data-id="g0_26">Be7</a> <a class="mv" data-id="g0_27">14.Nc5</a> <a class="mv" data-id="g0_28">Bxc5</a> <a class="mv" data-id="g0_29">15.Rxc5</a> <a class="mv" data-id="g0_30">Qe7</a> <a class="mv" data-id="g0_31">16.Rc1</a> <a class="mv" data-id="g0_32">Rfd8</a> <a class="mv" data-id="g0_33">17.Nd4</a> <a class="mv" data-id="g0_34">Bg4</a> <a class="mv" data-id="g0_35">18.Re1</a> <a class="mv" data-id="g0_36">Qd6</a> <a class="mv" data-id="g0_37">19.h3</a> <a class="mv" data-id="g0_38">Bd7</a> <a class="mv" data-id="g0_39">20.Nxc6</a> <a class="mv" data-id="g0_40">Bxc6</a> <a class="mv" data-id="g0_41">21.Qd4</a> <a class="mv" data-id="g0_42">Qe6</a> <a class="mv" data-id="g0_43">22.Rc3</a> <a class="mv" data-id="g0_44">Re8</a> <a class="mv" data-id="g0_45">23.g4</a> <a class="mv" data-id="g0_46">h6</a> <a class="mv" data-id="g0_47">24.Rg3</a> <a class="mv" data-id="g0_48">Rcd8</a> <a class="mv" data-id="g0_49">25.h4</a> <a class="mv" data-id="g0_50">Re7</a> <a class="mv" data-id="g0_51">26.g5</a> <a class="mv" data-id="g0_52">Ne8</a> <a class="mv" data-id="g0_53">27.e4</a> <a class="mv" data-id="g0_54">hxg5</a> <a class="mv" data-id="g0_55">28.hxg5</a> <a class="mv" data-id="g0_56">Qg6</a> <a class="mv" data-id="g0_57">29.f4</a> <a class="mv" data-id="g0_58">Nd6</a> <a class="mv" data-id="g0_59">30.f5</a> <a class="mv" data-id="g0_60">Nxf5</a> <a class="mv" data-id="g0_61">31.exf5</a> <a class="mv" data-id="g0_62">Rxe1+</a> <a class="mv" data-id="g0_63">32.Kf2</a> <a class="mv" data-id="g0_64">Qxf5+</a> <a class="mv" data-id="g0_65">33.Kxe1</a> <a class="mv" data-id="g0_66">Qg6</a> <a class="mv" data-id="g0_67">34.Kd2</a> <a class="mv" data-id="g0_68">Bb5</a> <a class="mv" data-id="g0_69">35.Be4</a> <a class="mv" data-id="g0_70">f5</a> <a class="mv" data-id="g0_71">36.Bxd5+</a> <a class="mv" data-id="g0_72">Kf8</a> <a class="mv" data-id="g0_73">37.Ba3+</a></p><p class="note">1-0</p></section>
+<section id="game2"><h2>Alonso Rosell – Yakubboev</h2><div class="gamehead"><div><b>Alonso Rosell, A</b> (2560) – <b>Yakubboev, Nodirbek</b> (2712)</div><div>41st ECC Open 2026, rd 3.5 &nbsp; 1-0</div><div>Nf3/b3/Bb2: Double fianchetto, c-file domination</div></div><p class="ml"><a class="mv" data-id="g1_1">1.Nf3</a> <a class="mv" data-id="g1_2">Nf6</a> <a class="mv" data-id="g1_3">2.g3</a> <a class="mv" data-id="g1_4">b6</a> <a class="mv" data-id="g1_5">3.Bg2</a> <a class="mv" data-id="g1_6">Bb7</a> <a class="mv" data-id="g1_7">4.O-O</a> <a class="mv" data-id="g1_8">e6</a> <a class="mv" data-id="g1_9">5.c4</a> <a class="mv" data-id="g1_10">Be7</a> <a class="mv" data-id="g1_11">6.b3</a> <a class="mv" data-id="g1_12">O-O</a> <a class="mv" data-id="g1_13">7.Bb2</a> <a class="mv" data-id="g1_14">Re8</a> <a class="mv" data-id="g1_15">8.Nc3</a> <a class="mv" data-id="g1_16">d5</a> <a class="mv" data-id="g1_17">9.cxd5</a> <a class="mv" data-id="g1_18">exd5</a> <a class="mv" data-id="g1_19">10.e3</a> <a class="mv" data-id="g1_20">Nbd7</a> <a class="mv" data-id="g1_21">11.Re1</a> <a class="mv" data-id="g1_22">a6</a> <a class="mv" data-id="g1_23">12.Rc1</a> <a class="mv" data-id="g1_24">Rc8</a> <a class="mv" data-id="g1_25">13.Re2</a> <a class="mv" data-id="g1_26">Bd6</a> <a class="mv" data-id="g1_27">14.d3</a> <a class="mv" data-id="g1_28">Ne5</a> <a class="mv" data-id="g1_29">15.Nxe5</a> <a class="mv" data-id="g1_30">Bxe5</a> <a class="mv" data-id="g1_31">16.Na4</a> <a class="mv" data-id="g1_32">Bxb2</a> <a class="mv" data-id="g1_33">17.Nxb2</a> <a class="mv" data-id="g1_34">c5</a> <a class="mv" data-id="g1_35">18.Rec2</a> <a class="mv" data-id="g1_36">a5</a> <a class="mv" data-id="g1_37">19.d4</a> <a class="mv" data-id="g1_38">cxd4</a> <a class="mv" data-id="g1_39">20.Qxd4</a> <a class="mv" data-id="g1_40">Rxc2</a> <a class="mv" data-id="g1_41">21.Rxc2</a> <a class="mv" data-id="g1_42">Ba6</a> <a class="mv" data-id="g1_43">22.Na4</a> <a class="mv" data-id="g1_44">Re6</a> <a class="mv" data-id="g1_45">23.Nc3</a> <a class="mv" data-id="g1_46">Rc6</a> <a class="mv" data-id="g1_47">24.h3</a> <a class="mv" data-id="g1_48">Bb7</a> <a class="mv" data-id="g1_49">25.e4</a> <a class="mv" data-id="g1_50">Rc5</a> <a class="mv" data-id="g1_51">26.Rd2</a> <a class="mv" data-id="g1_52">Qc7</a> <a class="mv" data-id="g1_53">27.Rd3</a> <a class="mv" data-id="g1_54">Ba6</a> <a class="mv" data-id="g1_55">28.Re3</a> <a class="mv" data-id="g1_56">dxe4</a> <a class="mv" data-id="g1_57">29.Nxe4</a> <a class="mv" data-id="g1_58">Re5</a> <a class="mv" data-id="g1_59">30.f4</a> <a class="mv" data-id="g1_60">Re7</a> <a class="mv" data-id="g1_61">31.Nxf6+</a> <a class="mv" data-id="g1_62">gxf6</a> <a class="mv" data-id="g1_63">32.Rxe7</a> <a class="mv" data-id="g1_64">Qxe7</a> <a class="mv" data-id="g1_65">33.Qxb6</a> <a class="mv" data-id="g1_66">Bd3</a> <a class="mv" data-id="g1_67">34.Qxa5</a> <a class="mv" data-id="g1_68">Qe3+</a> <a class="mv" data-id="g1_69">35.Kh2</a> <a class="mv" data-id="g1_70">Kg7</a> <a class="mv" data-id="g1_71">36.Qd5</a> <a class="mv" data-id="g1_72">Qe2</a> <a class="mv" data-id="g1_73">37.a4</a> <a class="mv" data-id="g1_74">Qc2</a> <a class="mv" data-id="g1_75">38.Kg1</a> <a class="mv" data-id="g1_76">Qb1+</a> <a class="mv" data-id="g1_77">39.Kh2</a> <a class="mv" data-id="g1_78">Qc2</a> <a class="mv" data-id="g1_79">40.a5</a> <a class="mv" data-id="g1_80">Bf1</a> <a class="mv" data-id="g1_81">41.b4</a> <a class="mv" data-id="g1_82">Qb2</a> <a class="mv" data-id="g1_83">42.Qf3</a> <a class="mv" data-id="g1_84">Ba6</a> <a class="mv" data-id="g1_85">43.Qc6</a> <a class="mv" data-id="g1_86">Qe2</a> <a class="mv" data-id="g1_87">44.Qe4</a> <a class="mv" data-id="g1_88">Qd2</a> <a class="mv" data-id="g1_89">45.Qc6</a> <a class="mv" data-id="g1_90">Qe2</a> <a class="mv" data-id="g1_91">46.g4</a> <a class="mv" data-id="g1_92">h6</a> <a class="mv" data-id="g1_93">47.Qe4</a> <a class="mv" data-id="g1_94">Qd2</a> <a class="mv" data-id="g1_95">48.Kg3</a> <a class="mv" data-id="g1_96">Qc3+</a> <a class="mv" data-id="g1_97">49.Bf3</a> <a class="mv" data-id="g1_98">Qc1</a> <a class="mv" data-id="g1_99">50.Qd4</a> <a class="mv" data-id="g1_100">Qe1+</a> <a class="mv" data-id="g1_101">51.Kh2</a> <a class="mv" data-id="g1_102">Qf1</a> <a class="mv" data-id="g1_103">52.Qe3</a> <a class="mv" data-id="g1_104">Qc4</a> <a class="mv" data-id="g1_105">53.g5</a> <a class="mv" data-id="g1_106">hxg5</a> <a class="mv" data-id="g1_107">54.fxg5</a> <a class="mv" data-id="g1_108">Qc7+</a> <a class="mv" data-id="g1_109">55.Kg2</a> <a class="mv" data-id="g1_110">Qd6</a> <a class="mv" data-id="g1_111">56.Qc3</a> <a class="mv" data-id="g1_112">Kg8</a> <a class="mv" data-id="g1_113">57.gxf6</a> <a class="mv" data-id="g1_114">Qf4</a> <a class="mv" data-id="g1_115">58.h4</a> <a class="mv" data-id="g1_116">Bc4</a> <a class="mv" data-id="g1_117">59.b5</a> <a class="mv" data-id="g1_118">Bxb5</a> <a class="mv" data-id="g1_119">60.Qc5</a> <a class="mv" data-id="g1_120">Bf1+</a> <a class="mv" data-id="g1_121">61.Kf2</a> <a class="mv" data-id="g1_122">Qxh4+</a> <a class="mv" data-id="g1_123">62.Kxf1</a> <a class="mv" data-id="g1_124">Qxf6</a> <a class="mv" data-id="g1_125">63.Qc8+</a> <a class="mv" data-id="g1_126">Kg7</a> <a class="mv" data-id="g1_127">64.Qg4+</a> <a class="mv" data-id="g1_128">Kf8</a> <a class="mv" data-id="g1_129">65.Qb4+</a> <a class="mv" data-id="g1_130">Kg7</a> <a class="mv" data-id="g1_131">66.Kg2</a> <a class="mv" data-id="g1_132">Kg8</a> <a class="mv" data-id="g1_133">67.Qg4+</a> <a class="mv" data-id="g1_134">Kf8</a> <a class="mv" data-id="g1_135">68.Qc8+</a> <a class="mv" data-id="g1_136">Kg7</a> <a class="mv" data-id="g1_137">69.a6</a> <a class="mv" data-id="g1_138">Qb2+</a> <a class="mv" data-id="g1_139">70.Kh3</a> <a class="mv" data-id="g1_140">Qb6</a> <a class="mv" data-id="g1_141">71.Qc3+</a> <a class="mv" data-id="g1_142">Kg8</a> <a class="mv" data-id="g1_143">72.Qc4</a> <a class="mv" data-id="g1_144">Qh6+</a> <a class="mv" data-id="g1_145">73.Kg2</a> <a class="mv" data-id="g1_146">Qd2+</a> <a class="mv" data-id="g1_147">74.Kf1</a> <a class="mv" data-id="g1_148">Qe3</a> <a class="mv" data-id="g1_149">75.Bd5</a> <a class="mv" data-id="g1_150">Kg7</a> <a class="mv" data-id="g1_151">76.Bxf7</a></p><p class="note">1-0</p></section>
+<section id="game3"><h2>Lobanov – Lisenkov</h2><div class="gamehead"><div><b>Lobanov, Sergei</b> (2517) – <b>Lisenkov, Svyatoslav</b> (2409)</div><div>Atyrau Chess Masters Open, rd 2.13 &nbsp; 1-0</div><div>Nf3/b3/Bb2: Qa1 battery and c-file invasion</div></div><p class="ml"><a class="mv" data-id="g2_1">1.c4</a> <a class="mv" data-id="g2_2">Nf6</a> <a class="mv" data-id="g2_3">2.g3</a> <a class="mv" data-id="g2_4">c6</a> <a class="mv" data-id="g2_5">3.Nf3</a> <a class="mv" data-id="g2_6">g6</a> <a class="mv" data-id="g2_7">4.b3</a> <a class="mv" data-id="g2_8">Bg7</a> <a class="mv" data-id="g2_9">5.Bb2</a> <a class="mv" data-id="g2_10">d5</a> <a class="mv" data-id="g2_11">6.Bg2</a> <a class="mv" data-id="g2_12">O-O</a> <a class="mv" data-id="g2_13">7.O-O</a> <a class="mv" data-id="g2_14">Re8</a> <a class="mv" data-id="g2_15">8.d3</a> <a class="mv" data-id="g2_16">Bg4</a> <a class="mv" data-id="g2_17">9.Nbd2</a> <a class="mv" data-id="g2_18">Nbd7</a> <a class="mv" data-id="g2_19">10.h3</a> <a class="mv" data-id="g2_20">Bxf3</a> <a class="mv" data-id="g2_21">11.Nxf3</a> <a class="mv" data-id="g2_22">e5</a> <a class="mv" data-id="g2_23">12.cxd5</a> <a class="mv" data-id="g2_24">cxd5</a> <a class="mv" data-id="g2_25">13.e3</a> <a class="mv" data-id="g2_26">Bf8</a> <a class="mv" data-id="g2_27">14.Rc1</a> <a class="mv" data-id="g2_28">Bd6</a> <a class="mv" data-id="g2_29">15.Rc2</a> <a class="mv" data-id="g2_30">Qe7</a> <a class="mv" data-id="g2_31">16.Qa1</a> <a class="mv" data-id="g2_32">Rac8</a> <a class="mv" data-id="g2_33">17.Rfc1</a> <a class="mv" data-id="g2_34">Rxc2</a> <a class="mv" data-id="g2_35">18.Rxc2</a> <a class="mv" data-id="g2_36">Ba3</a> <a class="mv" data-id="g2_37">19.Rc7</a> <a class="mv" data-id="g2_38">Bxb2</a> <a class="mv" data-id="g2_39">20.Qxb2</a> <a class="mv" data-id="g2_40">Qb4</a> <a class="mv" data-id="g2_41">21.Qc3</a> <a class="mv" data-id="g2_42">Qb6</a> <a class="mv" data-id="g2_43">22.Rc8</a> <a class="mv" data-id="g2_44">Rxc8</a> <a class="mv" data-id="g2_45">23.Qxc8+</a> <a class="mv" data-id="g2_46">Kg7</a> <a class="mv" data-id="g2_47">24.d4</a> <a class="mv" data-id="g2_48">e4</a> <a class="mv" data-id="g2_49">25.Ne5</a> <a class="mv" data-id="g2_50">Qd6</a> <a class="mv" data-id="g2_51">26.Qh8+</a> <a class="mv" data-id="g2_52">Kxh8</a> <a class="mv" data-id="g2_53">27.Nxf7+</a> <a class="mv" data-id="g2_54">Kg7</a> <a class="mv" data-id="g2_55">28.Nxd6</a> <a class="mv" data-id="g2_56">b6</a> <a class="mv" data-id="g2_57">29.Bf1</a> <a class="mv" data-id="g2_58">Kf8</a> <a class="mv" data-id="g2_59">30.Nc8</a> <a class="mv" data-id="g2_60">a5</a> <a class="mv" data-id="g2_61">31.Bb5</a> <a class="mv" data-id="g2_62">h5</a> <a class="mv" data-id="g2_63">32.Kf1</a> <a class="mv" data-id="g2_64">Kf7</a> <a class="mv" data-id="g2_65">33.Ke2</a> <a class="mv" data-id="g2_66">Ke6</a> <a class="mv" data-id="g2_67">34.f4</a> <a class="mv" data-id="g2_68">exf3+</a> <a class="mv" data-id="g2_69">35.Kxf3</a> <a class="mv" data-id="g2_70">g5</a> <a class="mv" data-id="g2_71">36.h4</a> <a class="mv" data-id="g2_72">gxh4</a> <a class="mv" data-id="g2_73">37.gxh4</a> <a class="mv" data-id="g2_74">Nf8</a> <a class="mv" data-id="g2_75">38.Bd3</a> <a class="mv" data-id="g2_76">b5</a> <a class="mv" data-id="g2_77">39.Kf4</a> <a class="mv" data-id="g2_78">b4</a> <a class="mv" data-id="g2_79">40.Bf5+</a> <a class="mv" data-id="g2_80">Kf7</a> <a class="mv" data-id="g2_81">41.Nd6+</a> <a class="mv" data-id="g2_82">Ke7</a> <a class="mv" data-id="g2_83">42.Nb7</a> <a class="mv" data-id="g2_84">Ne8</a> <a class="mv" data-id="g2_85">43.Nxa5</a> <a class="mv" data-id="g2_86">Kf6</a> <a class="mv" data-id="g2_87">44.Nc6</a></p><p class="note">1-0</p></section>
+<section id="game4"><h2>Kistrup – Szpar</h2><div class="gamehead"><div><b>Kistrup, Nicolai</b> (2398) – <b>Szpar, Milosz</b> (2507)</div><div>Amager CA Centenary GM, rd 9.2 &nbsp; 0-1</div><div>Nf3/b3/Bb2: Black's c6/d5 wall, the ...Ne5 antidote</div></div><p class="ml"><a class="mv" data-id="g3_1">1.Nf3</a> <a class="mv" data-id="g3_2">Nf6</a> <a class="mv" data-id="g3_3">2.c4</a> <a class="mv" data-id="g3_4">e6</a> <a class="mv" data-id="g3_5">3.b3</a> <a class="mv" data-id="g3_6">d5</a> <a class="mv" data-id="g3_7">4.Bb2</a> <a class="mv" data-id="g3_8">Bd6</a> <a class="mv" data-id="g3_9">5.g3</a> <a class="mv" data-id="g3_10">O-O</a> <a class="mv" data-id="g3_11">6.Bg2</a> <a class="mv" data-id="g3_12">Nbd7</a> <a class="mv" data-id="g3_13">7.cxd5</a> <a class="mv" data-id="g3_14">exd5</a> <a class="mv" data-id="g3_15">8.O-O</a> <a class="mv" data-id="g3_16">Re8</a> <a class="mv" data-id="g3_17">9.Nc3</a> <a class="mv" data-id="g3_18">c6</a> <a class="mv" data-id="g3_19">10.Re1</a> <a class="mv" data-id="g3_20">Ne5</a> <a class="mv" data-id="g3_21">11.Nxe5</a> <a class="mv" data-id="g3_22">Bxe5</a> <a class="mv" data-id="g3_23">12.d4</a> <a class="mv" data-id="g3_24">Bd6</a> <a class="mv" data-id="g3_25">13.Qd3</a> <a class="mv" data-id="g3_26">Be6</a> <a class="mv" data-id="g3_27">14.Rad1</a> <a class="mv" data-id="g3_28">h5</a> <a class="mv" data-id="g3_29">15.h4</a> <a class="mv" data-id="g3_30">Bg4</a> <a class="mv" data-id="g3_31">16.Bc1</a> <a class="mv" data-id="g3_32">Qd7</a> <a class="mv" data-id="g3_33">17.Bg5</a> <a class="mv" data-id="g3_34">Nh7</a> <a class="mv" data-id="g3_35">18.Bd2</a> <a class="mv" data-id="g3_36">Re7</a> <a class="mv" data-id="g3_37">19.Rc1</a> <a class="mv" data-id="g3_38">Rd8</a> <a class="mv" data-id="g3_39">20.e4</a> <a class="mv" data-id="g3_40">Ba3</a> <a class="mv" data-id="g3_41">21.exd5</a> <a class="mv" data-id="g3_42">Bxc1</a> <a class="mv" data-id="g3_43">22.Rxc1</a> <a class="mv" data-id="g3_44">Ree8</a> <a class="mv" data-id="g3_45">23.dxc6</a> <a class="mv" data-id="g3_46">bxc6</a> <a class="mv" data-id="g3_47">24.Be3</a> <a class="mv" data-id="g3_48">Nf6</a> <a class="mv" data-id="g3_49">25.Qa6</a> <a class="mv" data-id="g3_50">Rc8</a> <a class="mv" data-id="g3_51">26.Qa5</a> <a class="mv" data-id="g3_52">Bf5</a> <a class="mv" data-id="g3_53">27.Bf3</a> <a class="mv" data-id="g3_54">Ng4</a> <a class="mv" data-id="g3_55">28.Bxg4</a> <a class="mv" data-id="g3_56">Bxg4</a> <a class="mv" data-id="g3_57">29.Kh2</a> <a class="mv" data-id="g3_58">c5</a> <a class="mv" data-id="g3_59">30.Qb5</a> <a class="mv" data-id="g3_60">Qf5</a> <a class="mv" data-id="g3_61">31.Qf1</a> <a class="mv" data-id="g3_62">Rxe3</a> <a class="mv" data-id="g3_63">32.fxe3</a> <a class="mv" data-id="g3_64">Qxf1</a> <a class="mv" data-id="g3_65">33.Rxf1</a> <a class="mv" data-id="g3_66">cxd4</a> <a class="mv" data-id="g3_67">34.Nd5</a> <a class="mv" data-id="g3_68">Rc2+</a> <a class="mv" data-id="g3_69">35.Kg1</a> <a class="mv" data-id="g3_70">d3</a> <a class="mv" data-id="g3_71">36.Nb4</a> <a class="mv" data-id="g3_72">Rc3</a> <a class="mv" data-id="g3_73">37.Nd5</a> <a class="mv" data-id="g3_74">Rc5</a> <a class="mv" data-id="g3_75">38.Nf4</a> <a class="mv" data-id="g3_76">d2</a> <a class="mv" data-id="g3_77">39.Nd3</a> <a class="mv" data-id="g3_78">Be2</a></p><p class="note">0-1</p></section>
+<section id="game5"><h2>Sjugirov – Suleimen</h2><div class="gamehead"><div><b>Sjugirov, S</b> (2544) – <b>Suleimen, Ergali</b> (2375)</div><div>Atyrau Chess Masters Open, rd 2.22 &nbsp; 1-0</div><div>Nf3/b3/Bb2: Aggressive g4-g5 storm and queenside castling</div></div><p class="ml"><a class="mv" data-id="g4_1">1.Nf3</a> <a class="mv" data-id="g4_2">d5</a> <a class="mv" data-id="g4_3">2.e3</a> <a class="mv" data-id="g4_4">Nf6</a> <a class="mv" data-id="g4_5">3.c4</a> <a class="mv" data-id="g4_6">dxc4</a> <a class="mv" data-id="g4_7">4.Na3</a> <a class="mv" data-id="g4_8">c5</a> <a class="mv" data-id="g4_9">5.Nxc4</a> <a class="mv" data-id="g4_10">e6</a> <a class="mv" data-id="g4_11">6.b3</a> <a class="mv" data-id="g4_12">Be7</a> <a class="mv" data-id="g4_13">7.Bb2</a> <a class="mv" data-id="g4_14">O-O</a> <a class="mv" data-id="g4_15">8.g4</a> <a class="mv" data-id="g4_16">Nc6</a> <a class="mv" data-id="g4_17">9.g5</a> <a class="mv" data-id="g4_18">Ne4</a> <a class="mv" data-id="g4_19">10.Rg1</a> <a class="mv" data-id="g4_20">Nd6</a> <a class="mv" data-id="g4_21">11.Nxd6</a> <a class="mv" data-id="g4_22">Qxd6</a> <a class="mv" data-id="g4_23">12.Qc2</a> <a class="mv" data-id="g4_24">Rd8</a> <a class="mv" data-id="g4_25">13.Bb5</a> <a class="mv" data-id="g4_26">Qd5</a> <a class="mv" data-id="g4_27">14.Qc3</a> <a class="mv" data-id="g4_28">Bf8</a> <a class="mv" data-id="g4_29">15.Bxc6</a> <a class="mv" data-id="g4_30">bxc6</a> <a class="mv" data-id="g4_31">16.Ne5</a> <a class="mv" data-id="g4_32">a5</a> <a class="mv" data-id="g4_33">17.Ng4</a> <a class="mv" data-id="g4_34">Ra7</a> <a class="mv" data-id="g4_35">18.O-O-O</a> <a class="mv" data-id="g4_36">Kh8</a> <a class="mv" data-id="g4_37">19.h4</a> <a class="mv" data-id="g4_38">a4</a> <a class="mv" data-id="g4_39">20.h5</a> <a class="mv" data-id="g4_40">axb3</a> <a class="mv" data-id="g4_41">21.axb3</a> <a class="mv" data-id="g4_42">e5</a> <a class="mv" data-id="g4_43">22.Nxe5</a> <a class="mv" data-id="g4_44">Kg8</a> <a class="mv" data-id="g4_45">23.g6</a> <a class="mv" data-id="g4_46">f6</a> <a class="mv" data-id="g4_47">24.gxh7+</a> <a class="mv" data-id="g4_48">Kxh7</a> <a class="mv" data-id="g4_49">25.Qc2+</a> <a class="mv" data-id="g4_50">Kg8</a> <a class="mv" data-id="g4_51">26.Ng4</a> <a class="mv" data-id="g4_52">Bxg4</a> <a class="mv" data-id="g4_53">27.Rxg4</a> <a class="mv" data-id="g4_54">Qxh5</a> <a class="mv" data-id="g4_55">28.Qc4+</a> <a class="mv" data-id="g4_56">Qd5</a> <a class="mv" data-id="g4_57">29.Bxf6</a> <a class="mv" data-id="g4_58">Rb8</a> <a class="mv" data-id="g4_59">30.e4</a> <a class="mv" data-id="g4_60">Qxc4+</a> <a class="mv" data-id="g4_61">31.bxc4</a> <a class="mv" data-id="g4_62">Rb4</a> <a class="mv" data-id="g4_63">32.d3</a> <a class="mv" data-id="g4_64">Ra2</a> <a class="mv" data-id="g4_65">33.Rdg1</a> <a class="mv" data-id="g4_66">Rxf2</a> <a class="mv" data-id="g4_67">34.Bxg7</a> <a class="mv" data-id="g4_68">Bxg7</a> <a class="mv" data-id="g4_69">35.Rxg7+</a> <a class="mv" data-id="g4_70">Kf8</a> <a class="mv" data-id="g4_71">36.Rg8+</a> <a class="mv" data-id="g4_72">Ke7</a> <a class="mv" data-id="g4_73">37.R1g7+</a> <a class="mv" data-id="g4_74">Kd6</a> <a class="mv" data-id="g4_75">38.Rd8+</a> <a class="mv" data-id="g4_76">Ke5</a> <a class="mv" data-id="g4_77">39.Re7+</a> <a class="mv" data-id="g4_78">Kf6</a> <a class="mv" data-id="g4_79">40.Rf8+</a> <a class="mv" data-id="g4_80">Kxe7</a> <a class="mv" data-id="g4_81">41.Rf7+</a></p><p class="note">1-0</p></section>
+<section id="game6"><h2>Buckels – Genov</h2><div class="gamehead"><div><b>Buckels, Valentin</b> (2441) – <b>Genov, Petar</b> (2418)</div><div>2nd Bundesliga Nord 26-27, rd 2.4 &nbsp; 1-0</div><div>Zukertort: Ne5, f4, Rf3-h3, g4 kingside attack</div></div><p class="ml"><a class="mv" data-id="g5_1">1.d4</a> <a class="mv" data-id="g5_2">Nf6</a> <a class="mv" data-id="g5_3">2.Nf3</a> <a class="mv" data-id="g5_4">d5</a> <a class="mv" data-id="g5_5">3.e3</a> <a class="mv" data-id="g5_6">e6</a> <a class="mv" data-id="g5_7">4.Bd3</a> <a class="mv" data-id="g5_8">c5</a> <a class="mv" data-id="g5_9">5.b3</a> <a class="mv" data-id="g5_10">Nc6</a> <a class="mv" data-id="g5_11">6.Bb2</a> <a class="mv" data-id="g5_12">b6</a> <a class="mv" data-id="g5_13">7.Nbd2</a> <a class="mv" data-id="g5_14">Bb7</a> <a class="mv" data-id="g5_15">8.O-O</a> <a class="mv" data-id="g5_16">Rc8</a> <a class="mv" data-id="g5_17">9.Qe2</a> <a class="mv" data-id="g5_18">cxd4</a> <a class="mv" data-id="g5_19">10.exd4</a> <a class="mv" data-id="g5_20">Bd6</a> <a class="mv" data-id="g5_21">11.a3</a> <a class="mv" data-id="g5_22">O-O</a> <a class="mv" data-id="g5_23">12.Ne5</a> <a class="mv" data-id="g5_24">Ne7</a> <a class="mv" data-id="g5_25">13.f4</a> <a class="mv" data-id="g5_26">Ng6</a> <a class="mv" data-id="g5_27">14.Rf3</a> <a class="mv" data-id="g5_28">Qc7</a> <a class="mv" data-id="g5_29">15.Raf1</a> <a class="mv" data-id="g5_30">Ne4</a> <a class="mv" data-id="g5_31">16.Rh3</a> <a class="mv" data-id="g5_32">f5</a> <a class="mv" data-id="g5_33">17.Nxe4</a> <a class="mv" data-id="g5_34">dxe4</a> <a class="mv" data-id="g5_35">18.Bc4</a> <a class="mv" data-id="g5_36">Rf6</a> <a class="mv" data-id="g5_37">19.g4</a> <a class="mv" data-id="g5_38">fxg4</a> <a class="mv" data-id="g5_39">20.Qxg4</a> <a class="mv" data-id="g5_40">Bd5</a> <a class="mv" data-id="g5_41">21.Bxd5</a> <a class="mv" data-id="g5_42">exd5</a> <a class="mv" data-id="g5_43">22.Rc3</a> <a class="mv" data-id="g5_44">Bxe5</a> <a class="mv" data-id="g5_45">23.Qxc8+</a></p><p class="note">1-0</p></section>
+<section id="game7"><h2>Kuzubov – Delchev</h2><div class="gamehead"><div><b>Kuzubov, Y</b> (2572) – <b>Delchev, A</b> (2412)</div><div>1st Liga Central SRB 2026, rd 1 &nbsp; 1-0</div><div>Nf3/b3/Bb2: a4-a5 queenside clamp, d5 break opens diagonal</div></div><p class="ml"><a class="mv" data-id="g6_1">1.Nf3</a> <a class="mv" data-id="g6_2">d5</a> <a class="mv" data-id="g6_3">2.e3</a> <a class="mv" data-id="g6_4">Nf6</a> <a class="mv" data-id="g6_5">3.c4</a> <a class="mv" data-id="g6_6">e6</a> <a class="mv" data-id="g6_7">4.Nc3</a> <a class="mv" data-id="g6_8">Bd6</a> <a class="mv" data-id="g6_9">5.b3</a> <a class="mv" data-id="g6_10">O-O</a> <a class="mv" data-id="g6_11">6.Bb2</a> <a class="mv" data-id="g6_12">Re8</a> <a class="mv" data-id="g6_13">7.d4</a> <a class="mv" data-id="g6_14">b6</a> <a class="mv" data-id="g6_15">8.Bd3</a> <a class="mv" data-id="g6_16">Bb7</a> <a class="mv" data-id="g6_17">9.O-O</a> <a class="mv" data-id="g6_18">Nbd7</a> <a class="mv" data-id="g6_19">10.a4</a> <a class="mv" data-id="g6_20">a6</a> <a class="mv" data-id="g6_21">11.a5</a> <a class="mv" data-id="g6_22">dxc4</a> <a class="mv" data-id="g6_23">12.bxc4</a> <a class="mv" data-id="g6_24">e5</a> <a class="mv" data-id="g6_25">13.Bf5</a> <a class="mv" data-id="g6_26">exd4</a> <a class="mv" data-id="g6_27">14.exd4</a> <a class="mv" data-id="g6_28">Nf8</a> <a class="mv" data-id="g6_29">15.d5</a> <a class="mv" data-id="g6_30">Ng6</a> <a class="mv" data-id="g6_31">16.Qc2</a> <a class="mv" data-id="g6_32">Ne5</a> <a class="mv" data-id="g6_33">17.Nxe5</a> <a class="mv" data-id="g6_34">Bxe5</a> <a class="mv" data-id="g6_35">18.Rfe1</a> <a class="mv" data-id="g6_36">Qd6</a> <a class="mv" data-id="g6_37">19.g3</a> <a class="mv" data-id="g6_38">b5</a> <a class="mv" data-id="g6_39">20.Ne4</a> <a class="mv" data-id="g6_40">Nxe4</a> <a class="mv" data-id="g6_41">21.Qxe4</a> <a class="mv" data-id="g6_42">Bxb2</a> <a class="mv" data-id="g6_43">22.Qxe8+</a> <a class="mv" data-id="g6_44">Qf8</a> <a class="mv" data-id="g6_45">23.Qxf8+</a> <a class="mv" data-id="g6_46">Kxf8</a> <a class="mv" data-id="g6_47">24.Ra2</a> <a class="mv" data-id="g6_48">Bc3</a> <a class="mv" data-id="g6_49">25.Re3</a> <a class="mv" data-id="g6_50">b4</a> <a class="mv" data-id="g6_51">26.Rae2</a> <a class="mv" data-id="g6_52">g6</a> <a class="mv" data-id="g6_53">27.Bd7</a> <a class="mv" data-id="g6_54">Kg7</a> <a class="mv" data-id="g6_55">28.Ba4</a> <a class="mv" data-id="g6_56">Bc8</a> <a class="mv" data-id="g6_57">29.Re8</a></p><p class="note">1-0</p></section>
+  </main>
+  <aside class="bp">
+    <div class="bhead"><span id="who"></span><b id="cur"></b></div>
+    <div id="live"></div>
+    <div class="ctrls">
+      <button id="bStart" title="Start (Home)">⏮</button>
+      <button id="bPrev" title="Back (←)">◀</button>
+      <button id="bNext" title="Forward (→)">▶</button>
+      <button id="bEnd" title="End of line (End)">⏭</button>
+      <button id="bFlip" title="Flip board (F)">⇅</button>
+    </div>
+    <div class="choose" id="choose"></div>
+    <div class="msg" id="msg"></div>
+    <div class="path" id="path"></div>
+  </aside>
+</div>
+<script>/*
+ * Copyright (c) 2020, Jeff Hlywa (jhlywa@gmail.com)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ *----------------------------------------------------------------------------*/
+
+/* minified license below  */
+
+/* @license
+ * Copyright (c) 2018, Jeff Hlywa (jhlywa@gmail.com)
+ * Released under the BSD license
+ * https://github.com/jhlywa/chess.js/blob/master/LICENSE
+ */
+
+var Chess = function(fen) {
+  var BLACK = 'b'
+  var WHITE = 'w'
+
+  var EMPTY = -1
+
+  var PAWN = 'p'
+  var KNIGHT = 'n'
+  var BISHOP = 'b'
+  var ROOK = 'r'
+  var QUEEN = 'q'
+  var KING = 'k'
+
+  var SYMBOLS = 'pnbrqkPNBRQK'
+
+  var DEFAULT_POSITION =
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+  var POSSIBLE_RESULTS = ['1-0', '0-1', '1/2-1/2', '*']
+
+  var PAWN_OFFSETS = {
+    b: [16, 32, 17, 15],
+    w: [-16, -32, -17, -15]
+  }
+
+  var PIECE_OFFSETS = {
+    n: [-18, -33, -31, -14, 18, 33, 31, 14],
+    b: [-17, -15, 17, 15],
+    r: [-16, 1, 16, -1],
+    q: [-17, -16, -15, 1, 17, 16, 15, -1],
+    k: [-17, -16, -15, 1, 17, 16, 15, -1]
+  }
+
+  // prettier-ignore
+  var ATTACKS = [
+    20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20, 0,
+     0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
+     0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
+     0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
+     0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+    24,24,24,24,24,24,56,  0, 56,24,24,24,24,24,24, 0,
+     0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
+     0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
+     0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
+     0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
+    20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20
+  ];
+
+  // prettier-ignore
+  var RAYS = [
+     17,  0,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0,  0, 15, 0,
+      0, 17,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0, 15,  0, 0,
+      0,  0, 17,  0,  0,  0,  0, 16,  0,  0,  0,  0, 15,  0,  0, 0,
+      0,  0,  0, 17,  0,  0,  0, 16,  0,  0,  0, 15,  0,  0,  0, 0,
+      0,  0,  0,  0, 17,  0,  0, 16,  0,  0, 15,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,  0, 17,  0, 16,  0, 15,  0,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,  0,  0, 17, 16, 15,  0,  0,  0,  0,  0,  0, 0,
+      1,  1,  1,  1,  1,  1,  1,  0, -1, -1,  -1,-1, -1, -1, -1, 0,
+      0,  0,  0,  0,  0,  0,-15,-16,-17,  0,  0,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,  0,-15,  0,-16,  0,-17,  0,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,-15,  0,  0,-16,  0,  0,-17,  0,  0,  0,  0, 0,
+      0,  0,  0,-15,  0,  0,  0,-16,  0,  0,  0,-17,  0,  0,  0, 0,
+      0,  0,-15,  0,  0,  0,  0,-16,  0,  0,  0,  0,-17,  0,  0, 0,
+      0,-15,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,-17,  0, 0,
+    -15,  0,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,  0,-17
+  ];
+
+  var SHIFTS = { p: 0, n: 1, b: 2, r: 3, q: 4, k: 5 }
+
+  var FLAGS = {
+    NORMAL: 'n',
+    CAPTURE: 'c',
+    BIG_PAWN: 'b',
+    EP_CAPTURE: 'e',
+    PROMOTION: 'p',
+    KSIDE_CASTLE: 'k',
+    QSIDE_CASTLE: 'q'
+  }
+
+  var BITS = {
+    NORMAL: 1,
+    CAPTURE: 2,
+    BIG_PAWN: 4,
+    EP_CAPTURE: 8,
+    PROMOTION: 16,
+    KSIDE_CASTLE: 32,
+    QSIDE_CASTLE: 64
+  }
+
+  var RANK_1 = 7
+  var RANK_2 = 6
+  var RANK_3 = 5
+  var RANK_4 = 4
+  var RANK_5 = 3
+  var RANK_6 = 2
+  var RANK_7 = 1
+  var RANK_8 = 0
+
+  // prettier-ignore
+  var SQUARES = {
+    a8:   0, b8:   1, c8:   2, d8:   3, e8:   4, f8:   5, g8:   6, h8:   7,
+    a7:  16, b7:  17, c7:  18, d7:  19, e7:  20, f7:  21, g7:  22, h7:  23,
+    a6:  32, b6:  33, c6:  34, d6:  35, e6:  36, f6:  37, g6:  38, h6:  39,
+    a5:  48, b5:  49, c5:  50, d5:  51, e5:  52, f5:  53, g5:  54, h5:  55,
+    a4:  64, b4:  65, c4:  66, d4:  67, e4:  68, f4:  69, g4:  70, h4:  71,
+    a3:  80, b3:  81, c3:  82, d3:  83, e3:  84, f3:  85, g3:  86, h3:  87,
+    a2:  96, b2:  97, c2:  98, d2:  99, e2: 100, f2: 101, g2: 102, h2: 103,
+    a1: 112, b1: 113, c1: 114, d1: 115, e1: 116, f1: 117, g1: 118, h1: 119
+  };
+
+  var ROOKS = {
+    w: [
+      { square: SQUARES.a1, flag: BITS.QSIDE_CASTLE },
+      { square: SQUARES.h1, flag: BITS.KSIDE_CASTLE }
+    ],
+    b: [
+      { square: SQUARES.a8, flag: BITS.QSIDE_CASTLE },
+      { square: SQUARES.h8, flag: BITS.KSIDE_CASTLE }
+    ]
+  }
+
+  var board = new Array(128)
+  var kings = { w: EMPTY, b: EMPTY }
+  var turn = WHITE
+  var castling = { w: 0, b: 0 }
+  var ep_square = EMPTY
+  var half_moves = 0
+  var move_number = 1
+  var history = []
+  var header = {}
+
+  /* if the user passes in a fen string, load it, else default to
+   * starting position
+   */
+  if (typeof fen === 'undefined') {
+    load(DEFAULT_POSITION)
+  } else {
+    load(fen)
+  }
+
+  function clear(keep_headers) {
+    if (typeof keep_headers === 'undefined') {
+      keep_headers = false
+    }
+
+    board = new Array(128)
+    kings = { w: EMPTY, b: EMPTY }
+    turn = WHITE
+    castling = { w: 0, b: 0 }
+    ep_square = EMPTY
+    half_moves = 0
+    move_number = 1
+    history = []
+    if (!keep_headers) header = {}
+    update_setup(generate_fen())
+  }
+
+  function reset() {
+    load(DEFAULT_POSITION)
+  }
+
+  function load(fen, keep_headers) {
+    if (typeof keep_headers === 'undefined') {
+      keep_headers = false
+    }
+
+    var tokens = fen.split(/\s+/)
+    var position = tokens[0]
+    var square = 0
+
+    if (!validate_fen(fen).valid) {
+      return false
+    }
+
+    clear(keep_headers)
+
+    for (var i = 0; i < position.length; i++) {
+      var piece = position.charAt(i)
+
+      if (piece === '/') {
+        square += 8
+      } else if (is_digit(piece)) {
+        square += parseInt(piece, 10)
+      } else {
+        var color = piece < 'a' ? WHITE : BLACK
+        put({ type: piece.toLowerCase(), color: color }, algebraic(square))
+        square++
+      }
+    }
+
+    turn = tokens[1]
+
+    if (tokens[2].indexOf('K') > -1) {
+      castling.w |= BITS.KSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('Q') > -1) {
+      castling.w |= BITS.QSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('k') > -1) {
+      castling.b |= BITS.KSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('q') > -1) {
+      castling.b |= BITS.QSIDE_CASTLE
+    }
+
+    ep_square = tokens[3] === '-' ? EMPTY : SQUARES[tokens[3]]
+    half_moves = parseInt(tokens[4], 10)
+    move_number = parseInt(tokens[5], 10)
+
+    update_setup(generate_fen())
+
+    return true
+  }
+
+  /* TODO: this function is pretty much crap - it validates structure but
+   * completely ignores content (e.g. doesn't verify that each side has a king)
+   * ... we should rewrite this, and ditch the silly error_number field while
+   * we're at it
+   */
+  function validate_fen(fen) {
+    var errors = {
+      0: 'No errors.',
+      1: 'FEN string must contain six space-delimited fields.',
+      2: '6th field (move number) must be a positive integer.',
+      3: '5th field (half move counter) must be a non-negative integer.',
+      4: '4th field (en-passant square) is invalid.',
+      5: '3rd field (castling availability) is invalid.',
+      6: '2nd field (side to move) is invalid.',
+      7: "1st field (piece positions) does not contain 8 '/'-delimited rows.",
+      8: '1st field (piece positions) is invalid [consecutive numbers].',
+      9: '1st field (piece positions) is invalid [invalid piece].',
+      10: '1st field (piece positions) is invalid [row too large].',
+      11: 'Illegal en-passant square'
+    }
+
+    /* 1st criterion: 6 space-seperated fields? */
+    var tokens = fen.split(/\s+/)
+    if (tokens.length !== 6) {
+      return { valid: false, error_number: 1, error: errors[1] }
+    }
+
+    /* 2nd criterion: move number field is a integer value > 0? */
+    if (isNaN(tokens[5]) || parseInt(tokens[5], 10) <= 0) {
+      return { valid: false, error_number: 2, error: errors[2] }
+    }
+
+    /* 3rd criterion: half move counter is an integer >= 0? */
+    if (isNaN(tokens[4]) || parseInt(tokens[4], 10) < 0) {
+      return { valid: false, error_number: 3, error: errors[3] }
+    }
+
+    /* 4th criterion: 4th field is a valid e.p.-string? */
+    if (!/^(-|[abcdefgh][36])$/.test(tokens[3])) {
+      return { valid: false, error_number: 4, error: errors[4] }
+    }
+
+    /* 5th criterion: 3th field is a valid castle-string? */
+    if (!/^(KQ?k?q?|Qk?q?|kq?|q|-)$/.test(tokens[2])) {
+      return { valid: false, error_number: 5, error: errors[5] }
+    }
+
+    /* 6th criterion: 2nd field is "w" (white) or "b" (black)? */
+    if (!/^(w|b)$/.test(tokens[1])) {
+      return { valid: false, error_number: 6, error: errors[6] }
+    }
+
+    /* 7th criterion: 1st field contains 8 rows? */
+    var rows = tokens[0].split('/')
+    if (rows.length !== 8) {
+      return { valid: false, error_number: 7, error: errors[7] }
+    }
+
+    /* 8th criterion: every row is valid? */
+    for (var i = 0; i < rows.length; i++) {
+      /* check for right sum of fields AND not two numbers in succession */
+      var sum_fields = 0
+      var previous_was_number = false
+
+      for (var k = 0; k < rows[i].length; k++) {
+        if (!isNaN(rows[i][k])) {
+          if (previous_was_number) {
+            return { valid: false, error_number: 8, error: errors[8] }
+          }
+          sum_fields += parseInt(rows[i][k], 10)
+          previous_was_number = true
+        } else {
+          if (!/^[prnbqkPRNBQK]$/.test(rows[i][k])) {
+            return { valid: false, error_number: 9, error: errors[9] }
+          }
+          sum_fields += 1
+          previous_was_number = false
+        }
+      }
+      if (sum_fields !== 8) {
+        return { valid: false, error_number: 10, error: errors[10] }
+      }
+    }
+
+    if (
+      (tokens[3][1] == '3' && tokens[1] == 'w') ||
+      (tokens[3][1] == '6' && tokens[1] == 'b')
+    ) {
+      return { valid: false, error_number: 11, error: errors[11] }
+    }
+
+    /* everything's okay! */
+    return { valid: true, error_number: 0, error: errors[0] }
+  }
+
+  function generate_fen() {
+    var empty = 0
+    var fen = ''
+
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      if (board[i] == null) {
+        empty++
+      } else {
+        if (empty > 0) {
+          fen += empty
+          empty = 0
+        }
+        var color = board[i].color
+        var piece = board[i].type
+
+        fen += color === WHITE ? piece.toUpperCase() : piece.toLowerCase()
+      }
+
+      if ((i + 1) & 0x88) {
+        if (empty > 0) {
+          fen += empty
+        }
+
+        if (i !== SQUARES.h1) {
+          fen += '/'
+        }
+
+        empty = 0
+        i += 8
+      }
+    }
+
+    var cflags = ''
+    if (castling[WHITE] & BITS.KSIDE_CASTLE) {
+      cflags += 'K'
+    }
+    if (castling[WHITE] & BITS.QSIDE_CASTLE) {
+      cflags += 'Q'
+    }
+    if (castling[BLACK] & BITS.KSIDE_CASTLE) {
+      cflags += 'k'
+    }
+    if (castling[BLACK] & BITS.QSIDE_CASTLE) {
+      cflags += 'q'
+    }
+
+    /* do we have an empty castling flag? */
+    cflags = cflags || '-'
+    var epflags = ep_square === EMPTY ? '-' : algebraic(ep_square)
+
+    return [fen, turn, cflags, epflags, half_moves, move_number].join(' ')
+  }
+
+  function set_header(args) {
+    for (var i = 0; i < args.length; i += 2) {
+      if (typeof args[i] === 'string' && typeof args[i + 1] === 'string') {
+        header[args[i]] = args[i + 1]
+      }
+    }
+    return header
+  }
+
+  /* called when the initial board setup is changed with put() or remove().
+   * modifies the SetUp and FEN properties of the header object.  if the FEN is
+   * equal to the default position, the SetUp and FEN are deleted
+   * the setup is only updated if history.length is zero, ie moves haven't been
+   * made.
+   */
+  function update_setup(fen) {
+    if (history.length > 0) return
+
+    if (fen !== DEFAULT_POSITION) {
+      header['SetUp'] = '1'
+      header['FEN'] = fen
+    } else {
+      delete header['SetUp']
+      delete header['FEN']
+    }
+  }
+
+  function get(square) {
+    var piece = board[SQUARES[square]]
+    return piece ? { type: piece.type, color: piece.color } : null
+  }
+
+  function put(piece, square) {
+    /* check for valid piece object */
+    if (!('type' in piece && 'color' in piece)) {
+      return false
+    }
+
+    /* check for piece */
+    if (SYMBOLS.indexOf(piece.type.toLowerCase()) === -1) {
+      return false
+    }
+
+    /* check for valid square */
+    if (!(square in SQUARES)) {
+      return false
+    }
+
+    var sq = SQUARES[square]
+
+    /* don't let the user place more than one king */
+    if (
+      piece.type == KING &&
+      !(kings[piece.color] == EMPTY || kings[piece.color] == sq)
+    ) {
+      return false
+    }
+
+    board[sq] = { type: piece.type, color: piece.color }
+    if (piece.type === KING) {
+      kings[piece.color] = sq
+    }
+
+    update_setup(generate_fen())
+
+    return true
+  }
+
+  function remove(square) {
+    var piece = get(square)
+    board[SQUARES[square]] = null
+    if (piece && piece.type === KING) {
+      kings[piece.color] = EMPTY
+    }
+
+    update_setup(generate_fen())
+
+    return piece
+  }
+
+  function build_move(board, from, to, flags, promotion) {
+    var move = {
+      color: turn,
+      from: from,
+      to: to,
+      flags: flags,
+      piece: board[from].type
+    }
+
+    if (promotion) {
+      move.flags |= BITS.PROMOTION
+      move.promotion = promotion
+    }
+
+    if (board[to]) {
+      move.captured = board[to].type
+    } else if (flags & BITS.EP_CAPTURE) {
+      move.captured = PAWN
+    }
+    return move
+  }
+
+  function generate_moves(options) {
+    function add_move(board, moves, from, to, flags) {
+      /* if pawn promotion */
+      if (
+        board[from].type === PAWN &&
+        (rank(to) === RANK_8 || rank(to) === RANK_1)
+      ) {
+        var pieces = [QUEEN, ROOK, BISHOP, KNIGHT]
+        for (var i = 0, len = pieces.length; i < len; i++) {
+          moves.push(build_move(board, from, to, flags, pieces[i]))
+        }
+      } else {
+        moves.push(build_move(board, from, to, flags))
+      }
+    }
+
+    var moves = []
+    var us = turn
+    var them = swap_color(us)
+    var second_rank = { b: RANK_7, w: RANK_2 }
+
+    var first_sq = SQUARES.a8
+    var last_sq = SQUARES.h1
+    var single_square = false
+
+    /* do we want legal moves? */
+    var legal =
+      typeof options !== 'undefined' && 'legal' in options
+        ? options.legal
+        : true
+
+    /* are we generating moves for a single square? */
+    if (typeof options !== 'undefined' && 'square' in options) {
+      if (options.square in SQUARES) {
+        first_sq = last_sq = SQUARES[options.square]
+        single_square = true
+      } else {
+        /* invalid square */
+        return []
+      }
+    }
+
+    for (var i = first_sq; i <= last_sq; i++) {
+      /* did we run off the end of the board */
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      var piece = board[i]
+      if (piece == null || piece.color !== us) {
+        continue
+      }
+
+      if (piece.type === PAWN) {
+        /* single square, non-capturing */
+        var square = i + PAWN_OFFSETS[us][0]
+        if (board[square] == null) {
+          add_move(board, moves, i, square, BITS.NORMAL)
+
+          /* double square */
+          var square = i + PAWN_OFFSETS[us][1]
+          if (second_rank[us] === rank(i) && board[square] == null) {
+            add_move(board, moves, i, square, BITS.BIG_PAWN)
+          }
+        }
+
+        /* pawn captures */
+        for (j = 2; j < 4; j++) {
+          var square = i + PAWN_OFFSETS[us][j]
+          if (square & 0x88) continue
+
+          if (board[square] != null && board[square].color === them) {
+            add_move(board, moves, i, square, BITS.CAPTURE)
+          } else if (square === ep_square) {
+            add_move(board, moves, i, ep_square, BITS.EP_CAPTURE)
+          }
+        }
+      } else {
+        for (var j = 0, len = PIECE_OFFSETS[piece.type].length; j < len; j++) {
+          var offset = PIECE_OFFSETS[piece.type][j]
+          var square = i
+
+          while (true) {
+            square += offset
+            if (square & 0x88) break
+
+            if (board[square] == null) {
+              add_move(board, moves, i, square, BITS.NORMAL)
+            } else {
+              if (board[square].color === us) break
+              add_move(board, moves, i, square, BITS.CAPTURE)
+              break
+            }
+
+            /* break, if knight or king */
+            if (piece.type === 'n' || piece.type === 'k') break
+          }
+        }
+      }
+    }
+
+    /* check for castling if: a) we're generating all moves, or b) we're doing
+     * single square move generation on the king's square
+     */
+    if (!single_square || last_sq === kings[us]) {
+      /* king-side castling */
+      if (castling[us] & BITS.KSIDE_CASTLE) {
+        var castling_from = kings[us]
+        var castling_to = castling_from + 2
+
+        if (
+          board[castling_from + 1] == null &&
+          board[castling_to] == null &&
+          !attacked(them, kings[us]) &&
+          !attacked(them, castling_from + 1) &&
+          !attacked(them, castling_to)
+        ) {
+          add_move(board, moves, kings[us], castling_to, BITS.KSIDE_CASTLE)
+        }
+      }
+
+      /* queen-side castling */
+      if (castling[us] & BITS.QSIDE_CASTLE) {
+        var castling_from = kings[us]
+        var castling_to = castling_from - 2
+
+        if (
+          board[castling_from - 1] == null &&
+          board[castling_from - 2] == null &&
+          board[castling_from - 3] == null &&
+          !attacked(them, kings[us]) &&
+          !attacked(them, castling_from - 1) &&
+          !attacked(them, castling_to)
+        ) {
+          add_move(board, moves, kings[us], castling_to, BITS.QSIDE_CASTLE)
+        }
+      }
+    }
+
+    /* return all pseudo-legal moves (this includes moves that allow the king
+     * to be captured)
+     */
+    if (!legal) {
+      return moves
+    }
+
+    /* filter out illegal moves */
+    var legal_moves = []
+    for (var i = 0, len = moves.length; i < len; i++) {
+      make_move(moves[i])
+      if (!king_attacked(us)) {
+        legal_moves.push(moves[i])
+      }
+      undo_move()
+    }
+
+    return legal_moves
+  }
+
+  /* convert a move from 0x88 coordinates to Standard Algebraic Notation
+   * (SAN)
+   *
+   * @param {boolean} sloppy Use the sloppy SAN generator to work around over
+   * disambiguation bugs in Fritz and Chessbase.  See below:
+   *
+   * r1bqkbnr/ppp2ppp/2n5/1B1pP3/4P3/8/PPPP2PP/RNBQK1NR b KQkq - 2 4
+   * 4. ... Nge7 is overly disambiguated because the knight on c6 is pinned
+   * 4. ... Ne7 is technically the valid SAN
+   */
+  function move_to_san(move, sloppy) {
+    var output = ''
+
+    if (move.flags & BITS.KSIDE_CASTLE) {
+      output = 'O-O'
+    } else if (move.flags & BITS.QSIDE_CASTLE) {
+      output = 'O-O-O'
+    } else {
+      var disambiguator = get_disambiguator(move, sloppy)
+
+      if (move.piece !== PAWN) {
+        output += move.piece.toUpperCase() + disambiguator
+      }
+
+      if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
+        if (move.piece === PAWN) {
+          output += algebraic(move.from)[0]
+        }
+        output += 'x'
+      }
+
+      output += algebraic(move.to)
+
+      if (move.flags & BITS.PROMOTION) {
+        output += '=' + move.promotion.toUpperCase()
+      }
+    }
+
+    make_move(move)
+    if (in_check()) {
+      if (in_checkmate()) {
+        output += '#'
+      } else {
+        output += '+'
+      }
+    }
+    undo_move()
+
+    return output
+  }
+
+  // parses all of the decorators out of a SAN string
+  function stripped_san(move) {
+    return move.replace(/=/, '').replace(/[+#]?[?!]*$/, '')
+  }
+
+  function attacked(color, square) {
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      /* did we run off the end of the board */
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      /* if empty square or wrong color */
+      if (board[i] == null || board[i].color !== color) continue
+
+      var piece = board[i]
+      var difference = i - square
+      var index = difference + 119
+
+      if (ATTACKS[index] & (1 << SHIFTS[piece.type])) {
+        if (piece.type === PAWN) {
+          if (difference > 0) {
+            if (piece.color === WHITE) return true
+          } else {
+            if (piece.color === BLACK) return true
+          }
+          continue
+        }
+
+        /* if the piece is a knight or a king */
+        if (piece.type === 'n' || piece.type === 'k') return true
+
+        var offset = RAYS[index]
+        var j = i + offset
+
+        var blocked = false
+        while (j !== square) {
+          if (board[j] != null) {
+            blocked = true
+            break
+          }
+          j += offset
+        }
+
+        if (!blocked) return true
+      }
+    }
+
+    return false
+  }
+
+  function king_attacked(color) {
+    return attacked(swap_color(color), kings[color])
+  }
+
+  function in_check() {
+    return king_attacked(turn)
+  }
+
+  function in_checkmate() {
+    return in_check() && generate_moves().length === 0
+  }
+
+  function in_stalemate() {
+    return !in_check() && generate_moves().length === 0
+  }
+
+  function insufficient_material() {
+    var pieces = {}
+    var bishops = []
+    var num_pieces = 0
+    var sq_color = 0
+
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      sq_color = (sq_color + 1) % 2
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      var piece = board[i]
+      if (piece) {
+        pieces[piece.type] = piece.type in pieces ? pieces[piece.type] + 1 : 1
+        if (piece.type === BISHOP) {
+          bishops.push(sq_color)
+        }
+        num_pieces++
+      }
+    }
+
+    /* k vs. k */
+    if (num_pieces === 2) {
+      return true
+    } else if (
+      /* k vs. kn .... or .... k vs. kb */
+      num_pieces === 3 &&
+      (pieces[BISHOP] === 1 || pieces[KNIGHT] === 1)
+    ) {
+      return true
+    } else if (num_pieces === pieces[BISHOP] + 2) {
+      /* kb vs. kb where any number of bishops are all on the same color */
+      var sum = 0
+      var len = bishops.length
+      for (var i = 0; i < len; i++) {
+        sum += bishops[i]
+      }
+      if (sum === 0 || sum === len) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  function in_threefold_repetition() {
+    /* TODO: while this function is fine for casual use, a better
+     * implementation would use a Zobrist key (instead of FEN). the
+     * Zobrist key would be maintained in the make_move/undo_move functions,
+     * avoiding the costly that we do below.
+     */
+    var moves = []
+    var positions = {}
+    var repetition = false
+
+    while (true) {
+      var move = undo_move()
+      if (!move) break
+      moves.push(move)
+    }
+
+    while (true) {
+      /* remove the last two fields in the FEN string, they're not needed
+       * when checking for draw by rep */
+      var fen = generate_fen()
+        .split(' ')
+        .slice(0, 4)
+        .join(' ')
+
+      /* has the position occurred three or move times */
+      positions[fen] = fen in positions ? positions[fen] + 1 : 1
+      if (positions[fen] >= 3) {
+        repetition = true
+      }
+
+      if (!moves.length) {
+        break
+      }
+      make_move(moves.pop())
+    }
+
+    return repetition
+  }
+
+  function push(move) {
+    history.push({
+      move: move,
+      kings: { b: kings.b, w: kings.w },
+      turn: turn,
+      castling: { b: castling.b, w: castling.w },
+      ep_square: ep_square,
+      half_moves: half_moves,
+      move_number: move_number
+    })
+  }
+
+  function make_move(move) {
+    var us = turn
+    var them = swap_color(us)
+    push(move)
+
+    board[move.to] = board[move.from]
+    board[move.from] = null
+
+    /* if ep capture, remove the captured pawn */
+    if (move.flags & BITS.EP_CAPTURE) {
+      if (turn === BLACK) {
+        board[move.to - 16] = null
+      } else {
+        board[move.to + 16] = null
+      }
+    }
+
+    /* if pawn promotion, replace with new piece */
+    if (move.flags & BITS.PROMOTION) {
+      board[move.to] = { type: move.promotion, color: us }
+    }
+
+    /* if we moved the king */
+    if (board[move.to].type === KING) {
+      kings[board[move.to].color] = move.to
+
+      /* if we castled, move the rook next to the king */
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        var castling_to = move.to - 1
+        var castling_from = move.to + 1
+        board[castling_to] = board[castling_from]
+        board[castling_from] = null
+      } else if (move.flags & BITS.QSIDE_CASTLE) {
+        var castling_to = move.to + 1
+        var castling_from = move.to - 2
+        board[castling_to] = board[castling_from]
+        board[castling_from] = null
+      }
+
+      /* turn off castling */
+      castling[us] = ''
+    }
+
+    /* turn off castling if we move a rook */
+    if (castling[us]) {
+      for (var i = 0, len = ROOKS[us].length; i < len; i++) {
+        if (
+          move.from === ROOKS[us][i].square &&
+          castling[us] & ROOKS[us][i].flag
+        ) {
+          castling[us] ^= ROOKS[us][i].flag
+          break
+        }
+      }
+    }
+
+    /* turn off castling if we capture a rook */
+    if (castling[them]) {
+      for (var i = 0, len = ROOKS[them].length; i < len; i++) {
+        if (
+          move.to === ROOKS[them][i].square &&
+          castling[them] & ROOKS[them][i].flag
+        ) {
+          castling[them] ^= ROOKS[them][i].flag
+          break
+        }
+      }
+    }
+
+    /* if big pawn move, update the en passant square */
+    if (move.flags & BITS.BIG_PAWN) {
+      if (turn === 'b') {
+        ep_square = move.to - 16
+      } else {
+        ep_square = move.to + 16
+      }
+    } else {
+      ep_square = EMPTY
+    }
+
+    /* reset the 50 move counter if a pawn is moved or a piece is captured */
+    if (move.piece === PAWN) {
+      half_moves = 0
+    } else if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
+      half_moves = 0
+    } else {
+      half_moves++
+    }
+
+    if (turn === BLACK) {
+      move_number++
+    }
+    turn = swap_color(turn)
+  }
+
+  function undo_move() {
+    var old = history.pop()
+    if (old == null) {
+      return null
+    }
+
+    var move = old.move
+    kings = old.kings
+    turn = old.turn
+    castling = old.castling
+    ep_square = old.ep_square
+    half_moves = old.half_moves
+    move_number = old.move_number
+
+    var us = turn
+    var them = swap_color(turn)
+
+    board[move.from] = board[move.to]
+    board[move.from].type = move.piece // to undo any promotions
+    board[move.to] = null
+
+    if (move.flags & BITS.CAPTURE) {
+      board[move.to] = { type: move.captured, color: them }
+    } else if (move.flags & BITS.EP_CAPTURE) {
+      var index
+      if (us === BLACK) {
+        index = move.to - 16
+      } else {
+        index = move.to + 16
+      }
+      board[index] = { type: PAWN, color: them }
+    }
+
+    if (move.flags & (BITS.KSIDE_CASTLE | BITS.QSIDE_CASTLE)) {
+      var castling_to, castling_from
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        castling_to = move.to + 1
+        castling_from = move.to - 1
+      } else if (move.flags & BITS.QSIDE_CASTLE) {
+        castling_to = move.to - 2
+        castling_from = move.to + 1
+      }
+
+      board[castling_to] = board[castling_from]
+      board[castling_from] = null
+    }
+
+    return move
+  }
+
+  /* this function is used to uniquely identify ambiguous moves */
+  function get_disambiguator(move, sloppy) {
+    var moves = generate_moves({ legal: !sloppy })
+
+    var from = move.from
+    var to = move.to
+    var piece = move.piece
+
+    var ambiguities = 0
+    var same_rank = 0
+    var same_file = 0
+
+    for (var i = 0, len = moves.length; i < len; i++) {
+      var ambig_from = moves[i].from
+      var ambig_to = moves[i].to
+      var ambig_piece = moves[i].piece
+
+      /* if a move of the same piece type ends on the same to square, we'll
+       * need to add a disambiguator to the algebraic notation
+       */
+      if (piece === ambig_piece && from !== ambig_from && to === ambig_to) {
+        ambiguities++
+
+        if (rank(from) === rank(ambig_from)) {
+          same_rank++
+        }
+
+        if (file(from) === file(ambig_from)) {
+          same_file++
+        }
+      }
+    }
+
+    if (ambiguities > 0) {
+      /* if there exists a similar moving piece on the same rank and file as
+       * the move in question, use the square as the disambiguator
+       */
+      if (same_rank > 0 && same_file > 0) {
+        return algebraic(from)
+      } else if (same_file > 0) {
+        /* if the moving piece rests on the same file, use the rank symbol as the
+         * disambiguator
+         */
+        return algebraic(from).charAt(1)
+      } else {
+        /* else use the file symbol */
+        return algebraic(from).charAt(0)
+      }
+    }
+
+    return ''
+  }
+
+  function ascii() {
+    var s = '   +------------------------+\n'
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      /* display the rank */
+      if (file(i) === 0) {
+        s += ' ' + '87654321'[rank(i)] + ' |'
+      }
+
+      /* empty piece */
+      if (board[i] == null) {
+        s += ' . '
+      } else {
+        var piece = board[i].type
+        var color = board[i].color
+        var symbol = color === WHITE ? piece.toUpperCase() : piece.toLowerCase()
+        s += ' ' + symbol + ' '
+      }
+
+      if ((i + 1) & 0x88) {
+        s += '|\n'
+        i += 8
+      }
+    }
+    s += '   +------------------------+\n'
+    s += '     a  b  c  d  e  f  g  h\n'
+
+    return s
+  }
+
+  // convert a move from Standard Algebraic Notation (SAN) to 0x88 coordinates
+  function move_from_san(move, sloppy) {
+    // strip off any move decorations: e.g Nf3+?!
+    var clean_move = stripped_san(move)
+
+    // if we're using the sloppy parser run a regex to grab piece, to, and from
+    // this should parse invalid SAN like: Pe2-e4, Rc1c4, Qf3xf7
+    if (sloppy) {
+      var matches = clean_move.match(
+        /([pnbrqkPNBRQK])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBN])?/
+      )
+      if (matches) {
+        var piece = matches[1]
+        var from = matches[2]
+        var to = matches[3]
+        var promotion = matches[4]
+      }
+    }
+
+    var moves = generate_moves()
+    for (var i = 0, len = moves.length; i < len; i++) {
+      // try the strict parser first, then the sloppy parser if requested
+      // by the user
+      if (
+        clean_move === stripped_san(move_to_san(moves[i])) ||
+        (sloppy && clean_move === stripped_san(move_to_san(moves[i], true)))
+      ) {
+        return moves[i]
+      } else {
+        if (
+          matches &&
+          (!piece || piece.toLowerCase() == moves[i].piece) &&
+          SQUARES[from] == moves[i].from &&
+          SQUARES[to] == moves[i].to &&
+          (!promotion || promotion.toLowerCase() == moves[i].promotion)
+        ) {
+          return moves[i]
+        }
+      }
+    }
+
+    return null
+  }
+
+  /*****************************************************************************
+   * UTILITY FUNCTIONS
+   ****************************************************************************/
+  function rank(i) {
+    return i >> 4
+  }
+
+  function file(i) {
+    return i & 15
+  }
+
+  function algebraic(i) {
+    var f = file(i),
+      r = rank(i)
+    return 'abcdefgh'.substring(f, f + 1) + '87654321'.substring(r, r + 1)
+  }
+
+  function swap_color(c) {
+    return c === WHITE ? BLACK : WHITE
+  }
+
+  function is_digit(c) {
+    return '0123456789'.indexOf(c) !== -1
+  }
+
+  /* pretty = external move object */
+  function make_pretty(ugly_move) {
+    var move = clone(ugly_move)
+    move.san = move_to_san(move, false)
+    move.to = algebraic(move.to)
+    move.from = algebraic(move.from)
+
+    var flags = ''
+
+    for (var flag in BITS) {
+      if (BITS[flag] & move.flags) {
+        flags += FLAGS[flag]
+      }
+    }
+    move.flags = flags
+
+    return move
+  }
+
+  function clone(obj) {
+    var dupe = obj instanceof Array ? [] : {}
+
+    for (var property in obj) {
+      if (typeof property === 'object') {
+        dupe[property] = clone(obj[property])
+      } else {
+        dupe[property] = obj[property]
+      }
+    }
+
+    return dupe
+  }
+
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '')
+  }
+
+  /*****************************************************************************
+   * DEBUGGING UTILITIES
+   ****************************************************************************/
+  function perft(depth) {
+    var moves = generate_moves({ legal: false })
+    var nodes = 0
+    var color = turn
+
+    for (var i = 0, len = moves.length; i < len; i++) {
+      make_move(moves[i])
+      if (!king_attacked(color)) {
+        if (depth - 1 > 0) {
+          var child_nodes = perft(depth - 1)
+          nodes += child_nodes
+        } else {
+          nodes++
+        }
+      }
+      undo_move()
+    }
+
+    return nodes
+  }
+
+  return {
+    /***************************************************************************
+     * PUBLIC CONSTANTS (is there a better way to do this?)
+     **************************************************************************/
+    WHITE: WHITE,
+    BLACK: BLACK,
+    PAWN: PAWN,
+    KNIGHT: KNIGHT,
+    BISHOP: BISHOP,
+    ROOK: ROOK,
+    QUEEN: QUEEN,
+    KING: KING,
+    SQUARES: (function() {
+      /* from the ECMA-262 spec (section 12.6.4):
+       * "The mechanics of enumerating the properties ... is
+       * implementation dependent"
+       * so: for (var sq in SQUARES) { keys.push(sq); } might not be
+       * ordered correctly
+       */
+      var keys = []
+      for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+        if (i & 0x88) {
+          i += 7
+          continue
+        }
+        keys.push(algebraic(i))
+      }
+      return keys
+    })(),
+    FLAGS: FLAGS,
+
+    /***************************************************************************
+     * PUBLIC API
+     **************************************************************************/
+    load: function(fen) {
+      return load(fen)
+    },
+
+    reset: function() {
+      return reset()
+    },
+
+    moves: function(options) {
+      /* The internal representation of a chess move is in 0x88 format, and
+       * not meant to be human-readable.  The code below converts the 0x88
+       * square coordinates to algebraic coordinates.  It also prunes an
+       * unnecessary move keys resulting from a verbose call.
+       */
+
+      var ugly_moves = generate_moves(options)
+      var moves = []
+
+      for (var i = 0, len = ugly_moves.length; i < len; i++) {
+        /* does the user want a full move object (most likely not), or just
+         * SAN
+         */
+        if (
+          typeof options !== 'undefined' &&
+          'verbose' in options &&
+          options.verbose
+        ) {
+          moves.push(make_pretty(ugly_moves[i]))
+        } else {
+          moves.push(move_to_san(ugly_moves[i], false))
+        }
+      }
+
+      return moves
+    },
+
+    in_check: function() {
+      return in_check()
+    },
+
+    in_checkmate: function() {
+      return in_checkmate()
+    },
+
+    in_stalemate: function() {
+      return in_stalemate()
+    },
+
+    in_draw: function() {
+      return (
+        half_moves >= 100 ||
+        in_stalemate() ||
+        insufficient_material() ||
+        in_threefold_repetition()
+      )
+    },
+
+    insufficient_material: function() {
+      return insufficient_material()
+    },
+
+    in_threefold_repetition: function() {
+      return in_threefold_repetition()
+    },
+
+    game_over: function() {
+      return (
+        half_moves >= 100 ||
+        in_checkmate() ||
+        in_stalemate() ||
+        insufficient_material() ||
+        in_threefold_repetition()
+      )
+    },
+
+    validate_fen: function(fen) {
+      return validate_fen(fen)
+    },
+
+    fen: function() {
+      return generate_fen()
+    },
+
+    board: function() {
+      var output = [],
+        row = []
+
+      for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+        if (board[i] == null) {
+          row.push(null)
+        } else {
+          row.push({ type: board[i].type, color: board[i].color })
+        }
+        if ((i + 1) & 0x88) {
+          output.push(row)
+          row = []
+          i += 8
+        }
+      }
+
+      return output
+    },
+
+    pgn: function(options) {
+      /* using the specification from http://www.chessclub.com/help/PGN-spec
+       * example for html usage: .pgn({ max_width: 72, newline_char: "<br />" })
+       */
+      var newline =
+        typeof options === 'object' && typeof options.newline_char === 'string'
+          ? options.newline_char
+          : '\n'
+      var max_width =
+        typeof options === 'object' && typeof options.max_width === 'number'
+          ? options.max_width
+          : 0
+      var result = []
+      var header_exists = false
+
+      /* add the PGN header headerrmation */
+      for (var i in header) {
+        /* TODO: order of enumerated properties in header object is not
+         * guaranteed, see ECMA-262 spec (section 12.6.4)
+         */
+        result.push('[' + i + ' "' + header[i] + '"]' + newline)
+        header_exists = true
+      }
+
+      if (header_exists && history.length) {
+        result.push(newline)
+      }
+
+      /* pop all of history onto reversed_history */
+      var reversed_history = []
+      while (history.length > 0) {
+        reversed_history.push(undo_move())
+      }
+
+      var moves = []
+      var move_string = ''
+
+      /* build the list of moves.  a move_string looks like: "3. e3 e6" */
+      while (reversed_history.length > 0) {
+        var move = reversed_history.pop()
+
+        /* if the position started with black to move, start PGN with 1. ... */
+        if (!history.length && move.color === 'b') {
+          move_string = move_number + '. ...'
+        } else if (move.color === 'w') {
+          /* store the previous generated move_string if we have one */
+          if (move_string.length) {
+            moves.push(move_string)
+          }
+          move_string = move_number + '.'
+        }
+
+        move_string = move_string + ' ' + move_to_san(move, false)
+        make_move(move)
+      }
+
+      /* are there any other leftover moves? */
+      if (move_string.length) {
+        moves.push(move_string)
+      }
+
+      /* is there a result? */
+      if (typeof header.Result !== 'undefined') {
+        moves.push(header.Result)
+      }
+
+      /* history should be back to what is was before we started generating PGN,
+       * so join together moves
+       */
+      if (max_width === 0) {
+        return result.join('') + moves.join(' ')
+      }
+
+      /* wrap the PGN output at max_width */
+      var current_width = 0
+      for (var i = 0; i < moves.length; i++) {
+        /* if the current move will push past max_width */
+        if (current_width + moves[i].length > max_width && i !== 0) {
+          /* don't end the line with whitespace */
+          if (result[result.length - 1] === ' ') {
+            result.pop()
+          }
+
+          result.push(newline)
+          current_width = 0
+        } else if (i !== 0) {
+          result.push(' ')
+          current_width++
+        }
+        result.push(moves[i])
+        current_width += moves[i].length
+      }
+
+      return result.join('')
+    },
+
+    load_pgn: function(pgn, options) {
+      // allow the user to specify the sloppy move parser to work around over
+      // disambiguation bugs in Fritz and Chessbase
+      var sloppy =
+        typeof options !== 'undefined' && 'sloppy' in options
+          ? options.sloppy
+          : false
+
+      function mask(str) {
+        return str.replace(/\\/g, '\\')
+      }
+
+      function has_keys(object) {
+        for (var key in object) {
+          return true
+        }
+        return false
+      }
+
+      function parse_pgn_header(header, options) {
+        var newline_char =
+          typeof options === 'object' &&
+          typeof options.newline_char === 'string'
+            ? options.newline_char
+            : '\r?\n'
+        var header_obj = {}
+        var headers = header.split(new RegExp(mask(newline_char)))
+        var key = ''
+        var value = ''
+
+        for (var i = 0; i < headers.length; i++) {
+          key = headers[i].replace(/^\[([A-Z][A-Za-z]*)\s.*\]$/, '$1')
+          value = headers[i].replace(/^\[[A-Za-z]+\s"(.*)"\]$/, '$1')
+          if (trim(key).length > 0) {
+            header_obj[key] = value
+          }
+        }
+
+        return header_obj
+      }
+
+      var newline_char =
+        typeof options === 'object' && typeof options.newline_char === 'string'
+          ? options.newline_char
+          : '\r?\n'
+
+      // RegExp to split header. Takes advantage of the fact that header and movetext
+      // will always have a blank line between them (ie, two newline_char's).
+      // With default newline_char, will equal: /^(\[((?:\r?\n)|.)*\])(?:\r?\n){2}/
+      var header_regex = new RegExp(
+        '^(\\[((?:' +
+          mask(newline_char) +
+          ')|.)*\\])' +
+          '(?:' +
+          mask(newline_char) +
+          '){2}'
+      )
+
+      // If no header given, begin with moves.
+      var header_string = header_regex.test(pgn)
+        ? header_regex.exec(pgn)[1]
+        : ''
+
+      // Put the board in the starting position
+      reset()
+
+      /* parse PGN header */
+      var headers = parse_pgn_header(header_string, options)
+      for (var key in headers) {
+        set_header([key, headers[key]])
+      }
+
+      /* load the starting position indicated by [Setup '1'] and
+       * [FEN position] */
+      if (headers['SetUp'] === '1') {
+        if (!('FEN' in headers && load(headers['FEN'], true))) {
+          // second argument to load: don't clear the headers
+          return false
+        }
+      }
+
+      /* delete header to get the moves */
+      var ms = pgn
+        .replace(header_string, '')
+        .replace(new RegExp(mask(newline_char), 'g'), ' ')
+
+      /* delete comments */
+      ms = ms.replace(/(\{[^}]+\})+?/g, '')
+
+      /* delete recursive annotation variations */
+      var rav_regex = /(\([^\(\)]+\))+?/g
+      while (rav_regex.test(ms)) {
+        ms = ms.replace(rav_regex, '')
+      }
+
+      /* delete move numbers */
+      ms = ms.replace(/\d+\.(\.\.)?/g, '')
+
+      /* delete ... indicating black to move */
+      ms = ms.replace(/\.\.\./g, '')
+
+      /* delete numeric annotation glyphs */
+      ms = ms.replace(/\$\d+/g, '')
+
+      /* trim and get array of moves */
+      var moves = trim(ms).split(new RegExp(/\s+/))
+
+      /* delete empty entries */
+      moves = moves
+        .join(',')
+        .replace(/,,+/g, ',')
+        .split(',')
+      var move = ''
+
+      for (var half_move = 0; half_move < moves.length - 1; half_move++) {
+        move = move_from_san(moves[half_move], sloppy)
+
+        /* move not possible! (don't clear the board to examine to show the
+         * latest valid position)
+         */
+        if (move == null) {
+          return false
+        } else {
+          make_move(move)
+        }
+      }
+
+      /* examine last move */
+      move = moves[moves.length - 1]
+      if (POSSIBLE_RESULTS.indexOf(move) > -1) {
+        if (has_keys(header) && typeof header.Result === 'undefined') {
+          set_header(['Result', move])
+        }
+      } else {
+        move = move_from_san(move, sloppy)
+        if (move == null) {
+          return false
+        } else {
+          make_move(move)
+        }
+      }
+      return true
+    },
+
+    header: function() {
+      return set_header(arguments)
+    },
+
+    ascii: function() {
+      return ascii()
+    },
+
+    turn: function() {
+      return turn
+    },
+
+    move: function(move, options) {
+      /* The move function can be called with in the following parameters:
+       *
+       * .move('Nxb7')      <- where 'move' is a case-sensitive SAN string
+       *
+       * .move({ from: 'h7', <- where the 'move' is a move object (additional
+       *         to :'h8',      fields are ignored)
+       *         promotion: 'q',
+       *      })
+       */
+
+      // allow the user to specify the sloppy move parser to work around over
+      // disambiguation bugs in Fritz and Chessbase
+      var sloppy =
+        typeof options !== 'undefined' && 'sloppy' in options
+          ? options.sloppy
+          : false
+
+      var move_obj = null
+
+      if (typeof move === 'string') {
+        move_obj = move_from_san(move, sloppy)
+      } else if (typeof move === 'object') {
+        var moves = generate_moves()
+
+        /* convert the pretty move object to an ugly move object */
+        for (var i = 0, len = moves.length; i < len; i++) {
+          if (
+            move.from === algebraic(moves[i].from) &&
+            move.to === algebraic(moves[i].to) &&
+            (!('promotion' in moves[i]) ||
+              move.promotion === moves[i].promotion)
+          ) {
+            move_obj = moves[i]
+            break
+          }
+        }
+      }
+
+      /* failed to find move */
+      if (!move_obj) {
+        return null
+      }
+
+      /* need to make a copy of move because we can't generate SAN after the
+       * move is made
+       */
+      var pretty_move = make_pretty(move_obj)
+
+      make_move(move_obj)
+
+      return pretty_move
+    },
+
+    undo: function() {
+      var move = undo_move()
+      return move ? make_pretty(move) : null
+    },
+
+    clear: function() {
+      return clear()
+    },
+
+    put: function(piece, square) {
+      return put(piece, square)
+    },
+
+    get: function(square) {
+      return get(square)
+    },
+
+    remove: function(square) {
+      return remove(square)
+    },
+
+    perft: function(depth) {
+      return perft(depth)
+    },
+
+    square_color: function(square) {
+      if (square in SQUARES) {
+        var sq_0x88 = SQUARES[square]
+        return (rank(sq_0x88) + file(sq_0x88)) % 2 === 0 ? 'light' : 'dark'
+      }
+
+      return null
+    },
+
+    history: function(options) {
+      var reversed_history = []
+      var move_history = []
+      var verbose =
+        typeof options !== 'undefined' &&
+        'verbose' in options &&
+        options.verbose
+
+      while (history.length > 0) {
+        reversed_history.push(undo_move())
+      }
+
+      while (reversed_history.length > 0) {
+        var move = reversed_history.pop()
+        if (verbose) {
+          move_history.push(make_pretty(move))
+        } else {
+          move_history.push(move_to_san(move))
+        }
+        make_move(move)
+      }
+
+      return move_history
+    }
+  }
+}
+
+/* export Chess object if using node or any other CommonJS compatible
+ * environment */
+if (typeof exports !== 'undefined') exports.Chess = Chess
+/* export Chess object for any RequireJS compatible environment */
+if (typeof define !== 'undefined')
+  define(function() {
+    return Chess
+  })
+</script>
+<script>
+const NODES={"g0_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g0_1"],"","","","",0],"g0_1":["rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq - 0 1","g0_root",["g0_2"],"c4","1.c4","c2","c4",1],"g0_2":["rnbqkbnr/pppp1ppp/4p3/8/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 2","g0_1",["g0_3"],"e6","2…e6","e7","e6",0],"g0_3":["rnbqkbnr/pppp1ppp/4p3/8/2P5/5N2/PP1PPPPP/RNBQKB1R b KQkq - 1 2","g0_2",["g0_4"],"Nf3","2.Nf3","g1","f3",1],"g0_4":["rnbqkbnr/ppp2ppp/4p3/3p4/2P5/5N2/PP1PPPPP/RNBQKB1R w KQkq - 0 3","g0_3",["g0_5"],"d5","3…d5","d7","d5",0],"g0_5":["rnbqkbnr/ppp2ppp/4p3/3p4/2P5/5NP1/PP1PPP1P/RNBQKB1R b KQkq - 0 3","g0_4",["g0_6"],"g3","3.g3","g2","g3",1],"g0_6":["rnbqkbnr/1pp2ppp/p3p3/3p4/2P5/5NP1/PP1PPP1P/RNBQKB1R w KQkq - 0 4","g0_5",["g0_7"],"a6","4…a6","a7","a6",0],"g0_7":["rnbqkbnr/1pp2ppp/p3p3/3p4/2P5/1P3NP1/P2PPP1P/RNBQKB1R b KQkq - 0 4","g0_6",["g0_8"],"b3","4.b3","b2","b3",1],"g0_8":["rnbqkb1r/1pp2ppp/p3pn2/3p4/2P5/1P3NP1/P2PPP1P/RNBQKB1R w KQkq - 1 5","g0_7",["g0_9"],"Nf6","5…Nf6","g8","f6",0],"g0_9":["rnbqkb1r/1pp2ppp/p3pn2/3p4/2P5/1P3NP1/P2PPPBP/RNBQK2R b KQkq - 2 5","g0_8",["g0_10"],"Bg2","5.Bg2","f1","g2",1],"g0_10":["rnbqkb1r/1p3ppp/p3pn2/2pp4/2P5/1P3NP1/P2PPPBP/RNBQK2R w KQkq - 0 6","g0_9",["g0_11"],"c5","6…c5","c7","c5",0],"g0_11":["rnbqkb1r/1p3ppp/p3pn2/2pP4/8/1P3NP1/P2PPPBP/RNBQK2R b KQkq - 0 6","g0_10",["g0_12"],"cxd5","6.cxd5","c4","d5",1],"g0_12":["rnbqkb1r/1p3ppp/p4n2/2pp4/8/1P3NP1/P2PPPBP/RNBQK2R w KQkq - 0 7","g0_11",["g0_13"],"exd5","7…exd5","e6","d5",0],"g0_13":["rnbqkb1r/1p3ppp/p4n2/2pp4/8/1P3NP1/P2PPPBP/RNBQ1RK1 b kq - 1 7","g0_12",["g0_14"],"O-O","7.O-O","e1","g1",1],"g0_14":["r1bqkb1r/1p3ppp/p1n2n2/2pp4/8/1P3NP1/P2PPPBP/RNBQ1RK1 w kq - 2 8","g0_13",["g0_15"],"Nc6","8…Nc6","b8","c6",0],"g0_15":["r1bqkb1r/1p3ppp/p1n2n2/2pp4/8/1P3NP1/PB1PPPBP/RN1Q1RK1 b kq - 3 8","g0_14",["g0_16"],"Bb2","8.Bb2","c1","b2",1],"g0_16":["r1bqk2r/1p2bppp/p1n2n2/2pp4/8/1P3NP1/PB1PPPBP/RN1Q1RK1 w kq - 4 9","g0_15",["g0_17"],"Be7","9…Be7","f8","e7",0],"g0_17":["r1bqk2r/1p2bppp/p1n2n2/2pp4/3P4/1P3NP1/PB2PPBP/RN1Q1RK1 b kq - 0 9","g0_16",["g0_18"],"d4","9.d4","d2","d4",1],"g0_18":["r1bq1rk1/1p2bppp/p1n2n2/2pp4/3P4/1P3NP1/PB2PPBP/RN1Q1RK1 w - - 1 10","g0_17",["g0_19"],"O-O","10…O-O","e8","g8",0],"g0_19":["r1bq1rk1/1p2bppp/p1n2n2/2pp4/3P4/1PN2NP1/PB2PPBP/R2Q1RK1 b - - 2 10","g0_18",["g0_20"],"Nc3","10.Nc3","b1","c3",1],"g0_20":["r2q1rk1/1p2bppp/p1n1bn2/2pp4/3P4/1PN2NP1/PB2PPBP/R2Q1RK1 w - - 3 11","g0_19",["g0_21"],"Be6","11…Be6","c8","e6",0],"g0_21":["r2q1rk1/1p2bppp/p1n1bn2/2pp4/3P4/1PN2NP1/PB2PPBP/2RQ1RK1 b - - 4 11","g0_20",["g0_22"],"Rc1","11.Rc1","a1","c1",1],"g0_22":["2rq1rk1/1p2bppp/p1n1bn2/2pp4/3P4/1PN2NP1/PB2PPBP/2RQ1RK1 w - - 5 12","g0_21",["g0_23"],"Rc8","12…Rc8","a8","c8",0],"g0_23":["2rq1rk1/1p2bppp/p1n1bn2/2Pp4/8/1PN2NP1/PB2PPBP/2RQ1RK1 b - - 0 12","g0_22",["g0_24"],"dxc5","12.dxc5","d4","c5",1],"g0_24":["2rq1rk1/1p3ppp/p1n1bn2/2bp4/8/1PN2NP1/PB2PPBP/2RQ1RK1 w - - 0 13","g0_23",["g0_25"],"Bxc5","13…Bxc5","e7","c5",0],"g0_25":["2rq1rk1/1p3ppp/p1n1bn2/2bp4/N7/1P3NP1/PB2PPBP/2RQ1RK1 b - - 1 13","g0_24",["g0_26"],"Na4","13.Na4","c3","a4",1],"g0_26":["2rq1rk1/1p2bppp/p1n1bn2/3p4/N7/1P3NP1/PB2PPBP/2RQ1RK1 w - - 2 14","g0_25",["g0_27"],"Be7","14…Be7","c5","e7",0],"g0_27":["2rq1rk1/1p2bppp/p1n1bn2/2Np4/8/1P3NP1/PB2PPBP/2RQ1RK1 b - - 3 14","g0_26",["g0_28"],"Nc5","14.Nc5","a4","c5",1],"g0_28":["2rq1rk1/1p3ppp/p1n1bn2/2bp4/8/1P3NP1/PB2PPBP/2RQ1RK1 w - - 0 15","g0_27",["g0_29"],"Bxc5","15…Bxc5","e7","c5",0],"g0_29":["2rq1rk1/1p3ppp/p1n1bn2/2Rp4/8/1P3NP1/PB2PPBP/3Q1RK1 b - - 0 15","g0_28",["g0_30"],"Rxc5","15.Rxc5","c1","c5",1],"g0_30":["2r2rk1/1p2qppp/p1n1bn2/2Rp4/8/1P3NP1/PB2PPBP/3Q1RK1 w - - 1 16","g0_29",["g0_31"],"Qe7","16…Qe7","d8","e7",0],"g0_31":["2r2rk1/1p2qppp/p1n1bn2/3p4/8/1P3NP1/PB2PPBP/2RQ1RK1 b - - 2 16","g0_30",["g0_32"],"Rc1","16.Rc1","c5","c1",1],"g0_32":["2rr2k1/1p2qppp/p1n1bn2/3p4/8/1P3NP1/PB2PPBP/2RQ1RK1 w - - 3 17","g0_31",["g0_33"],"Rfd8","17…Rfd8","f8","d8",0],"g0_33":["2rr2k1/1p2qppp/p1n1bn2/3p4/3N4/1P4P1/PB2PPBP/2RQ1RK1 b - - 4 17","g0_32",["g0_34"],"Nd4","17.Nd4","f3","d4",1],"g0_34":["2rr2k1/1p2qppp/p1n2n2/3p4/3N2b1/1P4P1/PB2PPBP/2RQ1RK1 w - - 5 18","g0_33",["g0_35"],"Bg4","18…Bg4","e6","g4",0],"g0_35":["2rr2k1/1p2qppp/p1n2n2/3p4/3N2b1/1P4P1/PB2PPBP/2RQR1K1 b - - 6 18","g0_34",["g0_36"],"Re1","18.Re1","f1","e1",1],"g0_36":["2rr2k1/1p3ppp/p1nq1n2/3p4/3N2b1/1P4P1/PB2PPBP/2RQR1K1 w - - 7 19","g0_35",["g0_37"],"Qd6","19…Qd6","e7","d6",0],"g0_37":["2rr2k1/1p3ppp/p1nq1n2/3p4/3N2b1/1P4PP/PB2PPB1/2RQR1K1 b - - 0 19","g0_36",["g0_38"],"h3","19.h3","h2","h3",1],"g0_38":["2rr2k1/1p1b1ppp/p1nq1n2/3p4/3N4/1P4PP/PB2PPB1/2RQR1K1 w - - 1 20","g0_37",["g0_39"],"Bd7","20…Bd7","g4","d7",0],"g0_39":["2rr2k1/1p1b1ppp/p1Nq1n2/3p4/8/1P4PP/PB2PPB1/2RQR1K1 b - - 0 20","g0_38",["g0_40"],"Nxc6","20.Nxc6","d4","c6",1],"g0_40":["2rr2k1/1p3ppp/p1bq1n2/3p4/8/1P4PP/PB2PPB1/2RQR1K1 w - - 0 21","g0_39",["g0_41"],"Bxc6","21…Bxc6","d7","c6",0],"g0_41":["2rr2k1/1p3ppp/p1bq1n2/3p4/3Q4/1P4PP/PB2PPB1/2R1R1K1 b - - 1 21","g0_40",["g0_42"],"Qd4","21.Qd4","d1","d4",1],"g0_42":["2rr2k1/1p3ppp/p1b1qn2/3p4/3Q4/1P4PP/PB2PPB1/2R1R1K1 w - - 2 22","g0_41",["g0_43"],"Qe6","22…Qe6","d6","e6",0],"g0_43":["2rr2k1/1p3ppp/p1b1qn2/3p4/3Q4/1PR3PP/PB2PPB1/4R1K1 b - - 3 22","g0_42",["g0_44"],"Rc3","22.Rc3","c1","c3",1],"g0_44":["2r1r1k1/1p3ppp/p1b1qn2/3p4/3Q4/1PR3PP/PB2PPB1/4R1K1 w - - 4 23","g0_43",["g0_45"],"Re8","23…Re8","d8","e8",0],"g0_45":["2r1r1k1/1p3ppp/p1b1qn2/3p4/3Q2P1/1PR4P/PB2PPB1/4R1K1 b - - 0 23","g0_44",["g0_46"],"g4","23.g4","g3","g4",1],"g0_46":["2r1r1k1/1p3pp1/p1b1qn1p/3p4/3Q2P1/1PR4P/PB2PPB1/4R1K1 w - - 0 24","g0_45",["g0_47"],"h6","24…h6","h7","h6",0],"g0_47":["2r1r1k1/1p3pp1/p1b1qn1p/3p4/3Q2P1/1P4RP/PB2PPB1/4R1K1 b - - 1 24","g0_46",["g0_48"],"Rg3","24.Rg3","c3","g3",1],"g0_48":["3rr1k1/1p3pp1/p1b1qn1p/3p4/3Q2P1/1P4RP/PB2PPB1/4R1K1 w - - 2 25","g0_47",["g0_49"],"Rcd8","25…Rcd8","c8","d8",0],"g0_49":["3rr1k1/1p3pp1/p1b1qn1p/3p4/3Q2PP/1P4R1/PB2PPB1/4R1K1 b - - 0 25","g0_48",["g0_50"],"h4","25.h4","h3","h4",1],"g0_50":["3r2k1/1p2rpp1/p1b1qn1p/3p4/3Q2PP/1P4R1/PB2PPB1/4R1K1 w - - 1 26","g0_49",["g0_51"],"Re7","26…Re7","e8","e7",0],"g0_51":["3r2k1/1p2rpp1/p1b1qn1p/3p2P1/3Q3P/1P4R1/PB2PPB1/4R1K1 b - - 0 26","g0_50",["g0_52"],"g5","26.g5","g4","g5",1],"g0_52":["3rn1k1/1p2rpp1/p1b1q2p/3p2P1/3Q3P/1P4R1/PB2PPB1/4R1K1 w - - 1 27","g0_51",["g0_53"],"Ne8","27…Ne8","f6","e8",0],"g0_53":["3rn1k1/1p2rpp1/p1b1q2p/3p2P1/3QP2P/1P4R1/PB3PB1/4R1K1 b - - 0 27","g0_52",["g0_54"],"e4","27.e4","e2","e4",1],"g0_54":["3rn1k1/1p2rpp1/p1b1q3/3p2p1/3QP2P/1P4R1/PB3PB1/4R1K1 w - - 0 28","g0_53",["g0_55"],"hxg5","28…hxg5","h6","g5",0],"g0_55":["3rn1k1/1p2rpp1/p1b1q3/3p2P1/3QP3/1P4R1/PB3PB1/4R1K1 b - - 0 28","g0_54",["g0_56"],"hxg5","28.hxg5","h4","g5",1],"g0_56":["3rn1k1/1p2rpp1/p1b3q1/3p2P1/3QP3/1P4R1/PB3PB1/4R1K1 w - - 1 29","g0_55",["g0_57"],"Qg6","29…Qg6","e6","g6",0],"g0_57":["3rn1k1/1p2rpp1/p1b3q1/3p2P1/3QPP2/1P4R1/PB4B1/4R1K1 b - - 0 29","g0_56",["g0_58"],"f4","29.f4","f2","f4",1],"g0_58":["3r2k1/1p2rpp1/p1bn2q1/3p2P1/3QPP2/1P4R1/PB4B1/4R1K1 w - - 1 30","g0_57",["g0_59"],"Nd6","30…Nd6","e8","d6",0],"g0_59":["3r2k1/1p2rpp1/p1bn2q1/3p1PP1/3QP3/1P4R1/PB4B1/4R1K1 b - - 0 30","g0_58",["g0_60"],"f5","30.f5","f4","f5",1],"g0_60":["3r2k1/1p2rpp1/p1b3q1/3p1nP1/3QP3/1P4R1/PB4B1/4R1K1 w - - 0 31","g0_59",["g0_61"],"Nxf5","31…Nxf5","d6","f5",0],"g0_61":["3r2k1/1p2rpp1/p1b3q1/3p1PP1/3Q4/1P4R1/PB4B1/4R1K1 b - - 0 31","g0_60",["g0_62"],"exf5","31.exf5","e4","f5",1],"g0_62":["3r2k1/1p3pp1/p1b3q1/3p1PP1/3Q4/1P4R1/PB4B1/4r1K1 w - - 0 32","g0_61",["g0_63"],"Rxe1+","32…Rxe1+","e7","e1",0],"g0_63":["3r2k1/1p3pp1/p1b3q1/3p1PP1/3Q4/1P4R1/PB3KB1/4r3 b - - 1 32","g0_62",["g0_64"],"Kf2","32.Kf2","g1","f2",1],"g0_64":["3r2k1/1p3pp1/p1b5/3p1qP1/3Q4/1P4R1/PB3KB1/4r3 w - - 0 33","g0_63",["g0_65"],"Qxf5+","33…Qxf5+","g6","f5",0],"g0_65":["3r2k1/1p3pp1/p1b5/3p1qP1/3Q4/1P4R1/PB4B1/4K3 b - - 0 33","g0_64",["g0_66"],"Kxe1","33.Kxe1","f2","e1",1],"g0_66":["3r2k1/1p3pp1/p1b3q1/3p2P1/3Q4/1P4R1/PB4B1/4K3 w - - 1 34","g0_65",["g0_67"],"Qg6","34…Qg6","f5","g6",0],"g0_67":["3r2k1/1p3pp1/p1b3q1/3p2P1/3Q4/1P4R1/PB1K2B1/8 b - - 2 34","g0_66",["g0_68"],"Kd2","34.Kd2","e1","d2",1],"g0_68":["3r2k1/1p3pp1/p5q1/1b1p2P1/3Q4/1P4R1/PB1K2B1/8 w - - 3 35","g0_67",["g0_69"],"Bb5","35…Bb5","c6","b5",0],"g0_69":["3r2k1/1p3pp1/p5q1/1b1p2P1/3QB3/1P4R1/PB1K4/8 b - - 4 35","g0_68",["g0_70"],"Be4","35.Be4","g2","e4",1],"g0_70":["3r2k1/1p4p1/p5q1/1b1p1pP1/3QB3/1P4R1/PB1K4/8 w - f6 0 36","g0_69",["g0_71"],"f5","36…f5","f7","f5",0],"g0_71":["3r2k1/1p4p1/p5q1/1b1B1pP1/3Q4/1P4R1/PB1K4/8 b - - 0 36","g0_70",["g0_72"],"Bxd5+","36.Bxd5+","e4","d5",1],"g0_72":["3r1k2/1p4p1/p5q1/1b1B1pP1/3Q4/1P4R1/PB1K4/8 w - - 1 37","g0_71",["g0_73"],"Kf8","37…Kf8","g8","f8",0],"g0_73":["3r1k2/1p4p1/p5q1/1b1B1pP1/3Q4/BP4R1/P2K4/8 b - - 2 37","g0_72",[],"Ba3+","37.Ba3+","b2","a3",1],"g1_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g1_1"],"","","","",0],"g1_1":["rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1","g1_root",["g1_2"],"Nf3","1.Nf3","g1","f3",1],"g1_2":["rnbqkb1r/pppppppp/5n2/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 2 2","g1_1",["g1_3"],"Nf6","2…Nf6","g8","f6",0],"g1_3":["rnbqkb1r/pppppppp/5n2/8/8/5NP1/PPPPPP1P/RNBQKB1R b KQkq - 0 2","g1_2",["g1_4"],"g3","2.g3","g2","g3",1],"g1_4":["rnbqkb1r/p1pppppp/1p3n2/8/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq - 0 3","g1_3",["g1_5"],"b6","3…b6","b7","b6",0],"g1_5":["rnbqkb1r/p1pppppp/1p3n2/8/8/5NP1/PPPPPPBP/RNBQK2R b KQkq - 1 3","g1_4",["g1_6"],"Bg2","3.Bg2","f1","g2",1],"g1_6":["rn1qkb1r/pbpppppp/1p3n2/8/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 2 4","g1_5",["g1_7"],"Bb7","4…Bb7","c8","b7",0],"g1_7":["rn1qkb1r/pbpppppp/1p3n2/8/8/5NP1/PPPPPPBP/RNBQ1RK1 b kq - 3 4","g1_6",["g1_8"],"O-O","4.O-O","e1","g1",1],"g1_8":["rn1qkb1r/pbpp1ppp/1p2pn2/8/8/5NP1/PPPPPPBP/RNBQ1RK1 w kq - 0 5","g1_7",["g1_9"],"e6","5…e6","e7","e6",0],"g1_9":["rn1qkb1r/pbpp1ppp/1p2pn2/8/2P5/5NP1/PP1PPPBP/RNBQ1RK1 b kq - 0 5","g1_8",["g1_10"],"c4","5.c4","c2","c4",1],"g1_10":["rn1qk2r/pbppbppp/1p2pn2/8/2P5/5NP1/PP1PPPBP/RNBQ1RK1 w kq - 1 6","g1_9",["g1_11"],"Be7","6…Be7","f8","e7",0],"g1_11":["rn1qk2r/pbppbppp/1p2pn2/8/2P5/1P3NP1/P2PPPBP/RNBQ1RK1 b kq - 0 6","g1_10",["g1_12"],"b3","6.b3","b2","b3",1],"g1_12":["rn1q1rk1/pbppbppp/1p2pn2/8/2P5/1P3NP1/P2PPPBP/RNBQ1RK1 w - - 1 7","g1_11",["g1_13"],"O-O","7…O-O","e8","g8",0],"g1_13":["rn1q1rk1/pbppbppp/1p2pn2/8/2P5/1P3NP1/PB1PPPBP/RN1Q1RK1 b - - 2 7","g1_12",["g1_14"],"Bb2","7.Bb2","c1","b2",1],"g1_14":["rn1qr1k1/pbppbppp/1p2pn2/8/2P5/1P3NP1/PB1PPPBP/RN1Q1RK1 w - - 3 8","g1_13",["g1_15"],"Re8","8…Re8","f8","e8",0],"g1_15":["rn1qr1k1/pbppbppp/1p2pn2/8/2P5/1PN2NP1/PB1PPPBP/R2Q1RK1 b - - 4 8","g1_14",["g1_16"],"Nc3","8.Nc3","b1","c3",1],"g1_16":["rn1qr1k1/pbp1bppp/1p2pn2/3p4/2P5/1PN2NP1/PB1PPPBP/R2Q1RK1 w - - 0 9","g1_15",["g1_17"],"d5","9…d5","d7","d5",0],"g1_17":["rn1qr1k1/pbp1bppp/1p2pn2/3P4/8/1PN2NP1/PB1PPPBP/R2Q1RK1 b - - 0 9","g1_16",["g1_18"],"cxd5","9.cxd5","c4","d5",1],"g1_18":["rn1qr1k1/pbp1bppp/1p3n2/3p4/8/1PN2NP1/PB1PPPBP/R2Q1RK1 w - - 0 10","g1_17",["g1_19"],"exd5","10…exd5","e6","d5",0],"g1_19":["rn1qr1k1/pbp1bppp/1p3n2/3p4/8/1PN1PNP1/PB1P1PBP/R2Q1RK1 b - - 0 10","g1_18",["g1_20"],"e3","10.e3","e2","e3",1],"g1_20":["r2qr1k1/pbpnbppp/1p3n2/3p4/8/1PN1PNP1/PB1P1PBP/R2Q1RK1 w - - 1 11","g1_19",["g1_21"],"Nbd7","11…Nbd7","b8","d7",0],"g1_21":["r2qr1k1/pbpnbppp/1p3n2/3p4/8/1PN1PNP1/PB1P1PBP/R2QR1K1 b - - 2 11","g1_20",["g1_22"],"Re1","11.Re1","f1","e1",1],"g1_22":["r2qr1k1/1bpnbppp/pp3n2/3p4/8/1PN1PNP1/PB1P1PBP/R2QR1K1 w - - 0 12","g1_21",["g1_23"],"a6","12…a6","a7","a6",0],"g1_23":["r2qr1k1/1bpnbppp/pp3n2/3p4/8/1PN1PNP1/PB1P1PBP/2RQR1K1 b - - 1 12","g1_22",["g1_24"],"Rc1","12.Rc1","a1","c1",1],"g1_24":["2rqr1k1/1bpnbppp/pp3n2/3p4/8/1PN1PNP1/PB1P1PBP/2RQR1K1 w - - 2 13","g1_23",["g1_25"],"Rc8","13…Rc8","a8","c8",0],"g1_25":["2rqr1k1/1bpnbppp/pp3n2/3p4/8/1PN1PNP1/PB1PRPBP/2RQ2K1 b - - 3 13","g1_24",["g1_26"],"Re2","13.Re2","e1","e2",1],"g1_26":["2rqr1k1/1bpn1ppp/pp1b1n2/3p4/8/1PN1PNP1/PB1PRPBP/2RQ2K1 w - - 4 14","g1_25",["g1_27"],"Bd6","14…Bd6","e7","d6",0],"g1_27":["2rqr1k1/1bpn1ppp/pp1b1n2/3p4/8/1PNPPNP1/PB2RPBP/2RQ2K1 b - - 0 14","g1_26",["g1_28"],"d3","14.d3","d2","d3",1],"g1_28":["2rqr1k1/1bp2ppp/pp1b1n2/3pn3/8/1PNPPNP1/PB2RPBP/2RQ2K1 w - - 1 15","g1_27",["g1_29"],"Ne5","15…Ne5","d7","e5",0],"g1_29":["2rqr1k1/1bp2ppp/pp1b1n2/3pN3/8/1PNPP1P1/PB2RPBP/2RQ2K1 b - - 0 15","g1_28",["g1_30"],"Nxe5","15.Nxe5","f3","e5",1],"g1_30":["2rqr1k1/1bp2ppp/pp3n2/3pb3/8/1PNPP1P1/PB2RPBP/2RQ2K1 w - - 0 16","g1_29",["g1_31"],"Bxe5","16…Bxe5","d6","e5",0],"g1_31":["2rqr1k1/1bp2ppp/pp3n2/3pb3/N7/1P1PP1P1/PB2RPBP/2RQ2K1 b - - 1 16","g1_30",["g1_32"],"Na4","16.Na4","c3","a4",1],"g1_32":["2rqr1k1/1bp2ppp/pp3n2/3p4/N7/1P1PP1P1/Pb2RPBP/2RQ2K1 w - - 0 17","g1_31",["g1_33"],"Bxb2","17…Bxb2","e5","b2",0],"g1_33":["2rqr1k1/1bp2ppp/pp3n2/3p4/8/1P1PP1P1/PN2RPBP/2RQ2K1 b - - 0 17","g1_32",["g1_34"],"Nxb2","17.Nxb2","a4","b2",1],"g1_34":["2rqr1k1/1b3ppp/pp3n2/2pp4/8/1P1PP1P1/PN2RPBP/2RQ2K1 w - - 0 18","g1_33",["g1_35"],"c5","18…c5","c7","c5",0],"g1_35":["2rqr1k1/1b3ppp/pp3n2/2pp4/8/1P1PP1P1/PNR2PBP/2RQ2K1 b - - 1 18","g1_34",["g1_36"],"Rec2","18.Rec2","e2","c2",1],"g1_36":["2rqr1k1/1b3ppp/1p3n2/p1pp4/8/1P1PP1P1/PNR2PBP/2RQ2K1 w - - 0 19","g1_35",["g1_37"],"a5","19…a5","a6","a5",0],"g1_37":["2rqr1k1/1b3ppp/1p3n2/p1pp4/3P4/1P2P1P1/PNR2PBP/2RQ2K1 b - - 0 19","g1_36",["g1_38"],"d4","19.d4","d3","d4",1],"g1_38":["2rqr1k1/1b3ppp/1p3n2/p2p4/3p4/1P2P1P1/PNR2PBP/2RQ2K1 w - - 0 20","g1_37",["g1_39"],"cxd4","20…cxd4","c5","d4",0],"g1_39":["2rqr1k1/1b3ppp/1p3n2/p2p4/3Q4/1P2P1P1/PNR2PBP/2R3K1 b - - 0 20","g1_38",["g1_40"],"Qxd4","20.Qxd4","d1","d4",1],"g1_40":["3qr1k1/1b3ppp/1p3n2/p2p4/3Q4/1P2P1P1/PNr2PBP/2R3K1 w - - 0 21","g1_39",["g1_41"],"Rxc2","21…Rxc2","c8","c2",0],"g1_41":["3qr1k1/1b3ppp/1p3n2/p2p4/3Q4/1P2P1P1/PNR2PBP/6K1 b - - 0 21","g1_40",["g1_42"],"Rxc2","21.Rxc2","c1","c2",1],"g1_42":["3qr1k1/5ppp/bp3n2/p2p4/3Q4/1P2P1P1/PNR2PBP/6K1 w - - 1 22","g1_41",["g1_43"],"Ba6","22…Ba6","b7","a6",0],"g1_43":["3qr1k1/5ppp/bp3n2/p2p4/N2Q4/1P2P1P1/P1R2PBP/6K1 b - - 2 22","g1_42",["g1_44"],"Na4","22.Na4","b2","a4",1],"g1_44":["3q2k1/5ppp/bp2rn2/p2p4/N2Q4/1P2P1P1/P1R2PBP/6K1 w - - 3 23","g1_43",["g1_45"],"Re6","23…Re6","e8","e6",0],"g1_45":["3q2k1/5ppp/bp2rn2/p2p4/3Q4/1PN1P1P1/P1R2PBP/6K1 b - - 4 23","g1_44",["g1_46"],"Nc3","23.Nc3","a4","c3",1],"g1_46":["3q2k1/5ppp/bpr2n2/p2p4/3Q4/1PN1P1P1/P1R2PBP/6K1 w - - 5 24","g1_45",["g1_47"],"Rc6","24…Rc6","e6","c6",0],"g1_47":["3q2k1/5ppp/bpr2n2/p2p4/3Q4/1PN1P1PP/P1R2PB1/6K1 b - - 0 24","g1_46",["g1_48"],"h3","24.h3","h2","h3",1],"g1_48":["3q2k1/1b3ppp/1pr2n2/p2p4/3Q4/1PN1P1PP/P1R2PB1/6K1 w - - 1 25","g1_47",["g1_49"],"Bb7","25…Bb7","a6","b7",0],"g1_49":["3q2k1/1b3ppp/1pr2n2/p2p4/3QP3/1PN3PP/P1R2PB1/6K1 b - - 0 25","g1_48",["g1_50"],"e4","25.e4","e3","e4",1],"g1_50":["3q2k1/1b3ppp/1p3n2/p1rp4/3QP3/1PN3PP/P1R2PB1/6K1 w - - 1 26","g1_49",["g1_51"],"Rc5","26…Rc5","c6","c5",0],"g1_51":["3q2k1/1b3ppp/1p3n2/p1rp4/3QP3/1PN3PP/P2R1PB1/6K1 b - - 2 26","g1_50",["g1_52"],"Rd2","26.Rd2","c2","d2",1],"g1_52":["6k1/1bq2ppp/1p3n2/p1rp4/3QP3/1PN3PP/P2R1PB1/6K1 w - - 3 27","g1_51",["g1_53"],"Qc7","27…Qc7","d8","c7",0],"g1_53":["6k1/1bq2ppp/1p3n2/p1rp4/3QP3/1PNR2PP/P4PB1/6K1 b - - 4 27","g1_52",["g1_54"],"Rd3","27.Rd3","d2","d3",1],"g1_54":["6k1/2q2ppp/bp3n2/p1rp4/3QP3/1PNR2PP/P4PB1/6K1 w - - 5 28","g1_53",["g1_55"],"Ba6","28…Ba6","b7","a6",0],"g1_55":["6k1/2q2ppp/bp3n2/p1rp4/3QP3/1PN1R1PP/P4PB1/6K1 b - - 6 28","g1_54",["g1_56"],"Re3","28.Re3","d3","e3",1],"g1_56":["6k1/2q2ppp/bp3n2/p1r5/3Qp3/1PN1R1PP/P4PB1/6K1 w - - 0 29","g1_55",["g1_57"],"dxe4","29…dxe4","d5","e4",0],"g1_57":["6k1/2q2ppp/bp3n2/p1r5/3QN3/1P2R1PP/P4PB1/6K1 b - - 0 29","g1_56",["g1_58"],"Nxe4","29.Nxe4","c3","e4",1],"g1_58":["6k1/2q2ppp/bp3n2/p3r3/3QN3/1P2R1PP/P4PB1/6K1 w - - 1 30","g1_57",["g1_59"],"Re5","30…Re5","c5","e5",0],"g1_59":["6k1/2q2ppp/bp3n2/p3r3/3QNP2/1P2R1PP/P5B1/6K1 b - - 0 30","g1_58",["g1_60"],"f4","30.f4","f2","f4",1],"g1_60":["6k1/2q1rppp/bp3n2/p7/3QNP2/1P2R1PP/P5B1/6K1 w - - 1 31","g1_59",["g1_61"],"Re7","31…Re7","e5","e7",0],"g1_61":["6k1/2q1rppp/bp3N2/p7/3Q1P2/1P2R1PP/P5B1/6K1 b - - 0 31","g1_60",["g1_62"],"Nxf6+","31.Nxf6+","e4","f6",1],"g1_62":["6k1/2q1rp1p/bp3p2/p7/3Q1P2/1P2R1PP/P5B1/6K1 w - - 0 32","g1_61",["g1_63"],"gxf6","32…gxf6","g7","f6",0],"g1_63":["6k1/2q1Rp1p/bp3p2/p7/3Q1P2/1P4PP/P5B1/6K1 b - - 0 32","g1_62",["g1_64"],"Rxe7","32.Rxe7","e3","e7",1],"g1_64":["6k1/4qp1p/bp3p2/p7/3Q1P2/1P4PP/P5B1/6K1 w - - 0 33","g1_63",["g1_65"],"Qxe7","33…Qxe7","c7","e7",0],"g1_65":["6k1/4qp1p/bQ3p2/p7/5P2/1P4PP/P5B1/6K1 b - - 0 33","g1_64",["g1_66"],"Qxb6","33.Qxb6","d4","b6",1],"g1_66":["6k1/4qp1p/1Q3p2/p7/5P2/1P1b2PP/P5B1/6K1 w - - 1 34","g1_65",["g1_67"],"Bd3","34…Bd3","a6","d3",0],"g1_67":["6k1/4qp1p/5p2/Q7/5P2/1P1b2PP/P5B1/6K1 b - - 0 34","g1_66",["g1_68"],"Qxa5","34.Qxa5","b6","a5",1],"g1_68":["6k1/5p1p/5p2/Q7/5P2/1P1bq1PP/P5B1/6K1 w - - 1 35","g1_67",["g1_69"],"Qe3+","35…Qe3+","e7","e3",0],"g1_69":["6k1/5p1p/5p2/Q7/5P2/1P1bq1PP/P5BK/8 b - - 2 35","g1_68",["g1_70"],"Kh2","35.Kh2","g1","h2",1],"g1_70":["8/5pkp/5p2/Q7/5P2/1P1bq1PP/P5BK/8 w - - 3 36","g1_69",["g1_71"],"Kg7","36…Kg7","g8","g7",0],"g1_71":["8/5pkp/5p2/3Q4/5P2/1P1bq1PP/P5BK/8 b - - 4 36","g1_70",["g1_72"],"Qd5","36.Qd5","a5","d5",1],"g1_72":["8/5pkp/5p2/3Q4/5P2/1P1b2PP/P3q1BK/8 w - - 5 37","g1_71",["g1_73"],"Qe2","37…Qe2","e3","e2",0],"g1_73":["8/5pkp/5p2/3Q4/P4P2/1P1b2PP/4q1BK/8 b - - 0 37","g1_72",["g1_74"],"a4","37.a4","a2","a4",1],"g1_74":["8/5pkp/5p2/3Q4/P4P2/1P1b2PP/2q3BK/8 w - - 1 38","g1_73",["g1_75"],"Qc2","38…Qc2","e2","c2",0],"g1_75":["8/5pkp/5p2/3Q4/P4P2/1P1b2PP/2q3B1/6K1 b - - 2 38","g1_74",["g1_76"],"Kg1","38.Kg1","h2","g1",1],"g1_76":["8/5pkp/5p2/3Q4/P4P2/1P1b2PP/6B1/1q4K1 w - - 3 39","g1_75",["g1_77"],"Qb1+","39…Qb1+","c2","b1",0],"g1_77":["8/5pkp/5p2/3Q4/P4P2/1P1b2PP/6BK/1q6 b - - 4 39","g1_76",["g1_78"],"Kh2","39.Kh2","g1","h2",1],"g1_78":["8/5pkp/5p2/3Q4/P4P2/1P1b2PP/2q3BK/8 w - - 5 40","g1_77",["g1_79"],"Qc2","40…Qc2","b1","c2",0],"g1_79":["8/5pkp/5p2/P2Q4/5P2/1P1b2PP/2q3BK/8 b - - 0 40","g1_78",["g1_80"],"a5","40.a5","a4","a5",1],"g1_80":["8/5pkp/5p2/P2Q4/5P2/1P4PP/2q3BK/5b2 w - - 1 41","g1_79",["g1_81"],"Bf1","41…Bf1","d3","f1",0],"g1_81":["8/5pkp/5p2/P2Q4/1P3P2/6PP/2q3BK/5b2 b - - 0 41","g1_80",["g1_82"],"b4","41.b4","b3","b4",1],"g1_82":["8/5pkp/5p2/P2Q4/1P3P2/6PP/1q4BK/5b2 w - - 1 42","g1_81",["g1_83"],"Qb2","42…Qb2","c2","b2",0],"g1_83":["8/5pkp/5p2/P7/1P3P2/5QPP/1q4BK/5b2 b - - 2 42","g1_82",["g1_84"],"Qf3","42.Qf3","d5","f3",1],"g1_84":["8/5pkp/b4p2/P7/1P3P2/5QPP/1q4BK/8 w - - 3 43","g1_83",["g1_85"],"Ba6","43…Ba6","f1","a6",0],"g1_85":["8/5pkp/b1Q2p2/P7/1P3P2/6PP/1q4BK/8 b - - 4 43","g1_84",["g1_86"],"Qc6","43.Qc6","f3","c6",1],"g1_86":["8/5pkp/b1Q2p2/P7/1P3P2/6PP/4q1BK/8 w - - 5 44","g1_85",["g1_87"],"Qe2","44…Qe2","b2","e2",0],"g1_87":["8/5pkp/b4p2/P7/1P2QP2/6PP/4q1BK/8 b - - 6 44","g1_86",["g1_88"],"Qe4","44.Qe4","c6","e4",1],"g1_88":["8/5pkp/b4p2/P7/1P2QP2/6PP/3q2BK/8 w - - 7 45","g1_87",["g1_89"],"Qd2","45…Qd2","e2","d2",0],"g1_89":["8/5pkp/b1Q2p2/P7/1P3P2/6PP/3q2BK/8 b - - 8 45","g1_88",["g1_90"],"Qc6","45.Qc6","e4","c6",1],"g1_90":["8/5pkp/b1Q2p2/P7/1P3P2/6PP/4q1BK/8 w - - 9 46","g1_89",["g1_91"],"Qe2","46…Qe2","d2","e2",0],"g1_91":["8/5pkp/b1Q2p2/P7/1P3PP1/7P/4q1BK/8 b - - 0 46","g1_90",["g1_92"],"g4","46.g4","g3","g4",1],"g1_92":["8/5pk1/b1Q2p1p/P7/1P3PP1/7P/4q1BK/8 w - - 0 47","g1_91",["g1_93"],"h6","47…h6","h7","h6",0],"g1_93":["8/5pk1/b4p1p/P7/1P2QPP1/7P/4q1BK/8 b - - 1 47","g1_92",["g1_94"],"Qe4","47.Qe4","c6","e4",1],"g1_94":["8/5pk1/b4p1p/P7/1P2QPP1/7P/3q2BK/8 w - - 2 48","g1_93",["g1_95"],"Qd2","48…Qd2","e2","d2",0],"g1_95":["8/5pk1/b4p1p/P7/1P2QPP1/6KP/3q2B1/8 b - - 3 48","g1_94",["g1_96"],"Kg3","48.Kg3","h2","g3",1],"g1_96":["8/5pk1/b4p1p/P7/1P2QPP1/2q3KP/6B1/8 w - - 4 49","g1_95",["g1_97"],"Qc3+","49…Qc3+","d2","c3",0],"g1_97":["8/5pk1/b4p1p/P7/1P2QPP1/2q2BKP/8/8 b - - 5 49","g1_96",["g1_98"],"Bf3","49.Bf3","g2","f3",1],"g1_98":["8/5pk1/b4p1p/P7/1P2QPP1/5BKP/8/2q5 w - - 6 50","g1_97",["g1_99"],"Qc1","50…Qc1","c3","c1",0],"g1_99":["8/5pk1/b4p1p/P7/1P1Q1PP1/5BKP/8/2q5 b - - 7 50","g1_98",["g1_100"],"Qd4","50.Qd4","e4","d4",1],"g1_100":["8/5pk1/b4p1p/P7/1P1Q1PP1/5BKP/8/4q3 w - - 8 51","g1_99",["g1_101"],"Qe1+","51…Qe1+","c1","e1",0],"g1_101":["8/5pk1/b4p1p/P7/1P1Q1PP1/5B1P/7K/4q3 b - - 9 51","g1_100",["g1_102"],"Kh2","51.Kh2","g3","h2",1],"g1_102":["8/5pk1/b4p1p/P7/1P1Q1PP1/5B1P/7K/5q2 w - - 10 52","g1_101",["g1_103"],"Qf1","52…Qf1","e1","f1",0],"g1_103":["8/5pk1/b4p1p/P7/1P3PP1/4QB1P/7K/5q2 b - - 11 52","g1_102",["g1_104"],"Qe3","52.Qe3","d4","e3",1],"g1_104":["8/5pk1/b4p1p/P7/1Pq2PP1/4QB1P/7K/8 w - - 12 53","g1_103",["g1_105"],"Qc4","53…Qc4","f1","c4",0],"g1_105":["8/5pk1/b4p1p/P5P1/1Pq2P2/4QB1P/7K/8 b - - 0 53","g1_104",["g1_106"],"g5","53.g5","g4","g5",1],"g1_106":["8/5pk1/b4p2/P5p1/1Pq2P2/4QB1P/7K/8 w - - 0 54","g1_105",["g1_107"],"hxg5","54…hxg5","h6","g5",0],"g1_107":["8/5pk1/b4p2/P5P1/1Pq5/4QB1P/7K/8 b - - 0 54","g1_106",["g1_108"],"fxg5","54.fxg5","f4","g5",1],"g1_108":["8/2q2pk1/b4p2/P5P1/1P6/4QB1P/7K/8 w - - 1 55","g1_107",["g1_109"],"Qc7+","55…Qc7+","c4","c7",0],"g1_109":["8/2q2pk1/b4p2/P5P1/1P6/4QB1P/6K1/8 b - - 2 55","g1_108",["g1_110"],"Kg2","55.Kg2","h2","g2",1],"g1_110":["8/5pk1/b2q1p2/P5P1/1P6/4QB1P/6K1/8 w - - 3 56","g1_109",["g1_111"],"Qd6","56…Qd6","c7","d6",0],"g1_111":["8/5pk1/b2q1p2/P5P1/1P6/2Q2B1P/6K1/8 b - - 4 56","g1_110",["g1_112"],"Qc3","56.Qc3","e3","c3",1],"g1_112":["6k1/5p2/b2q1p2/P5P1/1P6/2Q2B1P/6K1/8 w - - 5 57","g1_111",["g1_113"],"Kg8","57…Kg8","g7","g8",0],"g1_113":["6k1/5p2/b2q1P2/P7/1P6/2Q2B1P/6K1/8 b - - 0 57","g1_112",["g1_114"],"gxf6","57.gxf6","g5","f6",1],"g1_114":["6k1/5p2/b4P2/P7/1P3q2/2Q2B1P/6K1/8 w - - 1 58","g1_113",["g1_115"],"Qf4","58…Qf4","d6","f4",0],"g1_115":["6k1/5p2/b4P2/P7/1P3q1P/2Q2B2/6K1/8 b - - 0 58","g1_114",["g1_116"],"h4","58.h4","h3","h4",1],"g1_116":["6k1/5p2/5P2/P7/1Pb2q1P/2Q2B2/6K1/8 w - - 1 59","g1_115",["g1_117"],"Bc4","59…Bc4","a6","c4",0],"g1_117":["6k1/5p2/5P2/PP6/2b2q1P/2Q2B2/6K1/8 b - - 0 59","g1_116",["g1_118"],"b5","59.b5","b4","b5",1],"g1_118":["6k1/5p2/5P2/Pb6/5q1P/2Q2B2/6K1/8 w - - 0 60","g1_117",["g1_119"],"Bxb5","60…Bxb5","c4","b5",0],"g1_119":["6k1/5p2/5P2/PbQ5/5q1P/5B2/6K1/8 b - - 1 60","g1_118",["g1_120"],"Qc5","60.Qc5","c3","c5",1],"g1_120":["6k1/5p2/5P2/P1Q5/5q1P/5B2/6K1/5b2 w - - 2 61","g1_119",["g1_121"],"Bf1+","61…Bf1+","b5","f1",0],"g1_121":["6k1/5p2/5P2/P1Q5/5q1P/5B2/5K2/5b2 b - - 3 61","g1_120",["g1_122"],"Kf2","61.Kf2","g2","f2",1],"g1_122":["6k1/5p2/5P2/P1Q5/7q/5B2/5K2/5b2 w - - 0 62","g1_121",["g1_123"],"Qxh4+","62…Qxh4+","f4","h4",0],"g1_123":["6k1/5p2/5P2/P1Q5/7q/5B2/8/5K2 b - - 0 62","g1_122",["g1_124"],"Kxf1","62.Kxf1","f2","f1",1],"g1_124":["6k1/5p2/5q2/P1Q5/8/5B2/8/5K2 w - - 0 63","g1_123",["g1_125"],"Qxf6","63…Qxf6","h4","f6",0],"g1_125":["2Q3k1/5p2/5q2/P7/8/5B2/8/5K2 b - - 1 63","g1_124",["g1_126"],"Qc8+","63.Qc8+","c5","c8",1],"g1_126":["2Q5/5pk1/5q2/P7/8/5B2/8/5K2 w - - 2 64","g1_125",["g1_127"],"Kg7","64…Kg7","g8","g7",0],"g1_127":["8/5pk1/5q2/P7/6Q1/5B2/8/5K2 b - - 3 64","g1_126",["g1_128"],"Qg4+","64.Qg4+","c8","g4",1],"g1_128":["5k2/5p2/5q2/P7/6Q1/5B2/8/5K2 w - - 4 65","g1_127",["g1_129"],"Kf8","65…Kf8","g7","f8",0],"g1_129":["5k2/5p2/5q2/P7/1Q6/5B2/8/5K2 b - - 5 65","g1_128",["g1_130"],"Qb4+","65.Qb4+","g4","b4",1],"g1_130":["8/5pk1/5q2/P7/1Q6/5B2/8/5K2 w - - 6 66","g1_129",["g1_131"],"Kg7","66…Kg7","f8","g7",0],"g1_131":["8/5pk1/5q2/P7/1Q6/5B2/6K1/8 b - - 7 66","g1_130",["g1_132"],"Kg2","66.Kg2","f1","g2",1],"g1_132":["6k1/5p2/5q2/P7/1Q6/5B2/6K1/8 w - - 8 67","g1_131",["g1_133"],"Kg8","67…Kg8","g7","g8",0],"g1_133":["6k1/5p2/5q2/P7/6Q1/5B2/6K1/8 b - - 9 67","g1_132",["g1_134"],"Qg4+","67.Qg4+","b4","g4",1],"g1_134":["5k2/5p2/5q2/P7/6Q1/5B2/6K1/8 w - - 10 68","g1_133",["g1_135"],"Kf8","68…Kf8","g8","f8",0],"g1_135":["2Q2k2/5p2/5q2/P7/8/5B2/6K1/8 b - - 11 68","g1_134",["g1_136"],"Qc8+","68.Qc8+","g4","c8",1],"g1_136":["2Q5/5pk1/5q2/P7/8/5B2/6K1/8 w - - 12 69","g1_135",["g1_137"],"Kg7","69…Kg7","f8","g7",0],"g1_137":["2Q5/5pk1/P4q2/8/8/5B2/6K1/8 b - - 0 69","g1_136",["g1_138"],"a6","69.a6","a5","a6",1],"g1_138":["2Q5/5pk1/P7/8/8/5B2/1q4K1/8 w - - 1 70","g1_137",["g1_139"],"Qb2+","70…Qb2+","f6","b2",0],"g1_139":["2Q5/5pk1/P7/8/8/5B1K/1q6/8 b - - 2 70","g1_138",["g1_140"],"Kh3","70.Kh3","g2","h3",1],"g1_140":["2Q5/5pk1/Pq6/8/8/5B1K/8/8 w - - 3 71","g1_139",["g1_141"],"Qb6","71…Qb6","b2","b6",0],"g1_141":["8/5pk1/Pq6/8/8/2Q2B1K/8/8 b - - 4 71","g1_140",["g1_142"],"Qc3+","71.Qc3+","c8","c3",1],"g1_142":["6k1/5p2/Pq6/8/8/2Q2B1K/8/8 w - - 5 72","g1_141",["g1_143"],"Kg8","72…Kg8","g7","g8",0],"g1_143":["6k1/5p2/Pq6/8/2Q5/5B1K/8/8 b - - 6 72","g1_142",["g1_144"],"Qc4","72.Qc4","c3","c4",1],"g1_144":["6k1/5p2/P6q/8/2Q5/5B1K/8/8 w - - 7 73","g1_143",["g1_145"],"Qh6+","73…Qh6+","b6","h6",0],"g1_145":["6k1/5p2/P6q/8/2Q5/5B2/6K1/8 b - - 8 73","g1_144",["g1_146"],"Kg2","73.Kg2","h3","g2",1],"g1_146":["6k1/5p2/P7/8/2Q5/5B2/3q2K1/8 w - - 9 74","g1_145",["g1_147"],"Qd2+","74…Qd2+","h6","d2",0],"g1_147":["6k1/5p2/P7/8/2Q5/5B2/3q4/5K2 b - - 10 74","g1_146",["g1_148"],"Kf1","74.Kf1","g2","f1",1],"g1_148":["6k1/5p2/P7/8/2Q5/4qB2/8/5K2 w - - 11 75","g1_147",["g1_149"],"Qe3","75…Qe3","d2","e3",0],"g1_149":["6k1/5p2/P7/3B4/2Q5/4q3/8/5K2 b - - 12 75","g1_148",["g1_150"],"Bd5","75.Bd5","f3","d5",1],"g1_150":["8/5pk1/P7/3B4/2Q5/4q3/8/5K2 w - - 13 76","g1_149",["g1_151"],"Kg7","76…Kg7","g8","g7",0],"g1_151":["8/5Bk1/P7/8/2Q5/4q3/8/5K2 b - - 0 76","g1_150",[],"Bxf7","76.Bxf7","d5","f7",1],"g2_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g2_1"],"","","","",0],"g2_1":["rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq - 0 1","g2_root",["g2_2"],"c4","1.c4","c2","c4",1],"g2_2":["rnbqkb1r/pppppppp/5n2/8/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 1 2","g2_1",["g2_3"],"Nf6","2…Nf6","g8","f6",0],"g2_3":["rnbqkb1r/pppppppp/5n2/8/2P5/6P1/PP1PPP1P/RNBQKBNR b KQkq - 0 2","g2_2",["g2_4"],"g3","2.g3","g2","g3",1],"g2_4":["rnbqkb1r/pp1ppppp/2p2n2/8/2P5/6P1/PP1PPP1P/RNBQKBNR w KQkq - 0 3","g2_3",["g2_5"],"c6","3…c6","c7","c6",0],"g2_5":["rnbqkb1r/pp1ppppp/2p2n2/8/2P5/5NP1/PP1PPP1P/RNBQKB1R b KQkq - 1 3","g2_4",["g2_6"],"Nf3","3.Nf3","g1","f3",1],"g2_6":["rnbqkb1r/pp1ppp1p/2p2np1/8/2P5/5NP1/PP1PPP1P/RNBQKB1R w KQkq - 0 4","g2_5",["g2_7"],"g6","4…g6","g7","g6",0],"g2_7":["rnbqkb1r/pp1ppp1p/2p2np1/8/2P5/1P3NP1/P2PPP1P/RNBQKB1R b KQkq - 0 4","g2_6",["g2_8"],"b3","4.b3","b2","b3",1],"g2_8":["rnbqk2r/pp1pppbp/2p2np1/8/2P5/1P3NP1/P2PPP1P/RNBQKB1R w KQkq - 1 5","g2_7",["g2_9"],"Bg7","5…Bg7","f8","g7",0],"g2_9":["rnbqk2r/pp1pppbp/2p2np1/8/2P5/1P3NP1/PB1PPP1P/RN1QKB1R b KQkq - 2 5","g2_8",["g2_10"],"Bb2","5.Bb2","c1","b2",1],"g2_10":["rnbqk2r/pp2ppbp/2p2np1/3p4/2P5/1P3NP1/PB1PPP1P/RN1QKB1R w KQkq - 0 6","g2_9",["g2_11"],"d5","6…d5","d7","d5",0],"g2_11":["rnbqk2r/pp2ppbp/2p2np1/3p4/2P5/1P3NP1/PB1PPPBP/RN1QK2R b KQkq - 1 6","g2_10",["g2_12"],"Bg2","6.Bg2","f1","g2",1],"g2_12":["rnbq1rk1/pp2ppbp/2p2np1/3p4/2P5/1P3NP1/PB1PPPBP/RN1QK2R w KQ - 2 7","g2_11",["g2_13"],"O-O","7…O-O","e8","g8",0],"g2_13":["rnbq1rk1/pp2ppbp/2p2np1/3p4/2P5/1P3NP1/PB1PPPBP/RN1Q1RK1 b - - 3 7","g2_12",["g2_14"],"O-O","7.O-O","e1","g1",1],"g2_14":["rnbqr1k1/pp2ppbp/2p2np1/3p4/2P5/1P3NP1/PB1PPPBP/RN1Q1RK1 w - - 4 8","g2_13",["g2_15"],"Re8","8…Re8","f8","e8",0],"g2_15":["rnbqr1k1/pp2ppbp/2p2np1/3p4/2P5/1P1P1NP1/PB2PPBP/RN1Q1RK1 b - - 0 8","g2_14",["g2_16"],"d3","8.d3","d2","d3",1],"g2_16":["rn1qr1k1/pp2ppbp/2p2np1/3p4/2P3b1/1P1P1NP1/PB2PPBP/RN1Q1RK1 w - - 1 9","g2_15",["g2_17"],"Bg4","9…Bg4","c8","g4",0],"g2_17":["rn1qr1k1/pp2ppbp/2p2np1/3p4/2P3b1/1P1P1NP1/PB1NPPBP/R2Q1RK1 b - - 2 9","g2_16",["g2_18"],"Nbd2","9.Nbd2","b1","d2",1],"g2_18":["r2qr1k1/pp1nppbp/2p2np1/3p4/2P3b1/1P1P1NP1/PB1NPPBP/R2Q1RK1 w - - 3 10","g2_17",["g2_19"],"Nbd7","10…Nbd7","b8","d7",0],"g2_19":["r2qr1k1/pp1nppbp/2p2np1/3p4/2P3b1/1P1P1NPP/PB1NPPB1/R2Q1RK1 b - - 0 10","g2_18",["g2_20"],"h3","10.h3","h2","h3",1],"g2_20":["r2qr1k1/pp1nppbp/2p2np1/3p4/2P5/1P1P1bPP/PB1NPPB1/R2Q1RK1 w - - 0 11","g2_19",["g2_21"],"Bxf3","11…Bxf3","g4","f3",0],"g2_21":["r2qr1k1/pp1nppbp/2p2np1/3p4/2P5/1P1P1NPP/PB2PPB1/R2Q1RK1 b - - 0 11","g2_20",["g2_22"],"Nxf3","11.Nxf3","d2","f3",1],"g2_22":["r2qr1k1/pp1n1pbp/2p2np1/3pp3/2P5/1P1P1NPP/PB2PPB1/R2Q1RK1 w - - 0 12","g2_21",["g2_23"],"e5","12…e5","e7","e5",0],"g2_23":["r2qr1k1/pp1n1pbp/2p2np1/3Pp3/8/1P1P1NPP/PB2PPB1/R2Q1RK1 b - - 0 12","g2_22",["g2_24"],"cxd5","12.cxd5","c4","d5",1],"g2_24":["r2qr1k1/pp1n1pbp/5np1/3pp3/8/1P1P1NPP/PB2PPB1/R2Q1RK1 w - - 0 13","g2_23",["g2_25"],"cxd5","13…cxd5","c6","d5",0],"g2_25":["r2qr1k1/pp1n1pbp/5np1/3pp3/8/1P1PPNPP/PB3PB1/R2Q1RK1 b - - 0 13","g2_24",["g2_26"],"e3","13.e3","e2","e3",1],"g2_26":["r2qrbk1/pp1n1p1p/5np1/3pp3/8/1P1PPNPP/PB3PB1/R2Q1RK1 w - - 1 14","g2_25",["g2_27"],"Bf8","14…Bf8","g7","f8",0],"g2_27":["r2qrbk1/pp1n1p1p/5np1/3pp3/8/1P1PPNPP/PB3PB1/2RQ1RK1 b - - 2 14","g2_26",["g2_28"],"Rc1","14.Rc1","a1","c1",1],"g2_28":["r2qr1k1/pp1n1p1p/3b1np1/3pp3/8/1P1PPNPP/PB3PB1/2RQ1RK1 w - - 3 15","g2_27",["g2_29"],"Bd6","15…Bd6","f8","d6",0],"g2_29":["r2qr1k1/pp1n1p1p/3b1np1/3pp3/8/1P1PPNPP/PBR2PB1/3Q1RK1 b - - 4 15","g2_28",["g2_30"],"Rc2","15.Rc2","c1","c2",1],"g2_30":["r3r1k1/pp1nqp1p/3b1np1/3pp3/8/1P1PPNPP/PBR2PB1/3Q1RK1 w - - 5 16","g2_29",["g2_31"],"Qe7","16…Qe7","d8","e7",0],"g2_31":["r3r1k1/pp1nqp1p/3b1np1/3pp3/8/1P1PPNPP/PBR2PB1/Q4RK1 b - - 6 16","g2_30",["g2_32"],"Qa1","16.Qa1","d1","a1",1],"g2_32":["2r1r1k1/pp1nqp1p/3b1np1/3pp3/8/1P1PPNPP/PBR2PB1/Q4RK1 w - - 7 17","g2_31",["g2_33"],"Rac8","17…Rac8","a8","c8",0],"g2_33":["2r1r1k1/pp1nqp1p/3b1np1/3pp3/8/1P1PPNPP/PBR2PB1/Q1R3K1 b - - 8 17","g2_32",["g2_34"],"Rfc1","17.Rfc1","f1","c1",1],"g2_34":["4r1k1/pp1nqp1p/3b1np1/3pp3/8/1P1PPNPP/PBr2PB1/Q1R3K1 w - - 0 18","g2_33",["g2_35"],"Rxc2","18…Rxc2","c8","c2",0],"g2_35":["4r1k1/pp1nqp1p/3b1np1/3pp3/8/1P1PPNPP/PBR2PB1/Q5K1 b - - 0 18","g2_34",["g2_36"],"Rxc2","18.Rxc2","c1","c2",1],"g2_36":["4r1k1/pp1nqp1p/5np1/3pp3/8/bP1PPNPP/PBR2PB1/Q5K1 w - - 1 19","g2_35",["g2_37"],"Ba3","19…Ba3","d6","a3",0],"g2_37":["4r1k1/ppRnqp1p/5np1/3pp3/8/bP1PPNPP/PB3PB1/Q5K1 b - - 2 19","g2_36",["g2_38"],"Rc7","19.Rc7","c2","c7",1],"g2_38":["4r1k1/ppRnqp1p/5np1/3pp3/8/1P1PPNPP/Pb3PB1/Q5K1 w - - 0 20","g2_37",["g2_39"],"Bxb2","20…Bxb2","a3","b2",0],"g2_39":["4r1k1/ppRnqp1p/5np1/3pp3/8/1P1PPNPP/PQ3PB1/6K1 b - - 0 20","g2_38",["g2_40"],"Qxb2","20.Qxb2","a1","b2",1],"g2_40":["4r1k1/ppRn1p1p/5np1/3pp3/1q6/1P1PPNPP/PQ3PB1/6K1 w - - 1 21","g2_39",["g2_41"],"Qb4","21…Qb4","e7","b4",0],"g2_41":["4r1k1/ppRn1p1p/5np1/3pp3/1q6/1PQPPNPP/P4PB1/6K1 b - - 2 21","g2_40",["g2_42"],"Qc3","21.Qc3","b2","c3",1],"g2_42":["4r1k1/ppRn1p1p/1q3np1/3pp3/8/1PQPPNPP/P4PB1/6K1 w - - 3 22","g2_41",["g2_43"],"Qb6","22…Qb6","b4","b6",0],"g2_43":["2R1r1k1/pp1n1p1p/1q3np1/3pp3/8/1PQPPNPP/P4PB1/6K1 b - - 4 22","g2_42",["g2_44"],"Rc8","22.Rc8","c7","c8",1],"g2_44":["2r3k1/pp1n1p1p/1q3np1/3pp3/8/1PQPPNPP/P4PB1/6K1 w - - 0 23","g2_43",["g2_45"],"Rxc8","23…Rxc8","e8","c8",0],"g2_45":["2Q3k1/pp1n1p1p/1q3np1/3pp3/8/1P1PPNPP/P4PB1/6K1 b - - 0 23","g2_44",["g2_46"],"Qxc8+","23.Qxc8+","c3","c8",1],"g2_46":["2Q5/pp1n1pkp/1q3np1/3pp3/8/1P1PPNPP/P4PB1/6K1 w - - 1 24","g2_45",["g2_47"],"Kg7","24…Kg7","g8","g7",0],"g2_47":["2Q5/pp1n1pkp/1q3np1/3pp3/3P4/1P2PNPP/P4PB1/6K1 b - - 0 24","g2_46",["g2_48"],"d4","24.d4","d3","d4",1],"g2_48":["2Q5/pp1n1pkp/1q3np1/3p4/3Pp3/1P2PNPP/P4PB1/6K1 w - - 0 25","g2_47",["g2_49"],"e4","25…e4","e5","e4",0],"g2_49":["2Q5/pp1n1pkp/1q3np1/3pN3/3Pp3/1P2P1PP/P4PB1/6K1 b - - 1 25","g2_48",["g2_50"],"Ne5","25.Ne5","f3","e5",1],"g2_50":["2Q5/pp1n1pkp/3q1np1/3pN3/3Pp3/1P2P1PP/P4PB1/6K1 w - - 2 26","g2_49",["g2_51"],"Qd6","26…Qd6","b6","d6",0],"g2_51":["7Q/pp1n1pkp/3q1np1/3pN3/3Pp3/1P2P1PP/P4PB1/6K1 b - - 3 26","g2_50",["g2_52"],"Qh8+","26.Qh8+","c8","h8",1],"g2_52":["7k/pp1n1p1p/3q1np1/3pN3/3Pp3/1P2P1PP/P4PB1/6K1 w - - 0 27","g2_51",["g2_53"],"Kxh8","27…Kxh8","g7","h8",0],"g2_53":["7k/pp1n1N1p/3q1np1/3p4/3Pp3/1P2P1PP/P4PB1/6K1 b - - 0 27","g2_52",["g2_54"],"Nxf7+","27.Nxf7+","e5","f7",1],"g2_54":["8/pp1n1Nkp/3q1np1/3p4/3Pp3/1P2P1PP/P4PB1/6K1 w - - 1 28","g2_53",["g2_55"],"Kg7","28…Kg7","h8","g7",0],"g2_55":["8/pp1n2kp/3N1np1/3p4/3Pp3/1P2P1PP/P4PB1/6K1 b - - 0 28","g2_54",["g2_56"],"Nxd6","28.Nxd6","f7","d6",1],"g2_56":["8/p2n2kp/1p1N1np1/3p4/3Pp3/1P2P1PP/P4PB1/6K1 w - - 0 29","g2_55",["g2_57"],"b6","29…b6","b7","b6",0],"g2_57":["8/p2n2kp/1p1N1np1/3p4/3Pp3/1P2P1PP/P4P2/5BK1 b - - 1 29","g2_56",["g2_58"],"Bf1","29.Bf1","g2","f1",1],"g2_58":["5k2/p2n3p/1p1N1np1/3p4/3Pp3/1P2P1PP/P4P2/5BK1 w - - 2 30","g2_57",["g2_59"],"Kf8","30…Kf8","g7","f8",0],"g2_59":["2N2k2/p2n3p/1p3np1/3p4/3Pp3/1P2P1PP/P4P2/5BK1 b - - 3 30","g2_58",["g2_60"],"Nc8","30.Nc8","d6","c8",1],"g2_60":["2N2k2/3n3p/1p3np1/p2p4/3Pp3/1P2P1PP/P4P2/5BK1 w - - 0 31","g2_59",["g2_61"],"a5","31…a5","a7","a5",0],"g2_61":["2N2k2/3n3p/1p3np1/pB1p4/3Pp3/1P2P1PP/P4P2/6K1 b - - 1 31","g2_60",["g2_62"],"Bb5","31.Bb5","f1","b5",1],"g2_62":["2N2k2/3n4/1p3np1/pB1p3p/3Pp3/1P2P1PP/P4P2/6K1 w - - 0 32","g2_61",["g2_63"],"h5","32…h5","h7","h5",0],"g2_63":["2N2k2/3n4/1p3np1/pB1p3p/3Pp3/1P2P1PP/P4P2/5K2 b - - 1 32","g2_62",["g2_64"],"Kf1","32.Kf1","g1","f1",1],"g2_64":["2N5/3n1k2/1p3np1/pB1p3p/3Pp3/1P2P1PP/P4P2/5K2 w - - 2 33","g2_63",["g2_65"],"Kf7","33…Kf7","f8","f7",0],"g2_65":["2N5/3n1k2/1p3np1/pB1p3p/3Pp3/1P2P1PP/P3KP2/8 b - - 3 33","g2_64",["g2_66"],"Ke2","33.Ke2","f1","e2",1],"g2_66":["2N5/3n4/1p2knp1/pB1p3p/3Pp3/1P2P1PP/P3KP2/8 w - - 4 34","g2_65",["g2_67"],"Ke6","34…Ke6","f7","e6",0],"g2_67":["2N5/3n4/1p2knp1/pB1p3p/3PpP2/1P2P1PP/P3K3/8 b - f3 0 34","g2_66",["g2_68"],"f4","34.f4","f2","f4",1],"g2_68":["2N5/3n4/1p2knp1/pB1p3p/3P4/1P2PpPP/P3K3/8 w - - 0 35","g2_67",["g2_69"],"exf3+","35…exf3+","e4","f3",0],"g2_69":["2N5/3n4/1p2knp1/pB1p3p/3P4/1P2PKPP/P7/8 b - - 0 35","g2_68",["g2_70"],"Kxf3","35.Kxf3","e2","f3",1],"g2_70":["2N5/3n4/1p2kn2/pB1p2pp/3P4/1P2PKPP/P7/8 w - - 0 36","g2_69",["g2_71"],"g5","36…g5","g6","g5",0],"g2_71":["2N5/3n4/1p2kn2/pB1p2pp/3P3P/1P2PKP1/P7/8 b - - 0 36","g2_70",["g2_72"],"h4","36.h4","h3","h4",1],"g2_72":["2N5/3n4/1p2kn2/pB1p3p/3P3p/1P2PKP1/P7/8 w - - 0 37","g2_71",["g2_73"],"gxh4","37…gxh4","g5","h4",0],"g2_73":["2N5/3n4/1p2kn2/pB1p3p/3P3P/1P2PK2/P7/8 b - - 0 37","g2_72",["g2_74"],"gxh4","37.gxh4","g3","h4",1],"g2_74":["2N2n2/8/1p2kn2/pB1p3p/3P3P/1P2PK2/P7/8 w - - 1 38","g2_73",["g2_75"],"Nf8","38…Nf8","d7","f8",0],"g2_75":["2N2n2/8/1p2kn2/p2p3p/3P3P/1P1BPK2/P7/8 b - - 2 38","g2_74",["g2_76"],"Bd3","38.Bd3","b5","d3",1],"g2_76":["2N2n2/8/4kn2/pp1p3p/3P3P/1P1BPK2/P7/8 w - - 0 39","g2_75",["g2_77"],"b5","39…b5","b6","b5",0],"g2_77":["2N2n2/8/4kn2/pp1p3p/3P1K1P/1P1BP3/P7/8 b - - 1 39","g2_76",["g2_78"],"Kf4","39.Kf4","f3","f4",1],"g2_78":["2N2n2/8/4kn2/p2p3p/1p1P1K1P/1P1BP3/P7/8 w - - 0 40","g2_77",["g2_79"],"b4","40…b4","b5","b4",0],"g2_79":["2N2n2/8/4kn2/p2p1B1p/1p1P1K1P/1P2P3/P7/8 b - - 1 40","g2_78",["g2_80"],"Bf5+","40.Bf5+","d3","f5",1],"g2_80":["2N2n2/5k2/5n2/p2p1B1p/1p1P1K1P/1P2P3/P7/8 w - - 2 41","g2_79",["g2_81"],"Kf7","41…Kf7","e6","f7",0],"g2_81":["5n2/5k2/3N1n2/p2p1B1p/1p1P1K1P/1P2P3/P7/8 b - - 3 41","g2_80",["g2_82"],"Nd6+","41.Nd6+","c8","d6",1],"g2_82":["5n2/4k3/3N1n2/p2p1B1p/1p1P1K1P/1P2P3/P7/8 w - - 4 42","g2_81",["g2_83"],"Ke7","42…Ke7","f7","e7",0],"g2_83":["5n2/1N2k3/5n2/p2p1B1p/1p1P1K1P/1P2P3/P7/8 b - - 5 42","g2_82",["g2_84"],"Nb7","42.Nb7","d6","b7",1],"g2_84":["4nn2/1N2k3/8/p2p1B1p/1p1P1K1P/1P2P3/P7/8 w - - 6 43","g2_83",["g2_85"],"Ne8","43…Ne8","f6","e8",0],"g2_85":["4nn2/4k3/8/N2p1B1p/1p1P1K1P/1P2P3/P7/8 b - - 0 43","g2_84",["g2_86"],"Nxa5","43.Nxa5","b7","a5",1],"g2_86":["4nn2/8/5k2/N2p1B1p/1p1P1K1P/1P2P3/P7/8 w - - 1 44","g2_85",["g2_87"],"Kf6","44…Kf6","e7","f6",0],"g2_87":["4nn2/8/2N2k2/3p1B1p/1p1P1K1P/1P2P3/P7/8 b - - 2 44","g2_86",[],"Nc6","44.Nc6","a5","c6",1],"g3_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g3_1"],"","","","",0],"g3_1":["rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1","g3_root",["g3_2"],"Nf3","1.Nf3","g1","f3",1],"g3_2":["rnbqkb1r/pppppppp/5n2/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 2 2","g3_1",["g3_3"],"Nf6","2…Nf6","g8","f6",0],"g3_3":["rnbqkb1r/pppppppp/5n2/8/2P5/5N2/PP1PPPPP/RNBQKB1R b KQkq - 0 2","g3_2",["g3_4"],"c4","2.c4","c2","c4",1],"g3_4":["rnbqkb1r/pppp1ppp/4pn2/8/2P5/5N2/PP1PPPPP/RNBQKB1R w KQkq - 0 3","g3_3",["g3_5"],"e6","3…e6","e7","e6",0],"g3_5":["rnbqkb1r/pppp1ppp/4pn2/8/2P5/1P3N2/P2PPPPP/RNBQKB1R b KQkq - 0 3","g3_4",["g3_6"],"b3","3.b3","b2","b3",1],"g3_6":["rnbqkb1r/ppp2ppp/4pn2/3p4/2P5/1P3N2/P2PPPPP/RNBQKB1R w KQkq - 0 4","g3_5",["g3_7"],"d5","4…d5","d7","d5",0],"g3_7":["rnbqkb1r/ppp2ppp/4pn2/3p4/2P5/1P3N2/PB1PPPPP/RN1QKB1R b KQkq - 1 4","g3_6",["g3_8"],"Bb2","4.Bb2","c1","b2",1],"g3_8":["rnbqk2r/ppp2ppp/3bpn2/3p4/2P5/1P3N2/PB1PPPPP/RN1QKB1R w KQkq - 2 5","g3_7",["g3_9"],"Bd6","5…Bd6","f8","d6",0],"g3_9":["rnbqk2r/ppp2ppp/3bpn2/3p4/2P5/1P3NP1/PB1PPP1P/RN1QKB1R b KQkq - 0 5","g3_8",["g3_10"],"g3","5.g3","g2","g3",1],"g3_10":["rnbq1rk1/ppp2ppp/3bpn2/3p4/2P5/1P3NP1/PB1PPP1P/RN1QKB1R w KQ - 1 6","g3_9",["g3_11"],"O-O","6…O-O","e8","g8",0],"g3_11":["rnbq1rk1/ppp2ppp/3bpn2/3p4/2P5/1P3NP1/PB1PPPBP/RN1QK2R b KQ - 2 6","g3_10",["g3_12"],"Bg2","6.Bg2","f1","g2",1],"g3_12":["r1bq1rk1/pppn1ppp/3bpn2/3p4/2P5/1P3NP1/PB1PPPBP/RN1QK2R w KQ - 3 7","g3_11",["g3_13"],"Nbd7","7…Nbd7","b8","d7",0],"g3_13":["r1bq1rk1/pppn1ppp/3bpn2/3P4/8/1P3NP1/PB1PPPBP/RN1QK2R b KQ - 0 7","g3_12",["g3_14"],"cxd5","7.cxd5","c4","d5",1],"g3_14":["r1bq1rk1/pppn1ppp/3b1n2/3p4/8/1P3NP1/PB1PPPBP/RN1QK2R w KQ - 0 8","g3_13",["g3_15"],"exd5","8…exd5","e6","d5",0],"g3_15":["r1bq1rk1/pppn1ppp/3b1n2/3p4/8/1P3NP1/PB1PPPBP/RN1Q1RK1 b - - 1 8","g3_14",["g3_16"],"O-O","8.O-O","e1","g1",1],"g3_16":["r1bqr1k1/pppn1ppp/3b1n2/3p4/8/1P3NP1/PB1PPPBP/RN1Q1RK1 w - - 2 9","g3_15",["g3_17"],"Re8","9…Re8","f8","e8",0],"g3_17":["r1bqr1k1/pppn1ppp/3b1n2/3p4/8/1PN2NP1/PB1PPPBP/R2Q1RK1 b - - 3 9","g3_16",["g3_18"],"Nc3","9.Nc3","b1","c3",1],"g3_18":["r1bqr1k1/pp1n1ppp/2pb1n2/3p4/8/1PN2NP1/PB1PPPBP/R2Q1RK1 w - - 0 10","g3_17",["g3_19"],"c6","10…c6","c7","c6",0],"g3_19":["r1bqr1k1/pp1n1ppp/2pb1n2/3p4/8/1PN2NP1/PB1PPPBP/R2QR1K1 b - - 1 10","g3_18",["g3_20"],"Re1","10.Re1","f1","e1",1],"g3_20":["r1bqr1k1/pp3ppp/2pb1n2/3pn3/8/1PN2NP1/PB1PPPBP/R2QR1K1 w - - 2 11","g3_19",["g3_21"],"Ne5","11…Ne5","d7","e5",0],"g3_21":["r1bqr1k1/pp3ppp/2pb1n2/3pN3/8/1PN3P1/PB1PPPBP/R2QR1K1 b - - 0 11","g3_20",["g3_22"],"Nxe5","11.Nxe5","f3","e5",1],"g3_22":["r1bqr1k1/pp3ppp/2p2n2/3pb3/8/1PN3P1/PB1PPPBP/R2QR1K1 w - - 0 12","g3_21",["g3_23"],"Bxe5","12…Bxe5","d6","e5",0],"g3_23":["r1bqr1k1/pp3ppp/2p2n2/3pb3/3P4/1PN3P1/PB2PPBP/R2QR1K1 b - - 0 12","g3_22",["g3_24"],"d4","12.d4","d2","d4",1],"g3_24":["r1bqr1k1/pp3ppp/2pb1n2/3p4/3P4/1PN3P1/PB2PPBP/R2QR1K1 w - - 1 13","g3_23",["g3_25"],"Bd6","13…Bd6","e5","d6",0],"g3_25":["r1bqr1k1/pp3ppp/2pb1n2/3p4/3P4/1PNQ2P1/PB2PPBP/R3R1K1 b - - 2 13","g3_24",["g3_26"],"Qd3","13.Qd3","d1","d3",1],"g3_26":["r2qr1k1/pp3ppp/2pbbn2/3p4/3P4/1PNQ2P1/PB2PPBP/R3R1K1 w - - 3 14","g3_25",["g3_27"],"Be6","14…Be6","c8","e6",0],"g3_27":["r2qr1k1/pp3ppp/2pbbn2/3p4/3P4/1PNQ2P1/PB2PPBP/3RR1K1 b - - 4 14","g3_26",["g3_28"],"Rad1","14.Rad1","a1","d1",1],"g3_28":["r2qr1k1/pp3pp1/2pbbn2/3p3p/3P4/1PNQ2P1/PB2PPBP/3RR1K1 w - - 0 15","g3_27",["g3_29"],"h5","15…h5","h7","h5",0],"g3_29":["r2qr1k1/pp3pp1/2pbbn2/3p3p/3P3P/1PNQ2P1/PB2PPB1/3RR1K1 b - - 0 15","g3_28",["g3_30"],"h4","15.h4","h2","h4",1],"g3_30":["r2qr1k1/pp3pp1/2pb1n2/3p3p/3P2bP/1PNQ2P1/PB2PPB1/3RR1K1 w - - 1 16","g3_29",["g3_31"],"Bg4","16…Bg4","e6","g4",0],"g3_31":["r2qr1k1/pp3pp1/2pb1n2/3p3p/3P2bP/1PNQ2P1/P3PPB1/2BRR1K1 b - - 2 16","g3_30",["g3_32"],"Bc1","16.Bc1","b2","c1",1],"g3_32":["r3r1k1/pp1q1pp1/2pb1n2/3p3p/3P2bP/1PNQ2P1/P3PPB1/2BRR1K1 w - - 3 17","g3_31",["g3_33"],"Qd7","17…Qd7","d8","d7",0],"g3_33":["r3r1k1/pp1q1pp1/2pb1n2/3p2Bp/3P2bP/1PNQ2P1/P3PPB1/3RR1K1 b - - 4 17","g3_32",["g3_34"],"Bg5","17.Bg5","c1","g5",1],"g3_34":["r3r1k1/pp1q1ppn/2pb4/3p2Bp/3P2bP/1PNQ2P1/P3PPB1/3RR1K1 w - - 5 18","g3_33",["g3_35"],"Nh7","18…Nh7","f6","h7",0],"g3_35":["r3r1k1/pp1q1ppn/2pb4/3p3p/3P2bP/1PNQ2P1/P2BPPB1/3RR1K1 b - - 6 18","g3_34",["g3_36"],"Bd2","18.Bd2","g5","d2",1],"g3_36":["r5k1/pp1qrppn/2pb4/3p3p/3P2bP/1PNQ2P1/P2BPPB1/3RR1K1 w - - 7 19","g3_35",["g3_37"],"Re7","19…Re7","e8","e7",0],"g3_37":["r5k1/pp1qrppn/2pb4/3p3p/3P2bP/1PNQ2P1/P2BPPB1/2R1R1K1 b - - 8 19","g3_36",["g3_38"],"Rc1","19.Rc1","d1","c1",1],"g3_38":["3r2k1/pp1qrppn/2pb4/3p3p/3P2bP/1PNQ2P1/P2BPPB1/2R1R1K1 w - - 9 20","g3_37",["g3_39"],"Rd8","20…Rd8","a8","d8",0],"g3_39":["3r2k1/pp1qrppn/2pb4/3p3p/3PP1bP/1PNQ2P1/P2B1PB1/2R1R1K1 b - - 0 20","g3_38",["g3_40"],"e4","20.e4","e2","e4",1],"g3_40":["3r2k1/pp1qrppn/2p5/3p3p/3PP1bP/bPNQ2P1/P2B1PB1/2R1R1K1 w - - 1 21","g3_39",["g3_41"],"Ba3","21…Ba3","d6","a3",0],"g3_41":["3r2k1/pp1qrppn/2p5/3P3p/3P2bP/bPNQ2P1/P2B1PB1/2R1R1K1 b - - 0 21","g3_40",["g3_42"],"exd5","21.exd5","e4","d5",1],"g3_42":["3r2k1/pp1qrppn/2p5/3P3p/3P2bP/1PNQ2P1/P2B1PB1/2b1R1K1 w - - 0 22","g3_41",["g3_43"],"Bxc1","22…Bxc1","a3","c1",0],"g3_43":["3r2k1/pp1qrppn/2p5/3P3p/3P2bP/1PNQ2P1/P2B1PB1/2R3K1 b - - 0 22","g3_42",["g3_44"],"Rxc1","22.Rxc1","e1","c1",1],"g3_44":["3rr1k1/pp1q1ppn/2p5/3P3p/3P2bP/1PNQ2P1/P2B1PB1/2R3K1 w - - 1 23","g3_43",["g3_45"],"Ree8","23…Ree8","e7","e8",0],"g3_45":["3rr1k1/pp1q1ppn/2P5/7p/3P2bP/1PNQ2P1/P2B1PB1/2R3K1 b - - 0 23","g3_44",["g3_46"],"dxc6","23.dxc6","d5","c6",1],"g3_46":["3rr1k1/p2q1ppn/2p5/7p/3P2bP/1PNQ2P1/P2B1PB1/2R3K1 w - - 0 24","g3_45",["g3_47"],"bxc6","24…bxc6","b7","c6",0],"g3_47":["3rr1k1/p2q1ppn/2p5/7p/3P2bP/1PNQB1P1/P4PB1/2R3K1 b - - 1 24","g3_46",["g3_48"],"Be3","24.Be3","d2","e3",1],"g3_48":["3rr1k1/p2q1pp1/2p2n2/7p/3P2bP/1PNQB1P1/P4PB1/2R3K1 w - - 2 25","g3_47",["g3_49"],"Nf6","25…Nf6","h7","f6",0],"g3_49":["3rr1k1/p2q1pp1/Q1p2n2/7p/3P2bP/1PN1B1P1/P4PB1/2R3K1 b - - 3 25","g3_48",["g3_50"],"Qa6","25.Qa6","d3","a6",1],"g3_50":["2r1r1k1/p2q1pp1/Q1p2n2/7p/3P2bP/1PN1B1P1/P4PB1/2R3K1 w - - 4 26","g3_49",["g3_51"],"Rc8","26…Rc8","d8","c8",0],"g3_51":["2r1r1k1/p2q1pp1/2p2n2/Q6p/3P2bP/1PN1B1P1/P4PB1/2R3K1 b - - 5 26","g3_50",["g3_52"],"Qa5","26.Qa5","a6","a5",1],"g3_52":["2r1r1k1/p2q1pp1/2p2n2/Q4b1p/3P3P/1PN1B1P1/P4PB1/2R3K1 w - - 6 27","g3_51",["g3_53"],"Bf5","27…Bf5","g4","f5",0],"g3_53":["2r1r1k1/p2q1pp1/2p2n2/Q4b1p/3P3P/1PN1BBP1/P4P2/2R3K1 b - - 7 27","g3_52",["g3_54"],"Bf3","27.Bf3","g2","f3",1],"g3_54":["2r1r1k1/p2q1pp1/2p5/Q4b1p/3P2nP/1PN1BBP1/P4P2/2R3K1 w - - 8 28","g3_53",["g3_55"],"Ng4","28…Ng4","f6","g4",0],"g3_55":["2r1r1k1/p2q1pp1/2p5/Q4b1p/3P2BP/1PN1B1P1/P4P2/2R3K1 b - - 0 28","g3_54",["g3_56"],"Bxg4","28.Bxg4","f3","g4",1],"g3_56":["2r1r1k1/p2q1pp1/2p5/Q6p/3P2bP/1PN1B1P1/P4P2/2R3K1 w - - 0 29","g3_55",["g3_57"],"Bxg4","29…Bxg4","f5","g4",0],"g3_57":["2r1r1k1/p2q1pp1/2p5/Q6p/3P2bP/1PN1B1P1/P4P1K/2R5 b - - 1 29","g3_56",["g3_58"],"Kh2","29.Kh2","g1","h2",1],"g3_58":["2r1r1k1/p2q1pp1/8/Q1p4p/3P2bP/1PN1B1P1/P4P1K/2R5 w - - 0 30","g3_57",["g3_59"],"c5","30…c5","c6","c5",0],"g3_59":["2r1r1k1/p2q1pp1/8/1Qp4p/3P2bP/1PN1B1P1/P4P1K/2R5 b - - 1 30","g3_58",["g3_60"],"Qb5","30.Qb5","a5","b5",1],"g3_60":["2r1r1k1/p4pp1/8/1Qp2q1p/3P2bP/1PN1B1P1/P4P1K/2R5 w - - 2 31","g3_59",["g3_61"],"Qf5","31…Qf5","d7","f5",0],"g3_61":["2r1r1k1/p4pp1/8/2p2q1p/3P2bP/1PN1B1P1/P4P1K/2R2Q2 b - - 3 31","g3_60",["g3_62"],"Qf1","31.Qf1","b5","f1",1],"g3_62":["2r3k1/p4pp1/8/2p2q1p/3P2bP/1PN1r1P1/P4P1K/2R2Q2 w - - 0 32","g3_61",["g3_63"],"Rxe3","32…Rxe3","e8","e3",0],"g3_63":["2r3k1/p4pp1/8/2p2q1p/3P2bP/1PN1P1P1/P6K/2R2Q2 b - - 0 32","g3_62",["g3_64"],"fxe3","32.fxe3","f2","e3",1],"g3_64":["2r3k1/p4pp1/8/2p4p/3P2bP/1PN1P1P1/P6K/2R2q2 w - - 0 33","g3_63",["g3_65"],"Qxf1","33…Qxf1","f5","f1",0],"g3_65":["2r3k1/p4pp1/8/2p4p/3P2bP/1PN1P1P1/P6K/5R2 b - - 0 33","g3_64",["g3_66"],"Rxf1","33.Rxf1","c1","f1",1],"g3_66":["2r3k1/p4pp1/8/7p/3p2bP/1PN1P1P1/P6K/5R2 w - - 0 34","g3_65",["g3_67"],"cxd4","34…cxd4","c5","d4",0],"g3_67":["2r3k1/p4pp1/8/3N3p/3p2bP/1P2P1P1/P6K/5R2 b - - 1 34","g3_66",["g3_68"],"Nd5","34.Nd5","c3","d5",1],"g3_68":["6k1/p4pp1/8/3N3p/3p2bP/1P2P1P1/P1r4K/5R2 w - - 2 35","g3_67",["g3_69"],"Rc2+","35…Rc2+","c8","c2",0],"g3_69":["6k1/p4pp1/8/3N3p/3p2bP/1P2P1P1/P1r5/5RK1 b - - 3 35","g3_68",["g3_70"],"Kg1","35.Kg1","h2","g1",1],"g3_70":["6k1/p4pp1/8/3N3p/6bP/1P1pP1P1/P1r5/5RK1 w - - 0 36","g3_69",["g3_71"],"d3","36…d3","d4","d3",0],"g3_71":["6k1/p4pp1/8/7p/1N4bP/1P1pP1P1/P1r5/5RK1 b - - 1 36","g3_70",["g3_72"],"Nb4","36.Nb4","d5","b4",1],"g3_72":["6k1/p4pp1/8/7p/1N4bP/1PrpP1P1/P7/5RK1 w - - 2 37","g3_71",["g3_73"],"Rc3","37…Rc3","c2","c3",0],"g3_73":["6k1/p4pp1/8/3N3p/6bP/1PrpP1P1/P7/5RK1 b - - 3 37","g3_72",["g3_74"],"Nd5","37.Nd5","b4","d5",1],"g3_74":["6k1/p4pp1/8/2rN3p/6bP/1P1pP1P1/P7/5RK1 w - - 4 38","g3_73",["g3_75"],"Rc5","38…Rc5","c3","c5",0],"g3_75":["6k1/p4pp1/8/2r4p/5NbP/1P1pP1P1/P7/5RK1 b - - 5 38","g3_74",["g3_76"],"Nf4","38.Nf4","d5","f4",1],"g3_76":["6k1/p4pp1/8/2r4p/5NbP/1P2P1P1/P2p4/5RK1 w - - 0 39","g3_75",["g3_77"],"d2","39…d2","d3","d2",0],"g3_77":["6k1/p4pp1/8/2r4p/6bP/1P1NP1P1/P2p4/5RK1 b - - 1 39","g3_76",["g3_78"],"Nd3","39.Nd3","f4","d3",1],"g3_78":["6k1/p4pp1/8/2r4p/7P/1P1NP1P1/P2pb3/5RK1 w - - 2 40","g3_77",[],"Be2","40…Be2","g4","e2",0],"g4_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g4_1"],"","","","",0],"g4_1":["rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1","g4_root",["g4_2"],"Nf3","1.Nf3","g1","f3",1],"g4_2":["rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 2","g4_1",["g4_3"],"d5","2…d5","d7","d5",0],"g4_3":["rnbqkbnr/ppp1pppp/8/3p4/8/4PN2/PPPP1PPP/RNBQKB1R b KQkq - 0 2","g4_2",["g4_4"],"e3","2.e3","e2","e3",1],"g4_4":["rnbqkb1r/ppp1pppp/5n2/3p4/8/4PN2/PPPP1PPP/RNBQKB1R w KQkq - 1 3","g4_3",["g4_5"],"Nf6","3…Nf6","g8","f6",0],"g4_5":["rnbqkb1r/ppp1pppp/5n2/3p4/2P5/4PN2/PP1P1PPP/RNBQKB1R b KQkq - 0 3","g4_4",["g4_6"],"c4","3.c4","c2","c4",1],"g4_6":["rnbqkb1r/ppp1pppp/5n2/8/2p5/4PN2/PP1P1PPP/RNBQKB1R w KQkq - 0 4","g4_5",["g4_7"],"dxc4","4…dxc4","d5","c4",0],"g4_7":["rnbqkb1r/ppp1pppp/5n2/8/2p5/N3PN2/PP1P1PPP/R1BQKB1R b KQkq - 1 4","g4_6",["g4_8"],"Na3","4.Na3","b1","a3",1],"g4_8":["rnbqkb1r/pp2pppp/5n2/2p5/2p5/N3PN2/PP1P1PPP/R1BQKB1R w KQkq - 0 5","g4_7",["g4_9"],"c5","5…c5","c7","c5",0],"g4_9":["rnbqkb1r/pp2pppp/5n2/2p5/2N5/4PN2/PP1P1PPP/R1BQKB1R b KQkq - 0 5","g4_8",["g4_10"],"Nxc4","5.Nxc4","a3","c4",1],"g4_10":["rnbqkb1r/pp3ppp/4pn2/2p5/2N5/4PN2/PP1P1PPP/R1BQKB1R w KQkq - 0 6","g4_9",["g4_11"],"e6","6…e6","e7","e6",0],"g4_11":["rnbqkb1r/pp3ppp/4pn2/2p5/2N5/1P2PN2/P2P1PPP/R1BQKB1R b KQkq - 0 6","g4_10",["g4_12"],"b3","6.b3","b2","b3",1],"g4_12":["rnbqk2r/pp2bppp/4pn2/2p5/2N5/1P2PN2/P2P1PPP/R1BQKB1R w KQkq - 1 7","g4_11",["g4_13"],"Be7","7…Be7","f8","e7",0],"g4_13":["rnbqk2r/pp2bppp/4pn2/2p5/2N5/1P2PN2/PB1P1PPP/R2QKB1R b KQkq - 2 7","g4_12",["g4_14"],"Bb2","7.Bb2","c1","b2",1],"g4_14":["rnbq1rk1/pp2bppp/4pn2/2p5/2N5/1P2PN2/PB1P1PPP/R2QKB1R w KQ - 3 8","g4_13",["g4_15"],"O-O","8…O-O","e8","g8",0],"g4_15":["rnbq1rk1/pp2bppp/4pn2/2p5/2N3P1/1P2PN2/PB1P1P1P/R2QKB1R b KQ - 0 8","g4_14",["g4_16"],"g4","8.g4","g2","g4",1],"g4_16":["r1bq1rk1/pp2bppp/2n1pn2/2p5/2N3P1/1P2PN2/PB1P1P1P/R2QKB1R w KQ - 1 9","g4_15",["g4_17"],"Nc6","9…Nc6","b8","c6",0],"g4_17":["r1bq1rk1/pp2bppp/2n1pn2/2p3P1/2N5/1P2PN2/PB1P1P1P/R2QKB1R b KQ - 0 9","g4_16",["g4_18"],"g5","9.g5","g4","g5",1],"g4_18":["r1bq1rk1/pp2bppp/2n1p3/2p3P1/2N1n3/1P2PN2/PB1P1P1P/R2QKB1R w KQ - 1 10","g4_17",["g4_19"],"Ne4","10…Ne4","f6","e4",0],"g4_19":["r1bq1rk1/pp2bppp/2n1p3/2p3P1/2N1n3/1P2PN2/PB1P1P1P/R2QKBR1 b Q - 2 10","g4_18",["g4_20"],"Rg1","10.Rg1","h1","g1",1],"g4_20":["r1bq1rk1/pp2bppp/2nnp3/2p3P1/2N5/1P2PN2/PB1P1P1P/R2QKBR1 w Q - 3 11","g4_19",["g4_21"],"Nd6","11…Nd6","e4","d6",0],"g4_21":["r1bq1rk1/pp2bppp/2nNp3/2p3P1/8/1P2PN2/PB1P1P1P/R2QKBR1 b Q - 0 11","g4_20",["g4_22"],"Nxd6","11.Nxd6","c4","d6",1],"g4_22":["r1b2rk1/pp2bppp/2nqp3/2p3P1/8/1P2PN2/PB1P1P1P/R2QKBR1 w Q - 0 12","g4_21",["g4_23"],"Qxd6","12…Qxd6","d8","d6",0],"g4_23":["r1b2rk1/pp2bppp/2nqp3/2p3P1/8/1P2PN2/PBQP1P1P/R3KBR1 b Q - 1 12","g4_22",["g4_24"],"Qc2","12.Qc2","d1","c2",1],"g4_24":["r1br2k1/pp2bppp/2nqp3/2p3P1/8/1P2PN2/PBQP1P1P/R3KBR1 w Q - 2 13","g4_23",["g4_25"],"Rd8","13…Rd8","f8","d8",0],"g4_25":["r1br2k1/pp2bppp/2nqp3/1Bp3P1/8/1P2PN2/PBQP1P1P/R3K1R1 b Q - 3 13","g4_24",["g4_26"],"Bb5","13.Bb5","f1","b5",1],"g4_26":["r1br2k1/pp2bppp/2n1p3/1Bpq2P1/8/1P2PN2/PBQP1P1P/R3K1R1 w Q - 4 14","g4_25",["g4_27"],"Qd5","14…Qd5","d6","d5",0],"g4_27":["r1br2k1/pp2bppp/2n1p3/1Bpq2P1/8/1PQ1PN2/PB1P1P1P/R3K1R1 b Q - 5 14","g4_26",["g4_28"],"Qc3","14.Qc3","c2","c3",1],"g4_28":["r1br1bk1/pp3ppp/2n1p3/1Bpq2P1/8/1PQ1PN2/PB1P1P1P/R3K1R1 w Q - 6 15","g4_27",["g4_29"],"Bf8","15…Bf8","e7","f8",0],"g4_29":["r1br1bk1/pp3ppp/2B1p3/2pq2P1/8/1PQ1PN2/PB1P1P1P/R3K1R1 b Q - 0 15","g4_28",["g4_30"],"Bxc6","15.Bxc6","b5","c6",1],"g4_30":["r1br1bk1/p4ppp/2p1p3/2pq2P1/8/1PQ1PN2/PB1P1P1P/R3K1R1 w Q - 0 16","g4_29",["g4_31"],"bxc6","16…bxc6","b7","c6",0],"g4_31":["r1br1bk1/p4ppp/2p1p3/2pqN1P1/8/1PQ1P3/PB1P1P1P/R3K1R1 b Q - 1 16","g4_30",["g4_32"],"Ne5","16.Ne5","f3","e5",1],"g4_32":["r1br1bk1/5ppp/2p1p3/p1pqN1P1/8/1PQ1P3/PB1P1P1P/R3K1R1 w Q - 0 17","g4_31",["g4_33"],"a5","17…a5","a7","a5",0],"g4_33":["r1br1bk1/5ppp/2p1p3/p1pq2P1/6N1/1PQ1P3/PB1P1P1P/R3K1R1 b Q - 1 17","g4_32",["g4_34"],"Ng4","17.Ng4","e5","g4",1],"g4_34":["2br1bk1/r4ppp/2p1p3/p1pq2P1/6N1/1PQ1P3/PB1P1P1P/R3K1R1 w Q - 2 18","g4_33",["g4_35"],"Ra7","18…Ra7","a8","a7",0],"g4_35":["2br1bk1/r4ppp/2p1p3/p1pq2P1/6N1/1PQ1P3/PB1P1P1P/2KR2R1 b - - 3 18","g4_34",["g4_36"],"O-O-O","18.O-O-O","e1","c1",1],"g4_36":["2br1b1k/r4ppp/2p1p3/p1pq2P1/6N1/1PQ1P3/PB1P1P1P/2KR2R1 w - - 4 19","g4_35",["g4_37"],"Kh8","19…Kh8","g8","h8",0],"g4_37":["2br1b1k/r4ppp/2p1p3/p1pq2P1/6NP/1PQ1P3/PB1P1P2/2KR2R1 b - - 0 19","g4_36",["g4_38"],"h4","19.h4","h2","h4",1],"g4_38":["2br1b1k/r4ppp/2p1p3/2pq2P1/p5NP/1PQ1P3/PB1P1P2/2KR2R1 w - - 0 20","g4_37",["g4_39"],"a4","20…a4","a5","a4",0],"g4_39":["2br1b1k/r4ppp/2p1p3/2pq2PP/p5N1/1PQ1P3/PB1P1P2/2KR2R1 b - - 0 20","g4_38",["g4_40"],"h5","20.h5","h4","h5",1],"g4_40":["2br1b1k/r4ppp/2p1p3/2pq2PP/6N1/1pQ1P3/PB1P1P2/2KR2R1 w - - 0 21","g4_39",["g4_41"],"axb3","21…axb3","a4","b3",0],"g4_41":["2br1b1k/r4ppp/2p1p3/2pq2PP/6N1/1PQ1P3/1B1P1P2/2KR2R1 b - - 0 21","g4_40",["g4_42"],"axb3","21.axb3","a2","b3",1],"g4_42":["2br1b1k/r4ppp/2p5/2pqp1PP/6N1/1PQ1P3/1B1P1P2/2KR2R1 w - - 0 22","g4_41",["g4_43"],"e5","22…e5","e6","e5",0],"g4_43":["2br1b1k/r4ppp/2p5/2pqN1PP/8/1PQ1P3/1B1P1P2/2KR2R1 b - - 0 22","g4_42",["g4_44"],"Nxe5","22.Nxe5","g4","e5",1],"g4_44":["2br1bk1/r4ppp/2p5/2pqN1PP/8/1PQ1P3/1B1P1P2/2KR2R1 w - - 1 23","g4_43",["g4_45"],"Kg8","23…Kg8","h8","g8",0],"g4_45":["2br1bk1/r4ppp/2p3P1/2pqN2P/8/1PQ1P3/1B1P1P2/2KR2R1 b - - 0 23","g4_44",["g4_46"],"g6","23.g6","g5","g6",1],"g4_46":["2br1bk1/r5pp/2p2pP1/2pqN2P/8/1PQ1P3/1B1P1P2/2KR2R1 w - - 0 24","g4_45",["g4_47"],"f6","24…f6","f7","f6",0],"g4_47":["2br1bk1/r5pP/2p2p2/2pqN2P/8/1PQ1P3/1B1P1P2/2KR2R1 b - - 0 24","g4_46",["g4_48"],"gxh7+","24.gxh7+","g6","h7",1],"g4_48":["2br1b2/r5pk/2p2p2/2pqN2P/8/1PQ1P3/1B1P1P2/2KR2R1 w - - 0 25","g4_47",["g4_49"],"Kxh7","25…Kxh7","g8","h7",0],"g4_49":["2br1b2/r5pk/2p2p2/2pqN2P/8/1P2P3/1BQP1P2/2KR2R1 b - - 1 25","g4_48",["g4_50"],"Qc2+","25.Qc2+","c3","c2",1],"g4_50":["2br1bk1/r5p1/2p2p2/2pqN2P/8/1P2P3/1BQP1P2/2KR2R1 w - - 2 26","g4_49",["g4_51"],"Kg8","26…Kg8","h7","g8",0],"g4_51":["2br1bk1/r5p1/2p2p2/2pq3P/6N1/1P2P3/1BQP1P2/2KR2R1 b - - 3 26","g4_50",["g4_52"],"Ng4","26.Ng4","e5","g4",1],"g4_52":["3r1bk1/r5p1/2p2p2/2pq3P/6b1/1P2P3/1BQP1P2/2KR2R1 w - - 0 27","g4_51",["g4_53"],"Bxg4","27…Bxg4","c8","g4",0],"g4_53":["3r1bk1/r5p1/2p2p2/2pq3P/6R1/1P2P3/1BQP1P2/2KR4 b - - 0 27","g4_52",["g4_54"],"Rxg4","27.Rxg4","g1","g4",1],"g4_54":["3r1bk1/r5p1/2p2p2/2p4q/6R1/1P2P3/1BQP1P2/2KR4 w - - 0 28","g4_53",["g4_55"],"Qxh5","28…Qxh5","d5","h5",0],"g4_55":["3r1bk1/r5p1/2p2p2/2p4q/2Q3R1/1P2P3/1B1P1P2/2KR4 b - - 1 28","g4_54",["g4_56"],"Qc4+","28.Qc4+","c2","c4",1],"g4_56":["3r1bk1/r5p1/2p2p2/2pq4/2Q3R1/1P2P3/1B1P1P2/2KR4 w - - 2 29","g4_55",["g4_57"],"Qd5","29…Qd5","h5","d5",0],"g4_57":["3r1bk1/r5p1/2p2B2/2pq4/2Q3R1/1P2P3/3P1P2/2KR4 b - - 0 29","g4_56",["g4_58"],"Bxf6","29.Bxf6","b2","f6",1],"g4_58":["1r3bk1/r5p1/2p2B2/2pq4/2Q3R1/1P2P3/3P1P2/2KR4 w - - 1 30","g4_57",["g4_59"],"Rb8","30…Rb8","d8","b8",0],"g4_59":["1r3bk1/r5p1/2p2B2/2pq4/2Q1P1R1/1P6/3P1P2/2KR4 b - - 0 30","g4_58",["g4_60"],"e4","30.e4","e3","e4",1],"g4_60":["1r3bk1/r5p1/2p2B2/2p5/2q1P1R1/1P6/3P1P2/2KR4 w - - 0 31","g4_59",["g4_61"],"Qxc4+","31…Qxc4+","d5","c4",0],"g4_61":["1r3bk1/r5p1/2p2B2/2p5/2P1P1R1/8/3P1P2/2KR4 b - - 0 31","g4_60",["g4_62"],"bxc4","31.bxc4","b3","c4",1],"g4_62":["5bk1/r5p1/2p2B2/2p5/1rP1P1R1/8/3P1P2/2KR4 w - - 1 32","g4_61",["g4_63"],"Rb4","32…Rb4","b8","b4",0],"g4_63":["5bk1/r5p1/2p2B2/2p5/1rP1P1R1/3P4/5P2/2KR4 b - - 0 32","g4_62",["g4_64"],"d3","32.d3","d2","d3",1],"g4_64":["5bk1/6p1/2p2B2/2p5/1rP1P1R1/3P4/r4P2/2KR4 w - - 1 33","g4_63",["g4_65"],"Ra2","33…Ra2","a7","a2",0],"g4_65":["5bk1/6p1/2p2B2/2p5/1rP1P1R1/3P4/r4P2/2K3R1 b - - 2 33","g4_64",["g4_66"],"Rdg1","33.Rdg1","d1","g1",1],"g4_66":["5bk1/6p1/2p2B2/2p5/1rP1P1R1/3P4/5r2/2K3R1 w - - 0 34","g4_65",["g4_67"],"Rxf2","34…Rxf2","a2","f2",0],"g4_67":["5bk1/6B1/2p5/2p5/1rP1P1R1/3P4/5r2/2K3R1 b - - 0 34","g4_66",["g4_68"],"Bxg7","34.Bxg7","f6","g7",1],"g4_68":["6k1/6b1/2p5/2p5/1rP1P1R1/3P4/5r2/2K3R1 w - - 0 35","g4_67",["g4_69"],"Bxg7","35…Bxg7","f8","g7",0],"g4_69":["6k1/6R1/2p5/2p5/1rP1P3/3P4/5r2/2K3R1 b - - 0 35","g4_68",["g4_70"],"Rxg7+","35.Rxg7+","g4","g7",1],"g4_70":["5k2/6R1/2p5/2p5/1rP1P3/3P4/5r2/2K3R1 w - - 1 36","g4_69",["g4_71"],"Kf8","36…Kf8","g8","f8",0],"g4_71":["5kR1/8/2p5/2p5/1rP1P3/3P4/5r2/2K3R1 b - - 2 36","g4_70",["g4_72"],"Rg8+","36.Rg8+","g7","g8",1],"g4_72":["6R1/4k3/2p5/2p5/1rP1P3/3P4/5r2/2K3R1 w - - 3 37","g4_71",["g4_73"],"Ke7","37…Ke7","f8","e7",0],"g4_73":["6R1/4k1R1/2p5/2p5/1rP1P3/3P4/5r2/2K5 b - - 4 37","g4_72",["g4_74"],"R1g7+","37.R1g7+","g1","g7",1],"g4_74":["6R1/6R1/2pk4/2p5/1rP1P3/3P4/5r2/2K5 w - - 5 38","g4_73",["g4_75"],"Kd6","38…Kd6","e7","d6",0],"g4_75":["3R4/6R1/2pk4/2p5/1rP1P3/3P4/5r2/2K5 b - - 6 38","g4_74",["g4_76"],"Rd8+","38.Rd8+","g8","d8",1],"g4_76":["3R4/6R1/2p5/2p1k3/1rP1P3/3P4/5r2/2K5 w - - 7 39","g4_75",["g4_77"],"Ke5","39…Ke5","d6","e5",0],"g4_77":["3R4/4R3/2p5/2p1k3/1rP1P3/3P4/5r2/2K5 b - - 8 39","g4_76",["g4_78"],"Re7+","39.Re7+","g7","e7",1],"g4_78":["3R4/4R3/2p2k2/2p5/1rP1P3/3P4/5r2/2K5 w - - 9 40","g4_77",["g4_79"],"Kf6","40…Kf6","e5","f6",0],"g4_79":["5R2/4R3/2p2k2/2p5/1rP1P3/3P4/5r2/2K5 b - - 10 40","g4_78",["g4_80"],"Rf8+","40.Rf8+","d8","f8",1],"g4_80":["5R2/4k3/2p5/2p5/1rP1P3/3P4/5r2/2K5 w - - 0 41","g4_79",["g4_81"],"Kxe7","41…Kxe7","f6","e7",0],"g4_81":["8/4kR2/2p5/2p5/1rP1P3/3P4/5r2/2K5 b - - 1 41","g4_80",[],"Rf7+","41.Rf7+","f8","f7",1],"g5_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g5_1"],"","","","",0],"g5_1":["rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1","g5_root",["g5_2"],"d4","1.d4","d2","d4",1],"g5_2":["rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 1 2","g5_1",["g5_3"],"Nf6","2…Nf6","g8","f6",0],"g5_3":["rnbqkb1r/pppppppp/5n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 2 2","g5_2",["g5_4"],"Nf3","2.Nf3","g1","f3",1],"g5_4":["rnbqkb1r/ppp1pppp/5n2/3p4/3P4/5N2/PPP1PPPP/RNBQKB1R w KQkq - 0 3","g5_3",["g5_5"],"d5","3…d5","d7","d5",0],"g5_5":["rnbqkb1r/ppp1pppp/5n2/3p4/3P4/4PN2/PPP2PPP/RNBQKB1R b KQkq - 0 3","g5_4",["g5_6"],"e3","3.e3","e2","e3",1],"g5_6":["rnbqkb1r/ppp2ppp/4pn2/3p4/3P4/4PN2/PPP2PPP/RNBQKB1R w KQkq - 0 4","g5_5",["g5_7"],"e6","4…e6","e7","e6",0],"g5_7":["rnbqkb1r/ppp2ppp/4pn2/3p4/3P4/3BPN2/PPP2PPP/RNBQK2R b KQkq - 1 4","g5_6",["g5_8"],"Bd3","4.Bd3","f1","d3",1],"g5_8":["rnbqkb1r/pp3ppp/4pn2/2pp4/3P4/3BPN2/PPP2PPP/RNBQK2R w KQkq - 0 5","g5_7",["g5_9"],"c5","5…c5","c7","c5",0],"g5_9":["rnbqkb1r/pp3ppp/4pn2/2pp4/3P4/1P1BPN2/P1P2PPP/RNBQK2R b KQkq - 0 5","g5_8",["g5_10"],"b3","5.b3","b2","b3",1],"g5_10":["r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/1P1BPN2/P1P2PPP/RNBQK2R w KQkq - 1 6","g5_9",["g5_11"],"Nc6","6…Nc6","b8","c6",0],"g5_11":["r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/1P1BPN2/PBP2PPP/RN1QK2R b KQkq - 2 6","g5_10",["g5_12"],"Bb2","6.Bb2","c1","b2",1],"g5_12":["r1bqkb1r/p4ppp/1pn1pn2/2pp4/3P4/1P1BPN2/PBP2PPP/RN1QK2R w KQkq - 0 7","g5_11",["g5_13"],"b6","7…b6","b7","b6",0],"g5_13":["r1bqkb1r/p4ppp/1pn1pn2/2pp4/3P4/1P1BPN2/PBPN1PPP/R2QK2R b KQkq - 1 7","g5_12",["g5_14"],"Nbd2","7.Nbd2","b1","d2",1],"g5_14":["r2qkb1r/pb3ppp/1pn1pn2/2pp4/3P4/1P1BPN2/PBPN1PPP/R2QK2R w KQkq - 2 8","g5_13",["g5_15"],"Bb7","8…Bb7","c8","b7",0],"g5_15":["r2qkb1r/pb3ppp/1pn1pn2/2pp4/3P4/1P1BPN2/PBPN1PPP/R2Q1RK1 b kq - 3 8","g5_14",["g5_16"],"O-O","8.O-O","e1","g1",1],"g5_16":["2rqkb1r/pb3ppp/1pn1pn2/2pp4/3P4/1P1BPN2/PBPN1PPP/R2Q1RK1 w k - 4 9","g5_15",["g5_17"],"Rc8","9…Rc8","a8","c8",0],"g5_17":["2rqkb1r/pb3ppp/1pn1pn2/2pp4/3P4/1P1BPN2/PBPNQPPP/R4RK1 b k - 5 9","g5_16",["g5_18"],"Qe2","9.Qe2","d1","e2",1],"g5_18":["2rqkb1r/pb3ppp/1pn1pn2/3p4/3p4/1P1BPN2/PBPNQPPP/R4RK1 w k - 0 10","g5_17",["g5_19"],"cxd4","10…cxd4","c5","d4",0],"g5_19":["2rqkb1r/pb3ppp/1pn1pn2/3p4/3P4/1P1B1N2/PBPNQPPP/R4RK1 b k - 0 10","g5_18",["g5_20"],"exd4","10.exd4","e3","d4",1],"g5_20":["2rqk2r/pb3ppp/1pnbpn2/3p4/3P4/1P1B1N2/PBPNQPPP/R4RK1 w k - 1 11","g5_19",["g5_21"],"Bd6","11…Bd6","f8","d6",0],"g5_21":["2rqk2r/pb3ppp/1pnbpn2/3p4/3P4/PP1B1N2/1BPNQPPP/R4RK1 b k - 0 11","g5_20",["g5_22"],"a3","11.a3","a2","a3",1],"g5_22":["2rq1rk1/pb3ppp/1pnbpn2/3p4/3P4/PP1B1N2/1BPNQPPP/R4RK1 w - - 1 12","g5_21",["g5_23"],"O-O","12…O-O","e8","g8",0],"g5_23":["2rq1rk1/pb3ppp/1pnbpn2/3pN3/3P4/PP1B4/1BPNQPPP/R4RK1 b - - 2 12","g5_22",["g5_24"],"Ne5","12.Ne5","f3","e5",1],"g5_24":["2rq1rk1/pb2nppp/1p1bpn2/3pN3/3P4/PP1B4/1BPNQPPP/R4RK1 w - - 3 13","g5_23",["g5_25"],"Ne7","13…Ne7","c6","e7",0],"g5_25":["2rq1rk1/pb2nppp/1p1bpn2/3pN3/3P1P2/PP1B4/1BPNQ1PP/R4RK1 b - - 0 13","g5_24",["g5_26"],"f4","13.f4","f2","f4",1],"g5_26":["2rq1rk1/pb3ppp/1p1bpnn1/3pN3/3P1P2/PP1B4/1BPNQ1PP/R4RK1 w - - 1 14","g5_25",["g5_27"],"Ng6","14…Ng6","e7","g6",0],"g5_27":["2rq1rk1/pb3ppp/1p1bpnn1/3pN3/3P1P2/PP1B1R2/1BPNQ1PP/R5K1 b - - 2 14","g5_26",["g5_28"],"Rf3","14.Rf3","f1","f3",1],"g5_28":["2r2rk1/pbq2ppp/1p1bpnn1/3pN3/3P1P2/PP1B1R2/1BPNQ1PP/R5K1 w - - 3 15","g5_27",["g5_29"],"Qc7","15…Qc7","d8","c7",0],"g5_29":["2r2rk1/pbq2ppp/1p1bpnn1/3pN3/3P1P2/PP1B1R2/1BPNQ1PP/5RK1 b - - 4 15","g5_28",["g5_30"],"Raf1","15.Raf1","a1","f1",1],"g5_30":["2r2rk1/pbq2ppp/1p1bp1n1/3pN3/3PnP2/PP1B1R2/1BPNQ1PP/5RK1 w - - 5 16","g5_29",["g5_31"],"Ne4","16…Ne4","f6","e4",0],"g5_31":["2r2rk1/pbq2ppp/1p1bp1n1/3pN3/3PnP2/PP1B3R/1BPNQ1PP/5RK1 b - - 6 16","g5_30",["g5_32"],"Rh3","16.Rh3","f3","h3",1],"g5_32":["2r2rk1/pbq3pp/1p1bp1n1/3pNp2/3PnP2/PP1B3R/1BPNQ1PP/5RK1 w - - 0 17","g5_31",["g5_33"],"f5","17…f5","f7","f5",0],"g5_33":["2r2rk1/pbq3pp/1p1bp1n1/3pNp2/3PNP2/PP1B3R/1BP1Q1PP/5RK1 b - - 0 17","g5_32",["g5_34"],"Nxe4","17.Nxe4","d2","e4",1],"g5_34":["2r2rk1/pbq3pp/1p1bp1n1/4Np2/3PpP2/PP1B3R/1BP1Q1PP/5RK1 w - - 0 18","g5_33",["g5_35"],"dxe4","18…dxe4","d5","e4",0],"g5_35":["2r2rk1/pbq3pp/1p1bp1n1/4Np2/2BPpP2/PP5R/1BP1Q1PP/5RK1 b - - 1 18","g5_34",["g5_36"],"Bc4","18.Bc4","d3","c4",1],"g5_36":["2r3k1/pbq3pp/1p1bprn1/4Np2/2BPpP2/PP5R/1BP1Q1PP/5RK1 w - - 2 19","g5_35",["g5_37"],"Rf6","19…Rf6","f8","f6",0],"g5_37":["2r3k1/pbq3pp/1p1bprn1/4Np2/2BPpPP1/PP5R/1BP1Q2P/5RK1 b - - 0 19","g5_36",["g5_38"],"g4","19.g4","g2","g4",1],"g5_38":["2r3k1/pbq3pp/1p1bprn1/4N3/2BPpPp1/PP5R/1BP1Q2P/5RK1 w - - 0 20","g5_37",["g5_39"],"fxg4","20…fxg4","f5","g4",0],"g5_39":["2r3k1/pbq3pp/1p1bprn1/4N3/2BPpPQ1/PP5R/1BP4P/5RK1 b - - 0 20","g5_38",["g5_40"],"Qxg4","20.Qxg4","e2","g4",1],"g5_40":["2r3k1/p1q3pp/1p1bprn1/3bN3/2BPpPQ1/PP5R/1BP4P/5RK1 w - - 1 21","g5_39",["g5_41"],"Bd5","21…Bd5","b7","d5",0],"g5_41":["2r3k1/p1q3pp/1p1bprn1/3BN3/3PpPQ1/PP5R/1BP4P/5RK1 b - - 0 21","g5_40",["g5_42"],"Bxd5","21.Bxd5","c4","d5",1],"g5_42":["2r3k1/p1q3pp/1p1b1rn1/3pN3/3PpPQ1/PP5R/1BP4P/5RK1 w - - 0 22","g5_41",["g5_43"],"exd5","22…exd5","e6","d5",0],"g5_43":["2r3k1/p1q3pp/1p1b1rn1/3pN3/3PpPQ1/PPR5/1BP4P/5RK1 b - - 1 22","g5_42",["g5_44"],"Rc3","22.Rc3","h3","c3",1],"g5_44":["2r3k1/p1q3pp/1p3rn1/3pb3/3PpPQ1/PPR5/1BP4P/5RK1 w - - 0 23","g5_43",["g5_45"],"Bxe5","23…Bxe5","d6","e5",0],"g5_45":["2Q3k1/p1q3pp/1p3rn1/3pb3/3PpP2/PPR5/1BP4P/5RK1 b - - 0 23","g5_44",[],"Qxc8+","23.Qxc8+","g4","c8",1],"g6_root":["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",null,["g6_1"],"","","","",0],"g6_1":["rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1","g6_root",["g6_2"],"Nf3","1.Nf3","g1","f3",1],"g6_2":["rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 2","g6_1",["g6_3"],"d5","2…d5","d7","d5",0],"g6_3":["rnbqkbnr/ppp1pppp/8/3p4/8/4PN2/PPPP1PPP/RNBQKB1R b KQkq - 0 2","g6_2",["g6_4"],"e3","2.e3","e2","e3",1],"g6_4":["rnbqkb1r/ppp1pppp/5n2/3p4/8/4PN2/PPPP1PPP/RNBQKB1R w KQkq - 1 3","g6_3",["g6_5"],"Nf6","3…Nf6","g8","f6",0],"g6_5":["rnbqkb1r/ppp1pppp/5n2/3p4/2P5/4PN2/PP1P1PPP/RNBQKB1R b KQkq - 0 3","g6_4",["g6_6"],"c4","3.c4","c2","c4",1],"g6_6":["rnbqkb1r/ppp2ppp/4pn2/3p4/2P5/4PN2/PP1P1PPP/RNBQKB1R w KQkq - 0 4","g6_5",["g6_7"],"e6","4…e6","e7","e6",0],"g6_7":["rnbqkb1r/ppp2ppp/4pn2/3p4/2P5/2N1PN2/PP1P1PPP/R1BQKB1R b KQkq - 1 4","g6_6",["g6_8"],"Nc3","4.Nc3","b1","c3",1],"g6_8":["rnbqk2r/ppp2ppp/3bpn2/3p4/2P5/2N1PN2/PP1P1PPP/R1BQKB1R w KQkq - 2 5","g6_7",["g6_9"],"Bd6","5…Bd6","f8","d6",0],"g6_9":["rnbqk2r/ppp2ppp/3bpn2/3p4/2P5/1PN1PN2/P2P1PPP/R1BQKB1R b KQkq - 0 5","g6_8",["g6_10"],"b3","5.b3","b2","b3",1],"g6_10":["rnbq1rk1/ppp2ppp/3bpn2/3p4/2P5/1PN1PN2/P2P1PPP/R1BQKB1R w KQ - 1 6","g6_9",["g6_11"],"O-O","6…O-O","e8","g8",0],"g6_11":["rnbq1rk1/ppp2ppp/3bpn2/3p4/2P5/1PN1PN2/PB1P1PPP/R2QKB1R b KQ - 2 6","g6_10",["g6_12"],"Bb2","6.Bb2","c1","b2",1],"g6_12":["rnbqr1k1/ppp2ppp/3bpn2/3p4/2P5/1PN1PN2/PB1P1PPP/R2QKB1R w KQ - 3 7","g6_11",["g6_13"],"Re8","7…Re8","f8","e8",0],"g6_13":["rnbqr1k1/ppp2ppp/3bpn2/3p4/2PP4/1PN1PN2/PB3PPP/R2QKB1R b KQ - 0 7","g6_12",["g6_14"],"d4","7.d4","d2","d4",1],"g6_14":["rnbqr1k1/p1p2ppp/1p1bpn2/3p4/2PP4/1PN1PN2/PB3PPP/R2QKB1R w KQ - 0 8","g6_13",["g6_15"],"b6","8…b6","b7","b6",0],"g6_15":["rnbqr1k1/p1p2ppp/1p1bpn2/3p4/2PP4/1PNBPN2/PB3PPP/R2QK2R b KQ - 1 8","g6_14",["g6_16"],"Bd3","8.Bd3","f1","d3",1],"g6_16":["rn1qr1k1/pbp2ppp/1p1bpn2/3p4/2PP4/1PNBPN2/PB3PPP/R2QK2R w KQ - 2 9","g6_15",["g6_17"],"Bb7","9…Bb7","c8","b7",0],"g6_17":["rn1qr1k1/pbp2ppp/1p1bpn2/3p4/2PP4/1PNBPN2/PB3PPP/R2Q1RK1 b - - 3 9","g6_16",["g6_18"],"O-O","9.O-O","e1","g1",1],"g6_18":["r2qr1k1/pbpn1ppp/1p1bpn2/3p4/2PP4/1PNBPN2/PB3PPP/R2Q1RK1 w - - 4 10","g6_17",["g6_19"],"Nbd7","10…Nbd7","b8","d7",0],"g6_19":["r2qr1k1/pbpn1ppp/1p1bpn2/3p4/P1PP4/1PNBPN2/1B3PPP/R2Q1RK1 b - - 0 10","g6_18",["g6_20"],"a4","10.a4","a2","a4",1],"g6_20":["r2qr1k1/1bpn1ppp/pp1bpn2/3p4/P1PP4/1PNBPN2/1B3PPP/R2Q1RK1 w - - 0 11","g6_19",["g6_21"],"a6","11…a6","a7","a6",0],"g6_21":["r2qr1k1/1bpn1ppp/pp1bpn2/P2p4/2PP4/1PNBPN2/1B3PPP/R2Q1RK1 b - - 0 11","g6_20",["g6_22"],"a5","11.a5","a4","a5",1],"g6_22":["r2qr1k1/1bpn1ppp/pp1bpn2/P7/2pP4/1PNBPN2/1B3PPP/R2Q1RK1 w - - 0 12","g6_21",["g6_23"],"dxc4","12…dxc4","d5","c4",0],"g6_23":["r2qr1k1/1bpn1ppp/pp1bpn2/P7/2PP4/2NBPN2/1B3PPP/R2Q1RK1 b - - 0 12","g6_22",["g6_24"],"bxc4","12.bxc4","b3","c4",1],"g6_24":["r2qr1k1/1bpn1ppp/pp1b1n2/P3p3/2PP4/2NBPN2/1B3PPP/R2Q1RK1 w - - 0 13","g6_23",["g6_25"],"e5","13…e5","e6","e5",0],"g6_25":["r2qr1k1/1bpn1ppp/pp1b1n2/P3pB2/2PP4/2N1PN2/1B3PPP/R2Q1RK1 b - - 1 13","g6_24",["g6_26"],"Bf5","13.Bf5","d3","f5",1],"g6_26":["r2qr1k1/1bpn1ppp/pp1b1n2/P4B2/2Pp4/2N1PN2/1B3PPP/R2Q1RK1 w - - 0 14","g6_25",["g6_27"],"exd4","14…exd4","e5","d4",0],"g6_27":["r2qr1k1/1bpn1ppp/pp1b1n2/P4B2/2PP4/2N2N2/1B3PPP/R2Q1RK1 b - - 0 14","g6_26",["g6_28"],"exd4","14.exd4","e3","d4",1],"g6_28":["r2qrnk1/1bp2ppp/pp1b1n2/P4B2/2PP4/2N2N2/1B3PPP/R2Q1RK1 w - - 1 15","g6_27",["g6_29"],"Nf8","15…Nf8","d7","f8",0],"g6_29":["r2qrnk1/1bp2ppp/pp1b1n2/P2P1B2/2P5/2N2N2/1B3PPP/R2Q1RK1 b - - 0 15","g6_28",["g6_30"],"d5","15.d5","d4","d5",1],"g6_30":["r2qr1k1/1bp2ppp/pp1b1nn1/P2P1B2/2P5/2N2N2/1B3PPP/R2Q1RK1 w - - 1 16","g6_29",["g6_31"],"Ng6","16…Ng6","f8","g6",0],"g6_31":["r2qr1k1/1bp2ppp/pp1b1nn1/P2P1B2/2P5/2N2N2/1BQ2PPP/R4RK1 b - - 2 16","g6_30",["g6_32"],"Qc2","16.Qc2","d1","c2",1],"g6_32":["r2qr1k1/1bp2ppp/pp1b1n2/P2PnB2/2P5/2N2N2/1BQ2PPP/R4RK1 w - - 3 17","g6_31",["g6_33"],"Ne5","17…Ne5","g6","e5",0],"g6_33":["r2qr1k1/1bp2ppp/pp1b1n2/P2PNB2/2P5/2N5/1BQ2PPP/R4RK1 b - - 0 17","g6_32",["g6_34"],"Nxe5","17.Nxe5","f3","e5",1],"g6_34":["r2qr1k1/1bp2ppp/pp3n2/P2PbB2/2P5/2N5/1BQ2PPP/R4RK1 w - - 0 18","g6_33",["g6_35"],"Bxe5","18…Bxe5","d6","e5",0],"g6_35":["r2qr1k1/1bp2ppp/pp3n2/P2PbB2/2P5/2N5/1BQ2PPP/R3R1K1 b - - 1 18","g6_34",["g6_36"],"Rfe1","18.Rfe1","f1","e1",1],"g6_36":["r3r1k1/1bp2ppp/pp1q1n2/P2PbB2/2P5/2N5/1BQ2PPP/R3R1K1 w - - 2 19","g6_35",["g6_37"],"Qd6","19…Qd6","d8","d6",0],"g6_37":["r3r1k1/1bp2ppp/pp1q1n2/P2PbB2/2P5/2N3P1/1BQ2P1P/R3R1K1 b - - 0 19","g6_36",["g6_38"],"g3","19.g3","g2","g3",1],"g6_38":["r3r1k1/1bp2ppp/p2q1n2/Pp1PbB2/2P5/2N3P1/1BQ2P1P/R3R1K1 w - - 0 20","g6_37",["g6_39"],"b5","20…b5","b6","b5",0],"g6_39":["r3r1k1/1bp2ppp/p2q1n2/Pp1PbB2/2P1N3/6P1/1BQ2P1P/R3R1K1 b - - 1 20","g6_38",["g6_40"],"Ne4","20.Ne4","c3","e4",1],"g6_40":["r3r1k1/1bp2ppp/p2q4/Pp1PbB2/2P1n3/6P1/1BQ2P1P/R3R1K1 w - - 0 21","g6_39",["g6_41"],"Nxe4","21…Nxe4","f6","e4",0],"g6_41":["r3r1k1/1bp2ppp/p2q4/Pp1PbB2/2P1Q3/6P1/1B3P1P/R3R1K1 b - - 0 21","g6_40",["g6_42"],"Qxe4","21.Qxe4","c2","e4",1],"g6_42":["r3r1k1/1bp2ppp/p2q4/Pp1P1B2/2P1Q3/6P1/1b3P1P/R3R1K1 w - - 0 22","g6_41",["g6_43"],"Bxb2","22…Bxb2","e5","b2",0],"g6_43":["r3Q1k1/1bp2ppp/p2q4/Pp1P1B2/2P5/6P1/1b3P1P/R3R1K1 b - - 0 22","g6_42",["g6_44"],"Qxe8+","22.Qxe8+","e4","e8",1],"g6_44":["r3Qqk1/1bp2ppp/p7/Pp1P1B2/2P5/6P1/1b3P1P/R3R1K1 w - - 1 23","g6_43",["g6_45"],"Qf8","23…Qf8","d6","f8",0],"g6_45":["r4Qk1/1bp2ppp/p7/Pp1P1B2/2P5/6P1/1b3P1P/R3R1K1 b - - 0 23","g6_44",["g6_46"],"Qxf8+","23.Qxf8+","e8","f8",1],"g6_46":["r4k2/1bp2ppp/p7/Pp1P1B2/2P5/6P1/1b3P1P/R3R1K1 w - - 0 24","g6_45",["g6_47"],"Kxf8","24…Kxf8","g8","f8",0],"g6_47":["r4k2/1bp2ppp/p7/Pp1P1B2/2P5/6P1/Rb3P1P/4R1K1 b - - 1 24","g6_46",["g6_48"],"Ra2","24.Ra2","a1","a2",1],"g6_48":["r4k2/1bp2ppp/p7/Pp1P1B2/2P5/2b3P1/R4P1P/4R1K1 w - - 2 25","g6_47",["g6_49"],"Bc3","25…Bc3","b2","c3",0],"g6_49":["r4k2/1bp2ppp/p7/Pp1P1B2/2P5/2b1R1P1/R4P1P/6K1 b - - 3 25","g6_48",["g6_50"],"Re3","25.Re3","e1","e3",1],"g6_50":["r4k2/1bp2ppp/p7/P2P1B2/1pP5/2b1R1P1/R4P1P/6K1 w - - 0 26","g6_49",["g6_51"],"b4","26…b4","b5","b4",0],"g6_51":["r4k2/1bp2ppp/p7/P2P1B2/1pP5/2b1R1P1/4RP1P/6K1 b - - 1 26","g6_50",["g6_52"],"Rae2","26.Rae2","a2","e2",1],"g6_52":["r4k2/1bp2p1p/p5p1/P2P1B2/1pP5/2b1R1P1/4RP1P/6K1 w - - 0 27","g6_51",["g6_53"],"g6","27…g6","g7","g6",0],"g6_53":["r4k2/1bpB1p1p/p5p1/P2P4/1pP5/2b1R1P1/4RP1P/6K1 b - - 1 27","g6_52",["g6_54"],"Bd7","27.Bd7","f5","d7",1],"g6_54":["r7/1bpB1pkp/p5p1/P2P4/1pP5/2b1R1P1/4RP1P/6K1 w - - 2 28","g6_53",["g6_55"],"Kg7","28…Kg7","f8","g7",0],"g6_55":["r7/1bp2pkp/p5p1/P2P4/BpP5/2b1R1P1/4RP1P/6K1 b - - 3 28","g6_54",["g6_56"],"Ba4","28.Ba4","d7","a4",1],"g6_56":["r1b5/2p2pkp/p5p1/P2P4/BpP5/2b1R1P1/4RP1P/6K1 w - - 4 29","g6_55",["g6_57"],"Bc8","29…Bc8","b7","c8",0],"g6_57":["r1b1R3/2p2pkp/p5p1/P2P4/BpP5/2b3P1/4RP1P/6K1 b - - 5 29","g6_56",[],"Re8","29.Re8","e3","e8",1]};const ROOTS={"g0_root":["Mamedyarov – Duncan",""],"g1_root":["Alonso Rosell – Yakubboev",""],"g2_root":["Lobanov – Lisenkov",""],"g3_root":["Kistrup – Szpar",""],"g4_root":["Sjugirov – Suleimen",""],"g5_root":["Buckels – Genov",""],"g6_root":["Kuzubov – Delchev",""]};const FIRST="g0_root";const SLUG="twic1667-nf3b3bb2";
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem('gw_'+k)}catch(e){return null}},set(k,v){try{localStorage.setItem('gw_'+k,v)}catch(e){}}};
+// node fields
+const F=0,PAR=1,CH=2,SAN=3,LAB=4,FROM=5,TO=6,W=7;
+let cur=FIRST, flipped=store.get('flip')==='1', sel=null, uSeq=0;
+const rootOf=id=>{while(NODES[id][PAR])id=NODES[id][PAR];return id};
+const files='abcdefgh';
+
+function boardHTML(fen,opt={}){
+  const rows=fen.split(' ')[0].split('/'); const grid=[];
+  rows.forEach((r,ri)=>{let c=0;for(const ch of r){if(/\d/.test(ch))c+=+ch;else{grid[ri*8+c]=ch;c++}}});
+  const fl=opt.flip; let sq='';
+  for(let i=0;i<64;i++){
+    const r=fl?7-Math.floor(i/8):Math.floor(i/8), c=fl?7-i%8:i%8;
+    const name=files[c]+(8-r), p=grid[r*8+c];
+    const cls=((r+c)%2?'d':'l')+((opt.lm||[]).includes(name)?' lm':'')+(opt.sel===name?' sel':'')+((opt.tg||[]).includes(name)?' tg':'');
+    sq+=`<div class="sq ${cls}" data-sq="${name}">${p?`<div class="pc ${p===p.toUpperCase()?'w':'b'}${p.toUpperCase()}"></div>`:''}</div>`;
+  }
+  const rk=[...Array(8)].map((_,i)=>`<span>${fl?i+1:8-i}</span>`).join('');
+  const fs=[...Array(8)].map((_,i)=>`<span>${files[fl?7-i:i]}</span>`).join('');
+  return `<div class="bwrap"><div class="rk">${rk}</div><div class="bd">${sq}</div><div class="fl">${fs}</div></div>`;
+}
+// static diagrams
+$$('.sb').forEach(el=>el.innerHTML=boardHTML(el.dataset.fen));
+$$('figure.dia').forEach(f=>f.addEventListener('click',()=>go(f.dataset.id,true)));
+
+function render(){
+  const n=NODES[cur], game=new Chess(n[F]);
+  let tg=[];
+  if(sel) tg=game.moves({square:sel,verbose:true}).map(m=>m.to);
+  $('#live').innerHTML=boardHTML(n[F],{flip:flipped,lm:n[FROM]?[n[FROM],n[TO]]:[],sel,tg});
+  const r=rootOf(cur);
+  $('#who').textContent=(ROOTS[r]||[''])[0];
+  $('#cur').textContent=n[LAB]||(ROOTS[r]||['',''])[1]||'Start position';
+  const side=n[F].split(' ')[1]==='w'?'White':'Black';
+  let m='';
+  if(game.in_checkmate())m='Checkmate.';else if(game.in_stalemate())m='Stalemate.';else if(game.in_draw())m='Draw.';
+  $('#msg').textContent=m||(side+' to move · click a piece to try your own move');
+  // choices
+  const ch=n[CH];
+  $('#choose').innerHTML=ch.length>1?'Choose a line: '+ch.map((c,i)=>`<button class="${i?'':'mainc'}" data-id="${c}">${NODES[c][LAB]}</button>`).join(''):'';
+  // path
+  const path=[];let x=cur;while(NODES[x][PAR]){path.unshift(x);x=NODES[x][PAR]}
+  $('#path').innerHTML=path.map((id,i)=>{const z=NODES[id];const t=(z[W]||i===0)?z[LAB]:z[SAN];return `<a class="mv${id[0]==='u'?' u':''}${id===cur?' cur':''}" data-id="${id}">${t}</a>`}).join(' ');
+  $('#bPrev').disabled=$('#bStart').disabled=!n[PAR];
+  $('#bNext').disabled=$('#bEnd').disabled=!ch.length;
+  // highlight in text
+  $$('main a.mv.cur').forEach(a=>a.classList.remove('cur'));
+  const t=$$(`main a.mv[data-id="${cur}"]`);
+  t.forEach(a=>a.classList.add('cur'));
+  return t[0];
+}
+function go(id,fromText){
+  if(!NODES[id])return; cur=id; sel=null;
+  const a=render();
+  if(a&&!fromText){const r=a.getBoundingClientRect(); const bp=document.querySelector('aside.bp'),bb=bp.getBoundingClientRect(),pb=(bb.width>innerWidth*0.9)?bb.bottom:80; if(r.top<pb+8||r.bottom>innerHeight-20)scrollBy({top:r.top-(pb+innerHeight)/2+r.height/2,behavior:'smooth'})}
+  if(id[0]!=='u')store.set('pos_'+SLUG,id);
+}
+const next=()=>{const c=NODES[cur][CH];if(c.length)go(c[0])};
+const prev=()=>{const p=NODES[cur][PAR];if(p)go(p)};
+const start=()=>go(rootOf(cur));
+const end=()=>{let x=cur;while(NODES[x][CH].length)x=NODES[x][CH][0];go(x)};
+const flip=()=>{flipped=!flipped;store.set('flip',flipped?'1':'0');render()};
+$('#bNext').onclick=next;$('#bPrev').onclick=prev;$('#bStart').onclick=start;$('#bEnd').onclick=end;$('#bFlip').onclick=flip;
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a.mv, #choose button'); if(a){go(a.dataset.id,a.closest('main')!==null);return}
+  const t=e.target.closest('nav.toc a'); if(t){document.getElementById(t.dataset.t).scrollIntoView({behavior:'smooth'})}
+});
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  const k=e.key;
+  if(k==='ArrowRight'){next();e.preventDefault()}else if(k==='ArrowLeft'){prev();e.preventDefault()}
+  else if(k==='Home'){start();e.preventDefault()}else if(k==='End'){end();e.preventDefault()}
+  else if(k==='f'||k==='F')flip();
+});
+// try-your-own-move on the live board
+$('#live').addEventListener('click',e=>{
+  const s=e.target.closest('.sq'); if(!s)return; const sq=s.dataset.sq;
+  const n=NODES[cur], game=new Chess(n[F]);
+  if(sel){
+    const mv=game.moves({square:sel,verbose:true}).find(m=>m.to===sq);
+    if(mv){
+      const res=game.move({from:sel,to:sq,promotion:'q'});
+      const ex=n[CH].find(c=>NODES[c][FROM]===res.from&&NODES[c][TO]===res.to&&NODES[c][SAN].replace(/[!?]+$/,'')===res.san);
+      if(ex){go(ex);return}
+      const parts=n[F].split(' '),num=+parts[5],w=parts[1]==='w';
+      const id='u'+(++uSeq);
+      NODES[id]=[game.fen(),cur,[],res.san,(w?num+'.':num+'...')+res.san,res.from,res.to,w?1:0];
+      n[CH].push(id); go(id); return;
+    }
+  }
+  const p=game.get(sq);
+  sel=(p&&p.color===game.turn()&&sel!==sq)?sq:null; render();
+});
+// text size & dark mode
+let fs=+store.get('fs')||21;
+const setFs=v=>{fs=Math.max(15,Math.min(34,v));document.documentElement.style.setProperty('--fs',fs+'px');store.set('fs',fs)};
+$('#fplus').onclick=()=>setFs(fs+2);$('#fminus').onclick=()=>setFs(fs-2);setFs(fs);
+const setDark=d=>{document.documentElement.dataset.theme=d?'dark':'light';$('#dark').textContent=d?'Light':'Dark';store.set('dark',d?'1':'0')};
+let dk=store.get('dark')==='1';setDark(dk);$('#dark').onclick=()=>{dk=!dk;setDark(dk)};
+// contents highlight
+const secs=$$('nav.toc a').map(a=>document.getElementById(a.dataset.t));
+addEventListener('scroll',()=>{let on=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<160)on=i});$$('nav.toc a').forEach((a,i)=>a.classList.toggle('on',i===on))},{passive:true});
+const saved=store.get('pos_'+SLUG); go(saved&&NODES[saved]?saved:FIRST,true);
+})();
+</script>
+<script>(function(){var b=document.getElementById('bTog');if(!b)return;b.onclick=function(){var h=document.body.classList.toggle('hideb');b.textContent=h?'Show board':'Hide board';};})();</script>
+</body>
+</html>
