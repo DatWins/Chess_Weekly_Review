@@ -5,14 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TWIC Weekly Review – Middlegame Plans</title>
 <style>
-:root{--fs:20px;--paper:#fbfaf7;--ink:#1d1f22;--muted:#5d6670;--line:#e2e0da;--card:#fff;--main:#1f4fa3;--mainbg:#1f4fa3;--mainfg:#fff;--btn:#fff;--btnb:#cfd5db}
-:root[data-theme="dark"]{--paper:#16191d;--ink:#e4e6e9;--muted:#9aa3ad;--line:#2c3238;--card:#1d2126;--main:#86b4ff;--mainbg:#2f5ea8;--mainfg:#fff;--btn:#232930;--btnb:#3a434c}
+:root{--fs:20px;--paper:#fbfaf7;--ink:#1d1f22;--muted:#5d6670;--line:#e2e0da;--card:#fff;--main:#1f4fa3;--mainbg:#1f4fa3;--mainfg:#fff;--btn:#fff;--btnb:#cfd5db;--tag-fight:#7b3f00;--tag-fight-bg:#fff3e6;--tag-upset:#5a0019;--tag-upset-bg:#ffeef2;--tag-mini:#1a4700;--tag-mini-bg:#edfbe8}
+:root[data-theme="dark"]{--paper:#16191d;--ink:#e4e6e9;--muted:#9aa3ad;--line:#2c3238;--card:#1d2126;--main:#86b4ff;--mainbg:#2f5ea8;--mainfg:#fff;--btn:#232930;--btnb:#3a434c;--tag-fight:#ffb74d;--tag-fight-bg:#3a2500;--tag-upset:#ff8fab;--tag-upset-bg:#3a0015;--tag-mini:#81c784;--tag-mini-bg:#1a3300}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--paper);color:var(--ink)}
 body{font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif;font-size:var(--fs);line-height:1.5}
-.top{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line);font-family:system-ui,"Segoe UI",sans-serif;font-size:15px}
-.top input{flex:1;max-width:420px;font:inherit;padding:7px 12px;border:1px solid var(--btnb);border-radius:8px;background:var(--btn);color:var(--ink)}
+.top{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line);font-family:system-ui,"Segoe UI",sans-serif;font-size:15px;flex-wrap:wrap}
+.top input{flex:1;min-width:160px;max-width:360px;font:inherit;padding:7px 12px;border:1px solid var(--btnb);border-radius:8px;background:var(--btn);color:var(--ink)}
+.filters{display:flex;gap:6px;align-items:center}
+.fil{font:inherit;font-size:14px;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:16px;padding:5px 13px;cursor:pointer;transition:background .15s}
+.fil.active,.fil:hover{background:var(--mainbg);color:var(--mainfg);border-color:var(--mainbg)}
+.fil[data-f="Fighting"].active{background:var(--tag-fight-bg);color:var(--tag-fight);border-color:var(--tag-fight)}
+.fil[data-f="Upset"].active{background:var(--tag-upset-bg);color:var(--tag-upset);border-color:var(--tag-upset)}
+.fil[data-f="Miniature"].active{background:var(--tag-mini-bg);color:var(--tag-mini);border-color:var(--tag-mini)}
 .top .sp{flex:1}
+.ctrls{display:flex;gap:6px}
 button{font:inherit;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:7px;padding:6px 12px;cursor:pointer;min-width:40px}
 header.hero{max-width:1100px;margin:0 auto;padding:36px 16px 10px}
 .kicker{font-family:system-ui,"Segoe UI",sans-serif;font-size:.7em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -27,22 +34,34 @@ h2{font-family:system-ui,"Segoe UI",sans-serif;font-size:1.3em;margin:.15em 0}
 h2 a{color:var(--ink);text-decoration:none}h2 a:hover{color:var(--main)}
 .theme{color:var(--main);font-family:system-ui,"Segoe UI",sans-serif;font-size:.85em;font-weight:600;margin:.1em 0}
 .dek{color:var(--muted);font-size:.9em;margin:.3em 0 .5em}
-.players{color:var(--muted);font-size:.8em;font-family:system-ui,"Segoe UI",sans-serif;margin:.2em 0 .8em}
+.players{color:var(--muted);font-size:.8em;font-family:system-ui,"Segoe UI",sans-serif;margin:.2em 0 .6em}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin:.4em 0 .8em}
+.tag{font-family:system-ui,"Segoe UI",sans-serif;font-size:.72em;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:12px;border:1px solid}
+.tag-Fighting{background:var(--tag-fight-bg);color:var(--tag-fight);border-color:var(--tag-fight)}
+.tag-Upset{background:var(--tag-upset-bg);color:var(--tag-upset);border-color:var(--tag-upset)}
+.tag-Miniature{background:var(--tag-mini-bg);color:var(--tag-mini);border-color:var(--tag-mini)}
 .btns{display:flex;gap:10px;flex-wrap:wrap;font-family:system-ui,"Segoe UI",sans-serif;font-size:15px}
 .b{padding:8px 16px;border-radius:8px;border:1px solid var(--btnb);color:var(--ink);text-decoration:none;background:var(--btn)}
 .b.main{background:var(--mainbg);color:var(--mainfg);border-color:var(--mainbg);font-weight:600}
 .b.pgn{font-size:.85em;padding:6px 12px}
 .count{font-family:system-ui,"Segoe UI",sans-serif;font-size:14px;color:var(--muted)}
 .none{color:var(--muted);font-style:italic;padding:20px 0}
-@media(max-width:640px){.card{flex-direction:column}.thumb img{width:100%;max-width:260px}.top{flex-wrap:wrap;padding:8px 12px}.top input{flex:1 1 100%;max-width:none}.top .sp{display:none}}
+@media(max-width:680px){.card{flex-direction:column}.thumb img{width:100%;max-width:260px}.top{padding:8px 12px}.top input{min-width:120px}.top .sp{display:none}}
 </style>
 </head>
 <body>
 <div class="top">
-  <input id="q" type="search" placeholder="Search TWIC issue, theme, players…" aria-label="Search">
+  <input id="q" type="search" placeholder="Search issue, theme, players…" aria-label="Search">
+  <div class="filters">
+    <button class="fil" data-f="Miniature">Miniature</button>
+    <button class="fil" data-f="Fighting">Fighting</button>
+    <button class="fil" data-f="Upset">Upset</button>
+  </div>
   <span class="sp"></span>
   <span class="count" id="count"></span>
-  <button id="fm" title="Smaller text">A−</button><button id="fp" title="Larger text">A+</button><button id="dk">Dark</button>
+  <div class="ctrls">
+    <button id="fm" title="Smaller text">A−</button><button id="fp" title="Larger text">A+</button><button id="dk">Dark</button>
+  </div>
 </div>
 <header class="hero">
   <div class="kicker">The Week In Chess · Middlegame Plans</div>
@@ -52,40 +71,27 @@ h2 a{color:var(--ink);text-decoration:none}h2 a:hover{color:var(--main)}
 <main id="list"></main>
 
 <script>
-const ISSUES = [
-  {
-    "num": 1,
-    "twic": 1667,
-    "slug": "twic1667",
-    "title": "Nf3/b3/Bb2: Seven Key Games",
-    "dek": "How the world's best players handle the Nf3/b3/Bb2 system – from isolated d5 targets to kingside storms.",
-    "theme": "Nf3/b3/Bb2 System",
-    "date": "2026-10-23",
-    "games": 7,
-    "players": "Mamedyarov, Alonso Rosell, Lobanov, Kistrup, Sjugirov, Buckels, Kuzubov",
-    "filekey": "nf3b3bb2"
-  }
-];
+const ISSUES = [{"num":1,"twic":1667,"slug":"twic1667","title":"Nf3/b3/Bb2: Seven Key Games","dek":"How the world’s best players handle the Nf3/b3/Bb2 system – from isolated d5 targets to kingside storms.","theme":"Nf3/b3/Bb2 System","date":"2026-10-23","games":7,"players":"Mamedyarov, Alonso Rosell, Lobanov, Kistrup, Sjugirov, Buckels, Kuzubov","filekey":"nf3b3bb2","tags":["Fighting","Upset"]}];
 
-function fmtDate(d){ const [y,m] = d.split('-'); return new Date(y,m-1,1).toLocaleString('en-US',{month:'long',year:'numeric'}); }
+function fmtDate(d){ const [y,m]=d.split('-'); return new Date(y,m-1,1).toLocaleString('en-US',{month:'long',year:'numeric'}); }
 
 function renderCard(iss){
-  // files are named: issues/<slug>/<slug>_<filekey>.{html,epub,pgn}
-  // filekey is stored in issues.json; fall back to slug if absent
-  const fk=iss.filekey||iss.slug.replace(/twic\d+/,'nf3b3bb2');
   const dir=`issues/${iss.slug}`;
-  const thumbFile=`${dir}/thumb.png`;
+  const fk=iss.filekey||'';
   const htmlFile=`${dir}/twic${iss.twic}_${fk}.html`;
   const epubFile=`${dir}/twic${iss.twic}_${fk}.epub`;
   const pgnFile=`${dir}/twic${iss.twic}_${fk}.pgn`;
-  return `<article class="card" data-s="${[iss.twic,iss.theme,iss.title,iss.players,iss.date].join(' ').toLowerCase()}">
+  const thumbFile=`${dir}/thumb.png`;
+  const tags=(iss.tags||[]).map(t=>`<span class="tag tag-${t}">${t}</span>`).join('');
+  return `<article class="card">
   <a class="thumb" href="${htmlFile}"><img src="${thumbFile}" alt="Board thumbnail for TWIC ${iss.twic}" loading="lazy"/></a>
   <div class="info">
-    <div class="meta">TWIC ${iss.twic} · ${fmtDate(iss.date)} · ${iss.games} games</div>
+    <div class="meta">TWIC ${iss.twic} &middot; ${fmtDate(iss.date)} &middot; ${iss.games} games</div>
     <h2><a href="${htmlFile}">TWIC ${iss.twic}: ${iss.title}</a></h2>
     <div class="theme">${iss.theme}</div>
     <p class="dek">${iss.dek}</p>
     <p class="players">${iss.players}</p>
+    ${tags?`<div class="tagrow">${tags}</div>`:''}
     <div class="btns">
       <a class="b main" href="${htmlFile}">Read online</a>
       <a class="b" href="${epubFile}" download>Download EPUB</a>
@@ -95,37 +101,55 @@ function renderCard(iss){
 </article>`;
 }
 
-function render(items){
+let activeFilter='';
+let searchQ='';
+
+function filtered(){
+  return ISSUES.filter(iss=>{
+    const matchF=!activeFilter||(iss.tags||[]).includes(activeFilter);
+    const matchQ=!searchQ||[iss.twic,iss.theme,iss.title,iss.players,iss.date].join(' ').toLowerCase().includes(searchQ);
+    return matchF&&matchQ;
+  });
+}
+
+function render(){
+  const items=filtered();
   const main=document.getElementById('list');
-  if(!items.length){ main.innerHTML='<p class="none">No issues found.</p>'; return; }
-  main.innerHTML=items.map(renderCard).join('');
+  main.innerHTML=items.length?items.map(renderCard).join(''):'<p class="none">No issues match.</p>';
   document.getElementById('count').textContent=items.length+' issue'+(items.length===1?'':'s');
 }
 
+// Filter buttons
+document.querySelectorAll('.fil').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const f=btn.dataset.f;
+    activeFilter=activeFilter===f?'':f;
+    document.querySelectorAll('.fil').forEach(b=>b.classList.toggle('active',b.dataset.f===activeFilter));
+    render();
+  });
+});
+
 // Search
-const qs=s=>s.trim().toLowerCase();
 document.getElementById('q').addEventListener('input',e=>{
-  const q=qs(e.target.value);
-  render(q?ISSUES.filter(iss=>iss._s.includes(q)):ISSUES);
+  searchQ=e.target.value.trim().toLowerCase();
+  render();
 });
 
 // Font size
-let fs=parseInt(localStorage.getItem('fs')||'20');
+let fs=20;try{fs=parseInt(localStorage.getItem('fs')||'20')||20;}catch(e){}
 document.documentElement.style.setProperty('--fs',fs+'px');
-document.getElementById('fm').onclick=()=>{ fs=Math.max(14,fs-2); document.documentElement.style.setProperty('--fs',fs+'px'); try{localStorage.setItem('fs',fs)}catch(e){} };
-document.getElementById('fp').onclick=()=>{ fs=Math.min(32,fs+2); document.documentElement.style.setProperty('--fs',fs+'px'); try{localStorage.setItem('fs',fs)}catch(e){} };
+document.getElementById('fm').onclick=()=>{fs=Math.max(14,fs-2);document.documentElement.style.setProperty('--fs',fs+'px');try{localStorage.setItem('fs',fs)}catch(e){}};
+document.getElementById('fp').onclick=()=>{fs=Math.min(32,fs+2);document.documentElement.style.setProperty('--fs',fs+'px');try{localStorage.setItem('fs',fs)}catch(e){}};
 
 // Dark mode
-try{ if(localStorage.getItem('dk')==='1') document.documentElement.setAttribute('data-theme','dark'); }catch(e){}
+try{if(localStorage.getItem('dk')==='1')document.documentElement.setAttribute('data-theme','dark');}catch(e){}
 document.getElementById('dk').onclick=()=>{
   const dark=document.documentElement.getAttribute('data-theme')==='dark';
   document.documentElement.setAttribute('data-theme',dark?'light':'dark');
   try{localStorage.setItem('dk',dark?'0':'1')}catch(e){}
 };
 
-// Pre-build search strings
-ISSUES.forEach(iss=>{ iss._s=[iss.twic,iss.theme,iss.title,iss.players,iss.date].join(' ').toLowerCase(); });
-render(ISSUES);
+render();
 </script>
 </body>
 </html>
