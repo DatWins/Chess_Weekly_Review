@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training Week 1 · TWIC Weekly Review</title>
+<style>
+:root{--fs:17px;--paper:#fbfaf7;--ink:#1d1f22;--muted:#5d6670;--line:#e2e0da;--card:#fff;--main:#1f4fa3;--mainbg:#1f4fa3;--mainfg:#fff;--btn:#fff;--btnb:#cfd5db;--gold:#b07d10;--open:#1a6030;--openbg:#edf7f0;--mid:#1f4fa3;--midbg:#eef3fc;--end:#6b1a1a;--endbg:#fdf0f0}
+:root[data-theme="dark"]{--paper:#16191d;--ink:#e4e6e9;--muted:#9aa3ad;--line:#2c3238;--card:#1d2126;--main:#86b4ff;--mainbg:#2f5ea8;--mainfg:#fff;--btn:#232930;--btnb:#3a434c;--gold:#c9a030;--open:#3a9a50;--openbg:#1a3020;--mid:#86b4ff;--midbg:#1a2535;--end:#cc6666;--endbg:#2a1515;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#16191d;--ink:#e4e6e9;--muted:#9aa3ad;--line:#2c3238;--card:#1d2126;--main:#86b4ff;--mainbg:#2f5ea8;--mainfg:#fff;--btn:#232930;--btnb:#3a434c;--gold:#c9a030;--open:#3a9a50;--openbg:#1a3020;--mid:#86b4ff;--midbg:#1a2535;--end:#cc6666;--endbg:#2a1515;color-scheme:dark}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:system-ui,'Segoe UI',sans-serif;font-size:var(--fs);line-height:1.5}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 20px;background:var(--paper);border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+.back{color:var(--main);text-decoration:none;font-weight:600;font-size:13px}
+.back:hover{text-decoration:underline}
+.sp{flex:1}
+.dk-btn{font:inherit;font-size:13px;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:6px;padding:4px 10px;cursor:pointer}
+.page{max-width:900px;margin:0 auto;padding:32px 20px 80px}
+.kicker{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;line-height:1.2;margin-bottom:4px}
+.sub{color:var(--muted);font-size:.9rem;margin-bottom:28px}
+hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,var(--line) 48px);margin-bottom:32px}
+
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
+@media(max-width:600px){.phases{grid-template-columns:1fr}}
+
+.phase-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.phase-head{padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.phase-tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:8px}
+.tag-open{background:var(--openbg);color:var(--open)}
+.tag-mid {background:var(--midbg);color:var(--mid)}
+.tag-end {background:var(--endbg);color:var(--end)}
+.phase-title{font-size:1rem;font-weight:700;margin-bottom:2px}
+.phase-count{font-size:.8rem;color:var(--muted)}
+.ex-list{list-style:none;padding:8px 0}
+.ex-list li{border-bottom:1px solid var(--line)}
+.ex-list li:last-child{border-bottom:none}
+.ex-list a{display:flex;align-items:center;gap:10px;padding:9px 16px;text-decoration:none;color:var(--ink);font-size:.88rem;transition:background .1s}
+.ex-list a:hover{background:color-mix(in srgb,var(--main) 6%,var(--card))}
+.ex-num{font-size:.72rem;font-weight:700;color:var(--muted);min-width:24px}
+.ex-done{color:var(--open);font-size:.8rem;margin-left:auto}
+.ex-lock{color:var(--muted);font-size:.8rem;margin-left:auto;opacity:.5}
+
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.progress-label{font-size:.8rem;color:var(--muted)}
+.progress-bar{flex:1;min-width:120px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--main);border-radius:3px;transition:width .3s}
+.progress-pct{font-size:.8rem;font-weight:700;color:var(--main)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../../../training.html">← Training Library</a>
+  <span style="color:var(--muted);font-size:13px">Week 1</span>
+  <span class="sp"></span>
+  <button class="dk-btn" id="dk">Dark</button>
+</div>
+
+<div class="page">
+  <div class="kicker">TWIC Weekly Review · Training</div>
+  <h1>Week 1 — Strategic Exercises</h1>
+  <p class="sub">30 positions per day · 10 Opening · 10 Middlegame · 10 Endgame · Work through each phase at your own pace.</p>
+  <hr>
+
+  <div class="progress-row">
+    <span class="progress-label">Week progress</span>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <span class="progress-pct" id="prog-pct">0 / 30</span>
+  </div>
+
+  <div class="phases">
+
+    <!-- Opening -->
+    <div class="phase-card">
+      <div class="phase-head">
+        <span class="phase-tag tag-open">Opening</span>
+        <div class="phase-title">Opening Positions</div>
+        <div class="phase-count">10 exercises · Coming soon</div>
+      </div>
+      <ul class="ex-list" id="open-list"></ul>
+    </div>
+
+    <!-- Middlegame -->
+    <div class="phase-card">
+      <div class="phase-head">
+        <span class="phase-tag tag-mid">Middlegame</span>
+        <div class="phase-title">Middlegame Plans</div>
+        <div class="phase-count">1 of 10 exercises ready</div>
+      </div>
+      <ul class="ex-list" id="mid-list"></ul>
+    </div>
+
+    <!-- Endgame -->
+    <div class="phase-card">
+      <div class="phase-head">
+        <span class="phase-tag tag-end">Endgame</span>
+        <div class="phase-title">Endgame Technique</div>
+        <div class="phase-count">10 exercises · Coming soon</div>
+      </div>
+      <ul class="ex-list" id="end-list"></ul>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const EXERCISES = {
+  opening: Array.from({length:10},(_,i)=>({num:i+1,title:'Coming soon',file:null})),
+  middlegame: [
+    {num:1,title:'Ivanchuk vs Kasparov — Linares 1991',file:'middlegame/ex01.html'},
+    ...Array.from({length:9},(_,i)=>({num:i+2,title:'Coming soon',file:null}))
+  ],
+  endgame: Array.from({length:10},(_,i)=>({num:i+1,title:'Coming soon',file:null}))
+};
+
+let done = new Set();
+try { done = new Set(JSON.parse(localStorage.getItem('w1done') || '[]')); } catch(e) {}
+
+function renderList(id, items, prefix) {
+  const ul = document.getElementById(id);
+  ul.innerHTML = items.map(ex => {
+    const key = prefix + ex.num;
+    const isDone = done.has(key);
+    if (ex.file) {
+      return `<li><a href="${ex.file}" data-key="${key}" onclick="markDone('${key}')">
+        <span class="ex-num">${ex.num}</span>
+        <span>${ex.title}</span>
+        ${isDone ? '<span class="ex-done">✓</span>' : ''}
+      </a></li>`;
+    }
+    return `<li><a style="cursor:default;opacity:.5">
+      <span class="ex-num">${ex.num}</span>
+      <span style="color:var(--muted)">${ex.title}</span>
+      <span class="ex-lock">—</span>
+    </a></li>`;
+  }).join('');
+}
+
+function markDone(key) {
+  done.add(key);
+  try { localStorage.setItem('w1done', JSON.stringify([...done])); } catch(e) {}
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 30;
+  const n = done.size;
+  const pct = Math.round(n / total * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = n + ' / ' + total;
+}
+
+renderList('open-list', EXERCISES.opening, 'o');
+renderList('mid-list', EXERCISES.middlegame, 'm');
+renderList('end-list', EXERCISES.endgame, 'e');
+updateProgress();
+
+try { if (localStorage.getItem('dk')==='1') document.documentElement.setAttribute('data-theme','dark'); } catch(e) {}
+document.getElementById('dk').onclick = () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  try { localStorage.setItem('dk', dark ? '0' : '1'); } catch(e) {}
+};
+</script>
+</body>
+</html>

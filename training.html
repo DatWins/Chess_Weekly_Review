@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training Library · TWIC Weekly Review</title>
+<style>
+:root{--fs:17px;--paper:#fbfaf7;--ink:#1d1f22;--muted:#5d6670;--line:#e2e0da;--card:#fff;--main:#1f4fa3;--mainbg:#1f4fa3;--mainfg:#fff;--btn:#fff;--btnb:#cfd5db;--gold:#b07d10;--open:#1a6030;--openbg:#edf7f0;--mid:#1f4fa3;--midbg:#eef3fc;--end:#6b1a1a;--endbg:#fdf0f0}
+:root[data-theme="dark"]{--paper:#16191d;--ink:#e4e6e9;--muted:#9aa3ad;--line:#2c3238;--card:#1d2126;--main:#86b4ff;--mainbg:#2f5ea8;--mainfg:#fff;--btn:#232930;--btnb:#3a434c;--gold:#c9a030;--open:#3a9a50;--openbg:#1a3020;--mid:#86b4ff;--midbg:#1a2535;--end:#cc6666;--endbg:#2a1515;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#16191d;--ink:#e4e6e9;--muted:#9aa3ad;--line:#2c3238;--card:#1d2126;--main:#86b4ff;--mainbg:#2f5ea8;--mainfg:#fff;--btn:#232930;--btnb:#3a434c;--gold:#c9a030;--open:#3a9a50;--openbg:#1a3020;--mid:#86b4ff;--midbg:#1a2535;--end:#cc6666;--endbg:#2a1515;color-scheme:dark}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:system-ui,'Segoe UI',sans-serif;font-size:var(--fs);line-height:1.5}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 20px;background:var(--paper);border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+.back{color:var(--main);text-decoration:none;font-weight:600;font-size:13px}
+.back:hover{text-decoration:underline}
+.sp{flex:1}
+.dk-btn{font:inherit;font-size:13px;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:6px;padding:4px 10px;cursor:pointer}
+.page{max-width:860px;margin:0 auto;padding:36px 20px 80px}
+.kicker{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+h1{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:800;line-height:1.1;margin-bottom:6px}
+.sub{color:var(--muted);font-size:.9rem;max-width:540px;margin-bottom:32px}
+hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,var(--line) 48px);margin-bottom:36px}
+
+.explain{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+@media(max-width:560px){.explain{grid-template-columns:1fr}}
+.pill{border-radius:10px;padding:16px 18px}
+.pill-open{background:var(--openbg)}
+.pill-mid {background:var(--midbg)}
+.pill-end {background:var(--endbg)}
+.pill-label{font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.pill-open .pill-label{color:var(--open)}
+.pill-mid  .pill-label{color:var(--mid)}
+.pill-end  .pill-label{color:var(--end)}
+.pill p{font-size:.82rem;color:var(--muted);line-height:1.4}
+
+.section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.section-head h2{font-size:1.1rem;font-weight:700}
+.section-head .cnt{font-size:.78rem;color:var(--muted)}
+
+.week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:48px}
+.week-card{background:var(--card);border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);padding:18px 20px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,border-color .15s}
+.week-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08);border-color:var(--main)}
+.wk-num{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.wk-title{font-size:.95rem;font-weight:700}
+.wk-date{font-size:.75rem;color:var(--muted)}
+.wk-bar{margin-top:6px;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.wk-fill{height:100%;background:var(--main);border-radius:2px}
+.wk-stat{font-size:.72rem;color:var(--muted)}
+.wk-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.wk-tag{font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:8px}
+.wk-tag.o{background:var(--openbg);color:var(--open)}
+.wk-tag.m{background:var(--midbg);color:var(--mid)}
+.wk-tag.e{background:var(--endbg);color:var(--end)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="index.html">← TWIC Review</a>
+  <span style="color:var(--muted);font-size:13px">Training Library</span>
+  <span class="sp"></span>
+  <button class="dk-btn" id="dk">Dark</button>
+</div>
+
+<div class="page">
+  <div class="kicker">TWIC Weekly Review</div>
+  <h1>Strategic Training Library</h1>
+  <p class="sub">210 exercises per week — 70 opening, 70 middlegame, 70 endgame positions drawn from master games. Guess the plan, then study the why.</p>
+  <hr>
+
+  <div class="explain">
+    <div class="pill pill-open">
+      <div class="pill-label">Opening</div>
+      <p>Pawn structure, development choices, typical plans — 10 positions per day where the move order matters.</p>
+    </div>
+    <div class="pill pill-mid">
+      <div class="pill-label">Middlegame</div>
+      <p>Strategic decisions: when to sacrifice a pawn, open a file, regroup — the moments that decide master games.</p>
+    </div>
+    <div class="pill pill-end">
+      <div class="pill-label">Endgame</div>
+      <p>Technique and precision — 10 endgames per day where the winning idea is one critical plan away.</p>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h2>Weekly Sets</h2>
+    <span class="cnt" id="week-cnt"></span>
+  </div>
+
+  <div class="week-grid" id="week-grid"></div>
+</div>
+
+<script>
+const WEEKS = [
+  {
+    num: 1,
+    title: 'TWIC Master Games — Week 1',
+    date: 'Oct 2026',
+    href: 'issues/training/week1/index.html',
+    total: 30,
+    ready: 1,
+    phases: ['m']
+  }
+  // More weeks will be added here as they are completed
+];
+
+function renderWeeks() {
+  const grid = document.getElementById('week-grid');
+  let done_total = 0, ready_total = 0;
+
+  grid.innerHTML = WEEKS.map(w => {
+    let done = 0;
+    try {
+      const saved = JSON.parse(localStorage.getItem('w' + w.num + 'done') || '[]');
+      done = saved.length;
+    } catch(e) {}
+    done_total += done;
+    ready_total += w.ready;
+
+    const pct = Math.round(done / w.total * 100);
+    const tags = w.phases.map(p => `<span class="wk-tag ${p}">${{o:'Opening',m:'Middlegame',e:'Endgame'}[p]}</span>`).join('');
+    return `<a class="week-card" href="${w.href}">
+      <div class="wk-num">Week ${w.num}</div>
+      <div class="wk-title">${w.title}</div>
+      <div class="wk-date">${w.date}</div>
+      <div class="wk-tags">${tags}</div>
+      <div class="wk-bar"><div class="wk-fill" style="width:${pct}%"></div></div>
+      <div class="wk-stat">${done} / ${w.total} done · ${w.ready} exercise${w.ready===1?'':'s'} ready</div>
+    </a>`;
+  }).join('');
+
+  document.getElementById('week-cnt').textContent = WEEKS.length + ' week' + (WEEKS.length === 1 ? '' : 's') + ' · ' + ready_total + ' exercise' + (ready_total === 1 ? '' : 's') + ' ready';
+}
+
+renderWeeks();
+
+try { if (localStorage.getItem('dk') === '1') document.documentElement.setAttribute('data-theme', 'dark'); } catch(e) {}
+document.getElementById('dk').onclick = () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  try { localStorage.setItem('dk', dark ? '0' : '1'); } catch(e) {}
+};
+</script>
+</body>
+</html>
