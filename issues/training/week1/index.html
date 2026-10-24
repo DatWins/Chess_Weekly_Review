@@ -80,7 +80,7 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
       <div class="phase-head">
         <span class="phase-tag tag-open">Opening</span>
         <div class="phase-title">Opening Positions</div>
-        <div class="phase-count">10 exercises · Coming soon</div>
+        <div class="phase-count">10 exercises ready</div>
       </div>
       <ul class="ex-list" id="open-list"></ul>
     </div>
@@ -90,7 +90,7 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
       <div class="phase-head">
         <span class="phase-tag tag-mid">Middlegame</span>
         <div class="phase-title">Middlegame Plans</div>
-        <div class="phase-count">1 of 10 exercises ready</div>
+        <div class="phase-count">10 exercises ready</div>
       </div>
       <ul class="ex-list" id="mid-list"></ul>
     </div>
@@ -100,7 +100,7 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
       <div class="phase-head">
         <span class="phase-tag tag-end">Endgame</span>
         <div class="phase-title">Endgame Technique</div>
-        <div class="phase-count">10 exercises · Coming soon</div>
+        <div class="phase-count">10 exercises ready</div>
       </div>
       <ul class="ex-list" id="end-list"></ul>
     </div>
@@ -110,12 +110,42 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
 
 <script>
 const EXERCISES = {
-  opening: Array.from({length:10},(_,i)=>({num:i+1,title:'Coming soon',file:null})),
-  middlegame: [
-    {num:1,title:'Ivanchuk vs Kasparov — Linares 1991',file:'middlegame/ex01.html'},
-    ...Array.from({length:9},(_,i)=>({num:i+2,title:'Coming soon',file:null}))
+  opening: [
+    {num:1, title:'Andreikin vs Maghsoodloo — Réti Opening', file:'opening/ex01.html'},
+    {num:2, title:'Nakamura vs Nihal — English (A13)', file:'opening/ex02.html'},
+    {num:3, title:'Caruana vs Moussard — Trompowsky', file:'opening/ex03.html'},
+    {num:4, title:'So vs Svane — Giuoco Piano', file:'opening/ex04.html'},
+    {num:5, title:'Nakamura vs Nguyen — English 1.c4 e6', file:'opening/ex05.html'},
+    {num:6, title:'Vachier-Lagrave vs Nakamura — Berlin', file:'opening/ex06.html'},
+    {num:7, title:'Aravindh vs Nakamura — Berlin d3', file:'opening/ex07.html'},
+    {num:8, title:'Bortnyk vs Nakamura — Four Knights', file:'opening/ex08.html'},
+    {num:9, title:'Caruana vs Niemann — Nimzo-Indian', file:'opening/ex09.html'},
+    {num:10,title:'Shankland vs Caruana — QGD (D37)', file:'opening/ex10.html'}
   ],
-  endgame: Array.from({length:10},(_,i)=>({num:i+1,title:'Coming soon',file:null}))
+  middlegame: [
+    {num:1, title:'Ivanchuk vs Kasparov — Linares 1991', file:'middlegame/ex01.html'},
+    {num:2, title:'Nakamura vs Maghsoodloo — Ruy Lopez', file:'middlegame/ex02.html'},
+    {num:3, title:'Dubov vs So — Slav Defence', file:'middlegame/ex03.html'},
+    {num:4, title:'Caruana vs Xiong — Petrov Defence', file:'middlegame/ex04.html'},
+    {num:5, title:'Nihal vs Vachier-Lagrave — King\'s Indian', file:'middlegame/ex05.html'},
+    {num:6, title:'Liang vs Aronian — Berlin Endgame', file:'middlegame/ex06.html'},
+    {num:7, title:'Martirosyan vs Caruana — QGA Flohr', file:'middlegame/ex07.html'},
+    {num:8, title:'Grischuk vs Nakamura — Berlin', file:'middlegame/ex08.html'},
+    {num:9, title:'Caruana vs Moussard — Trompowsky Attack', file:'middlegame/ex09.html'},
+    {num:10,title:'Nakamura vs Samunenkov — English', file:'middlegame/ex10.html'}
+  ],
+  endgame: [
+    {num:1, title:'Robson vs So — Rook Endgame (King activation)', file:'endgame/ex01.html'},
+    {num:2, title:'Nihal vs Caruana — Rook Endgame (Philidor)', file:'endgame/ex02.html'},
+    {num:3, title:'So vs Mishra — Bishop Endgame (Two weaknesses)', file:'endgame/ex03.html'},
+    {num:4, title:'Nakamura vs Dubov — Queen Endgame (Zugzwang)', file:'endgame/ex04.html'},
+    {num:5, title:'Bortnyk vs Nakamura — Pawn Endgame (Outside passer)', file:'endgame/ex05.html'},
+    {num:6, title:'VL vs Nakamura — Rook Endgame (Lucena)', file:'endgame/ex06.html'},
+    {num:7, title:'Aravindh vs Nakamura — Bishop vs Knight', file:'endgame/ex07.html'},
+    {num:8, title:'Caruana vs Svane — Knight Endgame (Outpost)', file:'endgame/ex08.html'},
+    {num:9, title:'Dubov vs Grischuk — Rook Endgame (Passed pawn)', file:'endgame/ex09.html'},
+    {num:10,title:'Nakamura vs Bortnyk — Rook Endgame (Tarrasch)', file:'endgame/ex10.html'}
+  ]
 };
 
 let done = new Set();
