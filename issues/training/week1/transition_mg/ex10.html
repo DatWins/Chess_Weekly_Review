@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Knights Rule the Fortress · TWIC 1667 Training</title>
+<title>The Knight Outpost · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -245,22 +245,22 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
     </div>
 
     <div class="text-col">
-      <p class="question">Black (Caruana) has two knights and two bishops against White's bishops. The position is semi-closed. What plan should Black employ?</p>
+      <p class="question">Black (Caruana) has two knights and two bishops against White's pieces. The position is semi-closed, with Black's bishops eyeing long diagonals. What is the strongest immediate plan?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">Play ...Nf4, planting a knight on an outpost</span>
+          <span class="choice-plan">Play ...Ne4, centralizing with tempo</span>
         </div>
-        <div class="choice-body">The knight leaps to f4, attacking the Bishop on e2. From f4, it cannot be chased by a pawn and eyes g2, d3, and h3. A classic outpost knight.</div>
+        <div class="choice-body">The knight leaps to e4, a dominant central outpost. From e4 it attacks the White queen on c3, forcing an immediate response. No pawn can dislodge it (f3 is already occupied), and the knight coordinates with the bishop on d5.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">Push ...e5, gaining central space</span>
+          <span class="choice-plan">Play ...Nf4, planting a knight on f4</span>
         </div>
-        <div class="choice-body">Advance the e-pawn to grab more space and restrict White's pieces. After ...e5, Black has a strong centre and the bishops have long diagonals to operate on.</div>
+        <div class="choice-body">The knight jumps to f4, eyeing e2 and g2. It looks aggressive and hard to dislodge by pawns. A tempting outpost square.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
@@ -268,7 +268,7 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
           <span class="choice-letter">C</span>
           <span class="choice-plan">Trade ...Bxe3, simplifying the position</span>
         </div>
-        <div class="choice-body">Exchange off the bishop for White's knight on e3, reducing material and heading toward an ending. Black's remaining bishop may dominate.</div>
+        <div class="choice-body">Exchange the bishop for White's knight on e3, reducing material and heading toward an ending where Black's remaining bishop may dominate.</div>
       </div>
 
       <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
@@ -278,12 +278,11 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
       <div class="explanation" id="explanation">
         <h3>Why Plan A?</h3>
-        <p>Caruana should play <strong>...Nf4</strong>, jumping to the outpost. This is a classic Caruana move—identify your best square, plant a piece there, and make your opponent squirm.</p>
-<p>The knight on f4 is a monster. It attacks the Be2 (forcing White to defend or move), eyes g2 (a permanent kingside weakness), and cannot be driven away by any pawn. White has no f3 pawn to challenge it, and the g3 square is protected by Black's own pieces.</p>
-<p>Once the knight lands on f4, Black can follow up with ...Nge4 or ...Nh5 depending on White's response. The two knights will control the position like a vice.</p>
-<p>Plan B (...e5) is good but premature—d5 becomes weak after e5, and White can exploit that with Nd5 or similar. Better to plant the knight first.</p>
-<p>Plan C (...Bxe3) is wrong. Never trade bishops for knights in a semi-closed position when your knights are about to dominate. Bishops improve as positions open; keep them for now.</p>
-<p>Key: with knights, your job is to find the best square and get there. Don't ask permission—occupy the outpost.</p>
+        <p>The correct plan is <strong>...Ne4!</strong>, centralizing the knight with an immediate attack on White's queen on c3. White must respond to the threat, giving Black a free tempo to improve the position further.</p>
+<p>The knight on e4 is a true outpost — no White pawn can touch it (f3 is already occupied by a pawn), and it sits on the most central square on the board, coordinating with the bishop on d5. Together they exert tremendous pressure on White's position.</p>
+<p>Plan B (...Nf4) looks attractive but fails immediately: White has a pawn on e3, and pawns capture diagonally forward. After <strong>...Nf4, exf4!</strong> White wins the knight for a pawn — a clean material gain. The pawn on e3 was guarding f4 the whole time. Always check for pawn recaptures before landing on a "safe" outpost.</p>
+<p>Plan C (...Bxe3) is wrong. Never trade your active bishop for a knight in a semi-closed position when your knights are ready to dominate. The bishop on d5 is a monster — keep it.</p>
+<p>Key lesson: centralize with gain of tempo. <strong>...Ne4</strong> attacks the queen and occupies the best square simultaneously.</p>
       </div>
     </div>
   </div>
