@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Robson vs So · TWIC 1667 Training</title>
+<title>Bortnyk vs Nakamura · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -199,63 +199,63 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Robson – So · Rook Endgame</h1>
-  <p class="byline">US Championship 2026 · TWIC 1667 · Black to move — king activation</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>Bortnyk – Nakamura · Pawn Endgame</h1>
+  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · Black to move — outside passed pawn</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Rook ending — Black to move</p>
+      <p class="board-caption">Pawn endgame — Black to move, outside passed pawn</p>
     </div>
 
     <div class="text-col">
-      <p class="question">So (Black) is in a rook endgame. White's rook is active on a5, but Black has the more active king. What is the key plan to convert the advantage?</p>
+      <p class="question">Nakamura (Black) has an outside passed pawn majority on the queenside. White has the outside passer on a4. How should Black exploit the position?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">52...Kf6 — activate the king</span>
+          <span class="choice-plan">43...a5 — fix the queenside pawn</span>
         </div>
-        <div class="choice-body">March the king toward the center to support the pawns and challenge White's rook.</div>
+        <div class="choice-body">Advance a5 to stabilize the queenside and prevent White's a-pawn from advancing.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">52...h5 — advance the h-pawn</span>
+          <span class="choice-plan">43...b5 — create the outside passed pawn</span>
         </div>
-        <div class="choice-body">Start advancing the h-pawn immediately to create a passed pawn.</div>
+        <div class="choice-body">Push b5 to begin creating a passed b-pawn to distract White's king.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">52...g4 — fix the pawn structure</span>
+          <span class="choice-plan">43...Kg5 — activate the king first</span>
         </div>
-        <div class="choice-body">Advance g4 to limit White's options and create a protected passed pawn.</div>
+        <div class="choice-body">March the king into the center before committing to a pawn plan.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — C is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan C.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan A?</h3>
-        <p><strong>52...Kf6!</strong> is the classic rook endgame principle: <em>activate the king</em>. After <strong>53. Ra7 Ke5 54. Rxf7 Kd4</strong> the king invades the queenside and White cannot stop the advance.</p>
-<p>Rook endgames are won by the player with the more active king. So's technique was exemplary: the king marched to d4, threatening to penetrate further while the rook on f7 stayed passive. Black won in 92 moves — a demonstration of pure rook endgame technique.</p>
-<p><strong>Plan B</strong> (h5) is too slow — White's rook stays active. <strong>Plan C</strong> (g4) gives White a target; the king activation is always the priority.</p>
+        <h3>Why Plan C?</h3>
+        <p><strong>43...Kg5!</strong> is the correct move — in pawn endgames, the king is the most important piece. After <strong>43...Kg5 44. Kg3 Kf5 45. a5 b6!</strong> (fixing White's passer) Black's king infiltrates the kingside while the queenside remains locked.</p>
+<p>The principle in outside passed pawn endings: <em>centralize the king first, then use the pawns</em>. Nakamura demonstrated the winning technique by activating the king before committing to queenside operations — a lesson in pawn endgame fundamentals.</p>
+<p><strong>Plan A</strong> (a5) is too passive. <strong>Plan B</strong> (b5) is premature — the king must come first or White's king reaches f4 with counterplay.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '8/5pk1/7p/R5p1/8/6P1/5PKP/8 b - - 0 52';
-const HL  = ['f7','f6','g5'];
-const CORRECT = 'A';
+const FEN = '8/pp6/6pk/8/P7/6PP/5PK1/8 b - - 0 43';
+const HL  = ['a7','a4','h6'];
+const CORRECT = 'C';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

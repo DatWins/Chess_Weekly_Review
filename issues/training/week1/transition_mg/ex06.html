@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Challenging the Outpost Knight · TWIC 1667 Training</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+:root {
+  --fs: 17px;
+  --paper: #fbfaf7;
+  --ink: #1d1f22;
+  --muted: #5d6670;
+  --line: #e2e0da;
+  --card: #fff;
+  --main: #1f4fa3;
+  --mainbg: #1f4fa3;
+  --mainfg: #fff;
+  --btn: #fff;
+  --btnb: #cfd5db;
+  --gold: #b07d10;
+  --correct: #1a6e30;
+  --wrong: #8b1a1a;
+  --sq-light: #dee3e6;
+  --sq-dark: #8ca2ad;
+  --sq-hl: rgba(31, 79, 163, 0.35);
+}
+:root[data-theme="dark"] {
+  --paper: #16191d;
+  --ink: #e4e6e9;
+  --muted: #9aa3ad;
+  --line: #2c3238;
+  --card: #1d2126;
+  --main: #86b4ff;
+  --mainbg: #2f5ea8;
+  --mainfg: #fff;
+  --btn: #232930;
+  --btnb: #3a434c;
+  --gold: #c9a030;
+  --correct: #3a9a50;
+  --wrong: #cc6666;
+  --sq-light: #dee3e6;
+  --sq-dark: #8ca2ad;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #16191d; --ink: #e4e6e9; --muted: #9aa3ad; --line: #2c3238;
+    --card: #1d2126; --main: #86b4ff; --mainbg: #2f5ea8; --mainfg: #fff;
+    --btn: #232930; --btnb: #3a434c; --gold: #c9a030;
+    --correct: #3a9a50; --wrong: #cc6666; color-scheme: dark;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--paper); color: var(--ink); }
+body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line-height: 1.6; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 16px; background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  font-family: system-ui, 'Segoe UI', sans-serif; font-size: 13px; flex-wrap: wrap;
+}
+.back { color: var(--main); text-decoration: none; font-weight: 600; }
+.back:hover { text-decoration: underline; }
+.topbar-title { color: var(--muted); }
+.topbar .sp { flex: 1; }
+.dk-btn {
+  font: inherit; font-size: 12px; background: var(--btn); color: var(--ink);
+  border: 1px solid var(--btnb); border-radius: 6px; padding: 3px 9px; cursor: pointer;
+}
+
+.page { max-width: 780px; margin: 0 auto; padding: 28px 18px 80px; }
+.phase-tag {
+  display: inline-block; font-family: system-ui, sans-serif;
+  font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
+  background: #dbeafe; color: #1e40af;
+}
+h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
+.byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
+hr { border: none; height: 2px; background: linear-gradient(to right, var(--main) 48px, var(--line) 48px); margin-bottom: 28px; }
+
+.layout { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+.board-col { flex: 0 0 auto; }
+.text-col { flex: 1; min-width: 240px; }
+
+#board {
+  width: min(400px, 88vw);
+  height: min(400px, 88vw);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border: 2px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+  user-select: none;
+}
+.sq { position: relative; }
+.sq.light { background: var(--sq-light); }
+.sq.dark  { background: var(--sq-dark); }
+.sq.hl { box-shadow: inset 0 0 0 4px rgba(31,79,163,.55); }
+.pc { position: absolute; inset: 0; background-size: 100% 100%; z-index: 1; }
+.pc.wP{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==')}
+.pc.wB{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjM5LS45NyAxMC4xMS40MyAxMy41LTIgMy4zOSAyLjQzIDEwLjExIDEuMDMgMTMuNSAyIDAgMCAxLjY1LjU0IDMgMi0uNjguOTctMS42NS45OS0zIC41LTMuMzktLjk3LTEwLjExLjQ2LTEzLjUtMS0zLjM5IDEuNDYtMTAuMTEuMDMtMTMuNSAxLTEuMzU0LjQ5LTIuMzIzLjQ3LTMtLjUgMS4zNTQtMS45NCAzLTIgMy0yeiIvPjxwYXRoIGQ9Ik0xNSAzMmMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyeiIvPjxwYXRoIGQ9Ik0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIvPjwvZz48cGF0aCBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PC9nPjwvc3ZnPg==')}
+.pc.wN{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMiAxMGMxMC41IDEgMTYuNSA4IDE2IDI5SDE1YzAtOSAxMC02LjUgOC0yMSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yNCAxOGMuMzggMi45MS01LjU1IDcuMzctOCA5LTMgMi0yLjgyIDQuMzQtNSA0LTEuMDQyLS45NCAxLjQxLTMuMDQgMC0zLTEgMCAuMTkgMS4yMy0xIDItMSAwLTQuMDAzIDEtNC00IDAtMiA2LTEyIDYtMTJzMS44OS0xLjkgMi0zLjVjLS43My0uOTk0LS41LTItLjUtMyAxLTEgMyAyLjUgMyAyLjVoMnMuNzgtMS45OTIgMi41LTNjMSAwIDEgMyAxIDMiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNOS41IDI1LjVhLjUuNSAwIDEgMS0xIDAgLjUuNSAwIDEgMSAxIDB6bTUuNDMzLTkuNzVhLjUgMS41IDMwIDEgMS0uODY2LS41LjUgMS41IDMwIDEgMSAuODY2LjV6IiBmaWxsPSIjMDAwIi8+PC9nPjwvc3ZnPg==')}
+.pc.wR{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM5aDI3di0zSDl2M3ptMy0zdi00aDIxdjRIMTJ6bS0xLTIyVjloNHYyaDVWOWg1djJoNVY5aDR2NSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMzQgMTRsLTMgM0gxNGwtMy0zIi8+PHBhdGggZD0iTTMxIDE3djEyLjVIMTRWMTciIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTMxIDI5LjVsMS41IDIuNWgtMjBsMS41LTIuNSIvPjxwYXRoIGQ9Ik0xMSAxNGgyMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjwvZz48L3N2Zz4=')}
+.pc.wQ{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik04IDEyYTIgMiAwIDEgMS00IDAgMiAyIDAgMSAxIDQgMHptMTYuNS00LjVhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAwek00MSAxMmEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDB6TTE2IDguNWEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDB6TTMzIDlhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAweiIvPjxwYXRoIGQ9Ik05IDI2YzguNS0xLjUgMjEtMS41IDI3IDBsMi0xMi03IDExVjExbC01LjUgMTMuNS0zLTE1LTMgMTUtNS41LTE0VjI1TDcgMTRsMiAxMnoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTkgMjZjMCAyIDEuNSAyIDIuNSA0IDEgMS41IDEgMSAuNSAzLjUtMS41IDEtMS41IDIuNS0xLjUgMi41LTEuNSAxLjUuNSAyLjUuNSAyLjUgNi41IDEgMTYuNSAxIDIzIDAgMCAwIDEuNS0xIDAtMi41IDAgMCAuNS0xLjUtMS0yLjUtLjUtMi41LS41LTIgLjUtMy41IDEtMiAyLjUtMiAyLjUtNC04LjUtMS41LTE4LjUtMS41LTI3IDB6IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0xMS41IDMwYzMuNS0xIDE4LjUtMSAyMiAwTTEyIDMzLjVjNi0xIDE1LTEgMjEgMCIgZmlsbD0ibm9uZSIvPjwvZz48L3N2Zz4=')}
+.pc.wK{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjZNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTIyLjUgMjVzNC41LTcuNSAzLTEwLjVjMCAwLTEtMi41LTMtMi41cy0zIDIuNS0zIDIuNWMtMS41IDMgMyAxMC41IDMgMTAuNSIgZmlsbD0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMTEuNSAzN2M1LjUgMy41IDE1LjUgMy41IDIxIDB2LTdzOS00LjUgNi0xMC41Yy00LTYuNS0xMy41LTMuNS0xNiA0VjI3di0zLjVjLTMuNS03LjUtMTMtMTAuNS0xNi00LTMgNiA1IDEwIDUgMTBWMzd6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTExLjUgMzBjNS41LTMgMTUuNS0zIDIxIDBtLTIxIDMuNWM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwIi8+PC9nPjwvc3ZnPg==')}
+.pc.bP{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==')}
+.pc.bB{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIGZpbGw9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjM5LS45NyAxMC4xMS40MyAxMy41LTIgMy4zOSAyLjQzIDEwLjExIDEuMDMgMTMuNSAyIDAgMCAxLjY1LjU0IDMgMi0uNjguOTctMS42NS45OS0zIC41LTMuMzktLjk3LTEwLjExLjQ2LTEzLjUtMS0zLjM5IDEuNDYtMTAuMTEuMDMtMTMuNSAxLTEuMzU0LjQ5LTIuMzIzLjQ3LTMtLjUgMS4zNTQtMS45NCAzLTIgMy0yeiIvPjxwYXRoIGQ9Ik0xNSAzMmMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyeiIvPjxwYXRoIGQ9Ik0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIvPjwvZz48cGF0aCBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1IiBzdHJva2U9IiNlY2VjZWMiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48L2c+PC9zdmc+')}
+.pc.bN{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMiAxMGMxMC41IDEgMTYuNSA4IDE2IDI5SDE1YzAtOSAxMC02LjUgOC0yMSIgZmlsbD0iIzAwMCIvPjxwYXRoIGQ9Ik0yNCAxOGMuMzggMi45MS01LjU1IDcuMzctOCA5LTMgMi0yLjgyIDQuMzQtNSA0LTEuMDQyLS45NCAxLjQxLTMuMDQgMC0zLTEgMCAuMTkgMS4yMy0xIDItMSAwLTQuMDAzIDEtNC00IDAtMiA2LTEyIDYtMTJzMS44OS0xLjkgMi0zLjVjLS43My0uOTk0LS41LTItLjUtMyAxLTEgMyAyLjUgMyAyLjVoMnMuNzgtMS45OTIgMi41LTNjMSAwIDEgMyAxIDMiIGZpbGw9IiMwMDAiLz48cGF0aCBkPSJNOS41IDI1LjVhLjUuNSAwIDEgMS0xIDAgLjUuNSAwIDEgMSAxIDB6bTUuNDMzLTkuNzVhLjUgMS41IDMwIDEgMS0uODY2LS41LjUgMS41IDMwIDEgMSAuODY2LjV6IiBmaWxsPSIjZWNlY2VjIiBzdHJva2U9IiNlY2VjZWMiLz48cGF0aCBkPSJNMjQuNTUgMTAuNGwtLjQ1IDEuNDUuNS4xNWMzLjE1IDEgNS42NSAyLjQ5IDcuOSA2Ljc1UzM1Ljc1IDI5LjA2IDM1LjI1IDM5bC0uMDUuNWgyLjI1bC4wNS0uNWMuNS0xMC4wNi0uODgtMTYuODUtMy4yNS0yMS4zNC0yLjM3LTQuNDktNS43OS02LjY0LTkuMTktNy4xNmwtLjUxLS4xeiIgZmlsbD0iI2VjZWNlYyIgc3Ryb2tlPSJub25lIi8+PC9nPjwvc3ZnPg==')}
+.pc.bR{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM5aDI3di0zSDl2M3ptMy41LTdsMS41LTIuNWgxN2wxLjUgMi41aC0yMHptLS41IDR2LTRoMjF2NEgxMnoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTE0IDI5LjV2LTEzaDE3djEzSDE0eiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMTQgMTYuNUwxMSAxNGgyM2wtMyAyLjVIMTR6TTExIDE0VjloNHYyaDVWOWg1djJoNVY5aDR2NUgxMXoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTEyIDM1LjVoMjFtLTIwLTRoMTltLTE4LTJoMTdtLTE3LTEzaDE3TTExIDE0aDIzIiBmaWxsPSJub25lIiBzdHJva2U9IiNlY2VjZWMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjwvZz48L3N2Zz4=')}
+.pc.bQ{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIHN0cm9rZT0ibm9uZSI+PGNpcmNsZSBjeD0iNiIgY3k9IjEyIiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSI5IiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMjIuNSIgY3k9IjgiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjkiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzOSIgY3k9IjEyIiByPSIyLjc1Ii8+PC9nPjxwYXRoIGQ9Ik05IDI2YzguNS0xLjUgMjEtMS41IDI3IDBsMi41LTEyLjVMMzEgMjVsLS4zLTE0LjEtNS4yIDEzLjYtMy0xNC41LTMgMTQuNS01LjItMTMuNkwxNCAyNSA2LjUgMTMuNSA5IDI2eiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNOSAyNmMwIDIgMS41IDIgMi41IDQgMSAxLjUgMSAxIC41IDMuNS0xLjUgMS0xLjUgMi41LTEuNSAyLjUtMS41IDEuNS41IDIuNS41IDIuNSA2LjUgMSAxNi41IDEgMjMgMCAwIDAgMS41LTEgMC0yLjUgMCAwIC41LTEuNS0xLTIuNS0uNS0yLjUtLjUtMiAuNS0zLjUgMS0yIDIuNS0yIDIuNS00LTguNS0xLjUtMTguNS0xLjUtMjcgMHoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTExIDM4LjVhMzUgMzUgMSAwIDAgMjMgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMTEgMjlhMzUgMzUgMSAwIDEgMjMgMG0tMjEuNSAyLjVoMjBtLTIxIDNhMzUgMzUgMSAwIDAgMjIgMG0tMjMgM2EzNSAzNSAxIDAgMCAyNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlY2VjZWMiLz48L2c+PC9zdmc+')}
+.pc.bK{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjYiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjIuNSAyNXM0LjUtNy41IDMtMTAuNWMwIDAtMS0yLjUtMy0yLjVzLTMgMi41LTMgMi41Yy0xLjUgMyAzIDEwLjUgMyAxMC41IiBmaWxsPSIjMDAwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0xMS41IDM3YzUuNSAzLjUgMTUuNSAzLjUgMjEgMHYtN3M5LTQuNSA2LTEwLjVjLTQtNi41LTEzLjUtMy41LTE2IDRWMjd2LTMuNWMtMy41LTcuNS0xMy0xMC41LTE2LTQtMyA2IDUgMTAgNSAxMFYzN3oiIGZpbGw9IiMwMDAiLz48cGF0aCBkPSJNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTMyIDI5LjVzOC41LTQgNi4wMy05LjY1QzM0LjE1IDE0IDI1IDE4IDIyLjUgMjQuNWwuMDEgMi4xLS4wMS0yLjFDMjAgMTggOS45MDYgMTQgNi45OTcgMTkuODVjLTIuNDk3IDUuNjUgNC44NTMgOSA0Ljg1MyA5IiBzdHJva2U9IiNlY2VjZWMiLz48cGF0aCBkPSJNMTEuNSAzMGM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwbS0yMSAzLjVjNS41LTMgMTUuNS0zIDIxIDAiIHN0cm9rZT0iI2VjZWNlYyIvPjwvZz48L3N2Zz4=')}
+.coord-file {
+  position: absolute; bottom: 1px; right: 3px;
+  font-size: clamp(.45rem, 1vw, .6rem); font-weight: 700; opacity: .55;
+  font-family: system-ui, sans-serif;
+}
+.coord-rank {
+  position: absolute; top: 1px; left: 3px;
+  font-size: clamp(.45rem, 1vw, .6rem); font-weight: 700; opacity: .55;
+  font-family: system-ui, sans-serif;
+}
+.board-caption { font-family: system-ui, sans-serif; font-size: .72rem; color: var(--muted); margin-top: 6px; text-align: center; }
+
+.question { font-size: 1rem; font-weight: 600; margin-bottom: 18px; color: var(--ink); }
+
+.choice {
+  border: 1.5px solid var(--line); border-radius: 8px;
+  margin-bottom: 10px; overflow: hidden; cursor: pointer;
+  transition: border-color .15s;
+}
+.choice:hover { border-color: var(--main); }
+.choice-head {
+  display: flex; gap: 10px; align-items: baseline;
+  padding: 10px 14px; font-family: system-ui, sans-serif;
+}
+.choice-letter {
+  font-size: .72rem; font-weight: 800; letter-spacing: .05em;
+  color: var(--main); min-width: 18px;
+}
+.choice-plan { font-size: .9rem; font-weight: 600; }
+.choice-body { padding: 0 14px 12px; font-size: .85rem; color: var(--muted); display: none; }
+.choice.ok  { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 6%, var(--card)); }
+.choice.no  { border-color: var(--wrong);   background: color-mix(in srgb, var(--wrong)   6%, var(--card)); }
+.choice.ok .choice-letter { color: var(--correct); }
+.choice.no .choice-letter { color: var(--wrong); }
+.choice.ok .choice-body, .choice.no .choice-body { display: block; }
+
+.verdict {
+  display: none; margin-top: 18px; padding: 12px 16px;
+  border-radius: 8px; border: 1.5px solid;
+  font-family: system-ui, sans-serif; font-size: .88rem;
+}
+.verdict.ok  { color: var(--correct); border-color: var(--correct); background: color-mix(in srgb, var(--correct) 8%, var(--card)); }
+.verdict.no  { color: var(--wrong);   border-color: var(--wrong);   background: color-mix(in srgb, var(--wrong)   8%, var(--card)); }
+.verdict.show { display: block; }
+
+.more-btn {
+  display: none; margin-top: 20px;
+  font: inherit; font-size: .85rem; font-family: system-ui, sans-serif;
+  background: transparent; color: var(--main);
+  border: 1.5px solid var(--main); border-radius: 7px;
+  padding: 8px 18px; cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.more-btn:hover { background: var(--main); color: var(--mainfg); }
+.more-btn.show { display: inline-block; }
+
+.explanation {
+  display: none; margin-top: 20px;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 8px; padding: 16px 18px;
+  font-size: .9rem; line-height: 1.65;
+}
+.explanation.show { display: block; }
+.explanation h3 { font-size: .95rem; margin-bottom: 8px; font-family: system-ui, sans-serif; }
+.explanation p { margin-bottom: 10px; color: var(--muted); }
+.explanation p:last-child { margin-bottom: 0; }
+.explanation strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../../../../index.html">🏠 Home</a>
+  <span style="color:var(--muted)">›</span>
+  <a class="back" href="../../../../training.html">Training</a>
+  <span style="color:var(--muted)">›</span>
+  <a class="back" href="../../index.html">Week 1</a>
+  <span style="color:var(--muted)">›</span>
+  <span class="topbar-title">Phase 1 · Transition to Middlegame Ex 6</span>
+  <span class="sp"></span>
+  <button class="dk-btn" id="dk">Dark</button>
+</div>
+
+<div class="page">
+  <span class="phase-tag">Phase 1 · Transition to Middlegame</span>
+  <h1>Challenging the Outpost Knight</h1>
+  <p class="byline">Hracek–Erdogmus · TWIC 1667 · Position after 16. Ne5</p>
+  <hr>
+
+  <div class="layout">
+    <div class="board-col">
+      <div id="board"></div>
+      <p class="board-caption">Black to move</p>
+    </div>
+
+    <div class="text-col">
+      <p class="question">White's knight on e5 is a monster. Black's knight on g5 is attacking f3, but is that the right focus? How should Black challenge White's domination?</p>
+
+      <div class="choice" id="cA" onclick="pick('A')">
+        <div class="choice-head">
+          <span class="choice-letter">A</span>
+          <span class="choice-plan">Capture ...Bxe5, trading off the monster knight</span>
+        </div>
+        <div class="choice-body">Take the powerful knight immediately with ...Bxe5 dxe5. Yes, White gets an advanced e5 pawn, but Black will have the bishop pair and can chip away at e5 with ...f6.</div>
+      </div>
+
+      <div class="choice" id="cB" onclick="pick('B')">
+        <div class="choice-head">
+          <span class="choice-letter">B</span>
+          <span class="choice-plan">Play ...f6, undermining e5 with pawns</span>
+        </div>
+        <div class="choice-body">Hit the base of the knight's support with ...f6. If Ne7+, Black plays Kh8. If Nxd7, Black recaptures with Rxd7 and is fine. Otherwise, ...f5 follows.</div>
+      </div>
+
+      <div class="choice" id="cC" onclick="pick('C')">
+        <div class="choice-head">
+          <span class="choice-letter">C</span>
+          <span class="choice-plan">Move the Ng5 to f3, winning the bishop pair</span>
+        </div>
+        <div class="choice-body">The knight on g5 is already attacking f3. Play Nxf3+? No wait—but ...Nxe4 forks the queen! The knight captures on e4 with a material winning threat.</div>
+      </div>
+
+      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
+
+      <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
+
+      <div class="explanation" id="explanation">
+        <h3>Why Plan B?</h3>
+        <p>Black should play <strong>...f6</strong>, attacking the knight at its base. This is the principled response to a powerful centralized knight: undermine the square it sits on rather than trading it off on your opponent's terms.</p>
+<p>After ...f6, if the knight retreats, White loses the outpost for good and Black's position becomes active. If White plays Nxd7 Rxd7, the e5 square is now available for Black's pieces. If White plays Nd7+ Qxd7, Black has traded the knight for the queen's bishop, which is a fine exchange.</p>
+<p>Plan A (...Bxe5) gives White dxe5 with a passed pawn on e5. That pawn is dangerous and White's two knights will support it. The bishop pair doesn't compensate for having a passed pawn rammed down your throat.</p>
+<p>Plan C is a hallucination—there is no fork. Carefully examine tactics before executing them. ...Nxe4 loses the knight to fxe4 because the queen on a4 doesn't hang.</p>
+<p>Always look for pawn levers before tactical tricks.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FEN = 'rn3rk1/pq3ppp/1p1b4/2ppN1n1/Q2P4/P3PPB1/1P2N1PP/2R2K1R b - - 4 17';
+const HL  = ["e5","g5","d6"];
+const CORRECT = 'B';
+
+function parseFen(fen) {
+  const ranks = fen.split(' ')[0].split('/');
+  const board = [];
+  for (const rank of ranks) {
+    const row = [];
+    for (const ch of rank) {
+      if (/\d/.test(ch)) row.push(...Array(+ch).fill(null));
+      else {
+        const color = ch === ch.toUpperCase() ? 'w' : 'b';
+        const piece = ch.toUpperCase();
+        row.push(color + piece);
+      }
+    }
+    board.push(row);
+  }
+  return board;
+}
+
+function buildBoard() {
+  const board = parseFen(FEN);
+  const el = document.getElementById('board');
+  el.innerHTML = '';
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const sq = document.createElement('div');
+      const file = String.fromCharCode(97 + c);
+      const rank = 8 - r;
+      const sqName = file + rank;
+      sq.className = 'sq ' + ((r + c) % 2 === 0 ? 'light' : 'dark');
+      if (HL.includes(sqName)) sq.classList.add('hl');
+      const piece = board[r][c];
+      if (piece) {
+        const p = document.createElement('div');
+        p.className = 'pc ' + piece;
+        sq.appendChild(p);
+      }
+      if (r === 7) { const fc = document.createElement('span'); fc.className = 'coord-file'; fc.textContent = file; sq.appendChild(fc); }
+      if (c === 0) { const rc = document.createElement('span'); rc.className = 'coord-rank'; rc.textContent = rank; sq.appendChild(rc); }
+      el.appendChild(sq);
+    }
+  }
+}
+
+let picked = false;
+function pick(letter) {
+  if (picked) return;
+  picked = true;
+  const isRight = letter === CORRECT;
+  ['A','B','C'].forEach(l => {
+    const el = document.getElementById('c' + l);
+    if (l === letter) el.classList.add(isRight ? 'ok' : 'no');
+    if (l === CORRECT && !isRight) el.classList.add('ok');
+  });
+  document.getElementById(isRight ? 'v-ok' : 'v-no').classList.add('show');
+  document.getElementById('more-btn').classList.add('show');
+}
+
+function showExplanation() {
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('more-btn').style.display = 'none';
+}
+
+buildBoard();
+
+try { if (localStorage.getItem('dk') === '1') document.documentElement.setAttribute('data-theme','dark'); } catch(e) {}
+document.getElementById('dk').onclick = () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  try { localStorage.setItem('dk', dark ? '0' : '1'); } catch(e) {}
+};
+</script>
+</body>
+</html>

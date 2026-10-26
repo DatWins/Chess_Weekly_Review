@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bortnyk vs Nakamura · TWIC 1667 Training</title>
+<title>Build the Bridge · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -76,7 +76,7 @@ body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line
   display: inline-block; font-family: system-ui, sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
-  background: #fdf0f0; color: #6b1a1a;
+  background: #f0fdf4; color: #166534;
 }
 h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
 .byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
@@ -193,69 +193,74 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
   <span style="color:var(--muted)">›</span>
   <a class="back" href="../../index.html">Week 1</a>
   <span style="color:var(--muted)">›</span>
-  <span class="topbar-title">Endgame Ex 5</span>
+  <span class="topbar-title">Phase 4 · Basic Endgame Ex 5</span>
   <span class="sp"></span>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Bortnyk – Nakamura · Pawn Endgame</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · Black to move — outside passed pawn</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>Build the Bridge — Lucena Method</h1>
+  <p class="byline">Fundamental Rook Endgame · Lucena Position</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Pawn endgame — Black to move, outside passed pawn</p>
+      <p class="board-caption">White to move — promote with Lucena technique</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Nakamura (Black) has an outside passed pawn majority on the queenside. White has the outside passer on a4. How should Black exploit the position?</p>
+      <p class="question">This is the Lucena position — the most important rook endgame to know. The pawn is on the 7th rank with the king in front. How does White win?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">43...a5 — fix the queenside pawn</span>
+          <span class="choice-plan">Play Re8+, forcing the Black king away</span>
         </div>
-        <div class="choice-body">Advance a5 to stabilize the queenside and prevent White's a-pawn from advancing.</div>
+        <div class="choice-body">Check! Re8+ forces Black's king to c7. Now White's king steps out (Ka7 or Ka8) and the pawn promotes. Wait—calculate carefully! After Re8+ Kd7, what does White do?</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">43...b5 — create the outside passed pawn</span>
+          <span class="choice-plan">Play Re4, beginning the "building the bridge" technique</span>
         </div>
-        <div class="choice-body">Push b5 to begin creating a passed b-pawn to distract White's king.</div>
+        <div class="choice-body">The Lucena method: Re4 cuts off the Black king, then White's king steps out Ka7. If Black checks from behind (Ra2+), White plays Re7, blocking the check, and the king escapes.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">43...Kg5 — activate the king first</span>
+          <span class="choice-plan">Try Ka7, marching the king out immediately</span>
         </div>
-        <div class="choice-body">March the king into the center before committing to a pawn plan.</div>
+        <div class="choice-body">Step out with the king immediately. If Black plays Ra1-a8+ (check), White plays Kb6, Kb7 avoiding the checks. Eventually the pawn promotes.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — C is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan C.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan C?</h3>
-        <p><strong>43...Kg5!</strong> is the correct move — in pawn endgames, the king is the most important piece. After <strong>43...Kg5 44. Kg3 Kf5 45. a5 b6!</strong> (fixing White's passer) Black's king infiltrates the kingside while the queenside remains locked.</p>
-<p>The principle in outside passed pawn endings: <em>centralize the king first, then use the pawns</em>. Nakamura demonstrated the winning technique by activating the king before committing to queenside operations — a lesson in pawn endgame fundamentals.</p>
-<p><strong>Plan A</strong> (a5) is too passive. <strong>Plan B</strong> (b5) is premature — the king must come first or White's king reaches f4 with counterplay.</p>
+        <h3>Why Plan B?</h3>
+        <p>The winning technique is <strong>Re4</strong>, beginning the Lucena method ("building the bridge").</p>
+<p>Here's the technique step by step:</p>
+<p><strong>1. Re4</strong> — the rook cuts off the Black king. Black's rook will try to check White's king once it steps out.</p>
+<p><strong>2. Ka7</strong> — the White king finally steps out from in front of the pawn.</p>
+<p>Now Black plays Ra2+. White's king cannot run forever, but here's the key:</p>
+<p><strong>3. Kb6 Ra6+ 4. Kb5 Ra5+ 5. Kb4 Ra4+ 6. Kb3... Re4!</strong> — White blocks the check with the rook ("builds the bridge"), and now the king walks to c2 and the pawn promotes.</p>
+<p>This is one of the most important endgame techniques to memorize. The idea: use your rook to cut off the enemy king, then walk your own king out using the rook to shield from checks.</p>
+<p>Plan A (Re8+) doesn't work because after Kd7, Black's king is in the square and can deal with the pawn. Plan C (Ka7 directly) fails to perpetual check — Black just keeps checking from behind until White's king cannot escape.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '8/pp6/6pk/8/P7/6PP/5PK1/8 b - - 0 43';
-const HL  = ['a7','a4','h6'];
-const CORRECT = 'C';
+const FEN = '1K1k4/1P6/8/8/8/8/r7/4R3 w - - 0 1';
+const HL  = ["b8","b7","d8","e1"];
+const CORRECT = 'B';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Caruana vs Svane · TWIC 1667 Training</title>
+<title>Knight and Pawn Zugzwang · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -76,7 +76,7 @@ body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line
   display: inline-block; font-family: system-ui, sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
-  background: #fdf0f0; color: #6b1a1a;
+  background: #f0fdf4; color: #166534;
 }
 h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
 .byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
@@ -193,69 +193,74 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
   <span style="color:var(--muted)">›</span>
   <a class="back" href="../../index.html">Week 1</a>
   <span style="color:var(--muted)">›</span>
-  <span class="topbar-title">Endgame Ex 8</span>
+  <span class="topbar-title">Phase 4 · Basic Endgame Ex 8</span>
   <span class="sp"></span>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Caruana – Svane · Knight Endgame</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · White to move — knight outpost</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>The Knight's Zugzwang</h1>
+  <p class="byline">Knight Endgame · Mutual Zugzwang Study</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Knight endgame — White's knight on d4 dominates</p>
+      <p class="board-caption">White to move — force zugzwang</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Caruana (White) has a dominant knight on d4 against Black's knight on d5. The e5 pawn is advanced. What is White's winning plan?</p>
+      <p class="question">White has a knight vs Black's extra pawn on d5. The kings are facing each other. White needs to force a zugzwang that wins the d5 pawn. What is the right move?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">33. f4 — expand on the kingside</span>
+          <span class="choice-plan">Play Nd3, threatening Ne5+ forking king and pawn</span>
         </div>
-        <div class="choice-body">Advance the f-pawn to create a passed pawn and expand territory.</div>
+        <div class="choice-body">Knight to d3 threatens Ne5+ forking king and d5 pawn. Black must react: if Ke6 Ne5+? No — after Ne5+ Kf5, the knight captures d5 and White wins the pawn with the king already close.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">33. Nf5+! — penetrate with the knight</span>
+          <span class="choice-plan">Play Ne6, attacking d8 and c7 squares</span>
         </div>
-        <div class="choice-body">Sacrifice the knight to create a winning pawn endgame.</div>
+        <div class="choice-body">Jump to e6, threatening to go to c7 and create a mating net or fork. From e6, the knight eyes c7, d4, g5, and f8.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">33. Kf2 — bring the king into action</span>
+          <span class="choice-plan">Play Ke5, advancing the king toward the pawn</span>
         </div>
-        <div class="choice-body">Activate the king before making any pawn advances.</div>
+        <div class="choice-body">King to e5, directly toward the d5 pawn. White threatens to win the pawn with the king. Black must give way and the pawn falls.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan B?</h3>
-        <p><strong>33. Nf5+!</strong> is the decisive combination — after <strong>33...gxf5 34. exf5 exf5</strong> White has a passed e-pawn that will queen. The knight sacrifice creates a winning pawn endgame where White's connected passed pawns are unstoppable.</p>
-<p>In knight endgames, the key is to use the knight's reach to create passed pawns or weak spots. The Nf5+ move exploits the loose pawn structure around Black's king — after the forced ...gxf5, White's pawn center becomes overwhelming.</p>
-<p><strong>Plan A</strong> (f4) is too slow. <strong>Plan C</strong> (Kf2) misses the immediate winning blow — when you see a clear winning combination, execute it immediately.</p>
+        <h3>Why Plan A?</h3>
+        <p>White should play <strong>Nd3</strong>, threatening Ne5+ which forks the king and the d5 pawn.</p>
+<p>After Nd3, Black faces a dilemma:
+<br>— If Black plays ...Ke7 or ...Ke6 to avoid Ne5+, White plays Ne5 anyway and the pawn falls to the fork. After Nxd5, White has an extra pawn in a winning knight endgame.
+<br>— If Black plays ...Ke5 (stepping toward the knight), White plays Ke5 is met by... wait, the kings cannot both be on e5. After Nd3 Ke5 (moving toward White), White plays Nb4 attacking d5 again from a new angle.</p>
+<p>The key concept: use the knight's fork threats to control where the Black king can go. Each time Black moves the king to avoid one fork, the knight repositions to threaten a new fork.</p>
+<p>Plan C (Ke5) is tempting but doesn't work immediately—after Ke5, Black plays Ke7 and the kings are in opposition. White cannot make progress without the knight's help.</p>
+<p>Plan B (Ne6) is less direct—the knight on e6 doesn't directly attack d5 and Black can shuffle the king.</p>
+<p>Knight endgames with passed pawns: use fork threats to control the defender's king.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '8/p4pkp/4p1p1/3nP3/3N4/8/P4PPP/6K1 w - - 0 33';
-const HL  = ['d4','d5','e5'];
-const CORRECT = 'B';
+const FEN = '8/8/3k4/3p4/3K1N2/8/8/8 w - - 0 58';
+const HL  = ["f4","d5","d6"];
+const CORRECT = 'A';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

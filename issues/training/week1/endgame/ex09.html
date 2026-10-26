@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dubov vs Grischuk · TWIC 1667 Training</title>
+<title>The Fifth Rank Cut · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -76,7 +76,7 @@ body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line
   display: inline-block; font-family: system-ui, sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
-  background: #fdf0f0; color: #6b1a1a;
+  background: #f0fdf4; color: #166534;
 }
 h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
 .byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
@@ -193,69 +193,72 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
   <span style="color:var(--muted)">›</span>
   <a class="back" href="../../index.html">Week 1</a>
   <span style="color:var(--muted)">›</span>
-  <span class="topbar-title">Endgame Ex 9</span>
+  <span class="topbar-title">Phase 4 · Basic Endgame Ex 9</span>
   <span class="sp"></span>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Dubov – Grischuk · Rook Endgame</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · White to move — passed pawn technique</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>The Fifth Rank Cut — Rook Endgame Defense</h1>
+  <p class="byline">Defensive Technique · Rook Endgame</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Rook endgame — White's passed d-pawn</p>
+      <p class="board-caption">Black to move — find the defensive resource</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Dubov (White) has a passed d-pawn on d4 against Grischuk's active rook on g5. How should White advance the pawn effectively?</p>
+      <p class="question">White's rook on d4 is pressing. Black has a passed d-pawn but the king is cut off on the 4th rank by White's rook. What is Black's defensive/active plan?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">37. d5 — advance immediately</span>
+          <span class="choice-plan">Play ...Rf5, the fifth-rank cut! — stopping the king</span>
         </div>
-        <div class="choice-body">Push the d-pawn forward to d5, beginning the march to promotion.</div>
+        <div class="choice-body">Cut off White's king with ...Rf5. Now White cannot advance the king past the 5th rank. Black can then push the d-pawn with king support. The rook on the 5th rank is a wall.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">37. Rb8+ — check first</span>
+          <span class="choice-plan">Play ...Rd8, defending the d-pawn from behind</span>
         </div>
-        <div class="choice-body">Give check to drive the king away before advancing the pawn.</div>
+        <div class="choice-body">Put the rook behind the passed pawn: ...Rd8. This is a standard technique—the rook should be behind its own passer to support its advance. Then push ...d4.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">37. h4 — drive away the rook</span>
+          <span class="choice-plan">Advance immediately: ...d4, pushing the passer</span>
         </div>
-        <div class="choice-body">Advance h4 to drive Black's rook away from g5 before pushing the d-pawn.</div>
+        <div class="choice-body">Don't wait—push the pawn! After ...d4, White's rook must react to the passed pawn rather than advancing the king. The passer creates its own problems.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan B?</h3>
-        <p><strong>37. Rb8+!</strong> drives the king away: <strong>37...Kh7 38. d5</strong> — now the pawn advances with the king already pushed to the corner. After the check, White's rook can support the pawn's advance from behind.</p>
-<p>The principle: <em>checks first, pawn advance second</em>. By first forcing the king to the corner, White eliminates Black's ability to use the king actively to blockade the passed pawn. Dubov converted in 49 moves.</p>
-<p><strong>Plan A</strong> (d5 immediately) allows Black to play ...Rd5 and blockade. <strong>Plan C</strong> (h4) is logical but the check is more forcing — it achieves the same goal in one fewer move.</p>
+        <h3>Why Plan A?</h3>
+        <p>Black should play <strong>...Rf5</strong>, cutting off the White king on the 5th rank. This is a key defensive and counterattacking technique in rook endings.</p>
+<p>After ...Rf5, White's king cannot cross the 5th rank (trying Ke4 is met by Rxf5?—wait, Black keeps the rook there. White's king is confined to the 4th rank or lower). Now Black's king can advance toward the d-pawn and ultimately support its advance to queen.</p>
+<p>The rook on the 5th rank serves two purposes: (1) it cuts off White's king, preventing it from attacking Black's passed pawn, and (2) it gives Black time to advance the d-pawn with king support.</p>
+<p>Plan B (...Rd8, rook behind the passer) is also good and a sound technique. The rook should support the passer from behind. But ...Rf5 is more active—it solves the immediate problem of the White king advancing while also positioning the rook well.</p>
+<p>Plan C (...d4 immediately) is wrong—after Rxd4, Black loses the pawn immediately! Always calculate before advancing a passer.</p>
+<p>Lateral king cuts with the rook are one of the most powerful defensive and attacking tools in rook endgames.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '6k1/5p2/7p/6r1/3P4/1R6/5PPP/6K1 w - - 0 37';
-const HL  = ['d4','b3','g5'];
-const CORRECT = 'B';
+const FEN = '5r2/8/3k4/3p4/3R4/3K4/8/8 b - - 0 50';
+const HL  = ["f8","d4","d5"];
+const CORRECT = 'A';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nihal vs Caruana · TWIC 1667 Training</title>
+<title>Vachier-Lagrave vs Nakamura · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -199,63 +199,63 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Nihal – Caruana · Rook Endgame</h1>
-  <p class="byline">3rd 3-0 Thursday, Oct 2026 · TWIC 1667 · Black to move — Philidor defence</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>Vachier-Lagrave – Nakamura · Rook Endgame</h1>
+  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · Black to move — rook activity</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Rook endgame — Black to move, defend or counterattack?</p>
+      <p class="board-caption">Rook endgame — Black to move, active rook vs passive rook</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Caruana (Black) faces a rook endgame with White's pawn on d5. Black's rook actively attacks on e5. What is the best defensive/counter plan?</p>
+      <p class="question">Nakamura (Black) has an active rook on c4 and a c-pawn on c5. White's rook is passive on g8. What is the key technique to convert?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">68...Re1+ — check to gain time</span>
+          <span class="choice-plan">48...Rc2+ — give check</span>
         </div>
-        <div class="choice-body">Give check to distract White's king and win time for the king to approach.</div>
+        <div class="choice-body">Check the king to drive it away and gain time for the c-pawn to advance.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">68...Kc7 — blockade the pawn</span>
+          <span class="choice-plan">48...Kd5 — advance king to escort the pawn</span>
         </div>
-        <div class="choice-body">Move the king to c7 to blockade the d5 pawn and keep the rook active.</div>
+        <div class="choice-body">March the king to d4 to escort the c-pawn to promotion.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">68...Re6 — set up the Philidor position</span>
+          <span class="choice-plan">48...c4 — push the pawn immediately</span>
         </div>
-        <div class="choice-body">Place the rook on the 6th rank (Philidor position) to cut off White's king.</div>
+        <div class="choice-body">Advance the c-pawn without delay to create immediate promotion threats.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — C is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan C.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan C?</h3>
-        <p><strong>68...Re6!</strong> is the Philidor defensive position — the classic technique for drawing rook endgames with one pawn. The rook on e6 prevents White's king from advancing, and when White pushes d6, Black's rook switches to the back rank: <strong>Rd6 → ...Ra6</strong> giving perpetual check from the side.</p>
-<p>The Philidor position (rook on the 6th rank) is the most important defensive technique in rook endgames. Named after the 18th-century master, it guarantees a draw even a pawn down — as long as you set it up before the pawn advances too far.</p>
-<p><strong>Plan A</strong> (Re1+) is active but leads nowhere after Kf2. <strong>Plan B</strong> (Kc7) is too slow — White pushes d6 with tempo.</p>
+        <h3>Why Plan B?</h3>
+        <p><strong>48...Kd5!</strong> is the winning technique — the king marches to escort the c-pawn. After <strong>49. Rg5+ Kd4 50. Rg4+ Kc3</strong> the king has advanced past the pawn and White cannot stop both the king from advancing and the pawn from promoting.</p>
+<p>In single-pawn rook endgames, the winning technique is the <em>Lucena position</em> — get the king in front of the pawn, cut off the opposing king, and build a bridge. Nakamura executed this flawlessly in 70 moves.</p>
+<p><strong>Plan A</strong> (Rc2+) is good but the king activation is the primary method — checks alone don't win. <strong>Plan C</strong> (c4) advances the pawn but the king must lead the way.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '8/8/3k4/3Rr3/8/8/5PP1/6K1 b - - 0 68';
-const HL  = ['e5','d5','d6'];
-const CORRECT = 'C';
+const FEN = '6R1/8/2k5/2p5/2r5/8/4K3/8 b - - 0 48';
+const HL  = ['c4','g8','c5'];
+const CORRECT = 'B';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

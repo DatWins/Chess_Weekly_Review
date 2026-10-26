@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>So vs Mishra · TWIC 1667 Training</title>
+<title>Aravindh vs Nakamura · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -199,42 +199,42 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>So – Mishra · Bishop Endgame</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · White to move — good vs bad bishop</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>Aravindh – Nakamura · Bishop vs Knight</h1>
+  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · Black to move — bishop advantage</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Bishop endgame — White's active bishop vs passive bishop</p>
+      <p class="board-caption">Bishop vs Knight endgame — Black's bishop dominates</p>
     </div>
 
     <div class="text-col">
-      <p class="question">So (White) has an active bishop on e3 vs Black's bishop on e5. The key is whether the pawn structure favors White's bishop or Black's. What is White's winning plan?</p>
+      <p class="question">Nakamura (Black) has a bishop on d1 against White's knight on f3. The pawns are on both flanks. Which side has the advantage and why?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">55. Kf1 — activate the king</span>
+          <span class="choice-plan">56...Bc2 — activate the bishop</span>
         </div>
-        <div class="choice-body">Bring the king toward the center to support the pawns.</div>
+        <div class="choice-body">Move the bishop to c2 to attack White's b4 pawn and further restrict the knight.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">55. Bf4 — trade bishops</span>
+          <span class="choice-plan">56...h4 — fix the pawns</span>
         </div>
-        <div class="choice-body">Force the trade of bishops to reach a winning king and pawn endgame.</div>
+        <div class="choice-body">Advance h4 to fix White's g4 pawn and create a target for the bishop.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">55. Bg5 — target the e6 pawn</span>
+          <span class="choice-plan">56...Kg6 — activate the king</span>
         </div>
-        <div class="choice-body">Attack the e6 pawn to create a second weakness and win material.</div>
+        <div class="choice-body">Bring the king into the action before committing to a bishop plan.</div>
       </div>
 
       <div class="verdict ok" id="v-ok">✓ Correct — C is the best plan.</div>
@@ -244,17 +244,17 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
       <div class="explanation" id="explanation">
         <h3>Why Plan C?</h3>
-        <p><strong>55. Bg5!</strong> targets the e6 pawn, creating a second weakness. After <strong>55...Bf6 56. Bxf6 Kxf6 57. Kf2</strong> the king and pawn endgame is won for White — Black's pawns on c5 and e6 cannot both be defended.</p>
-<p>In bishop endgames, the winning technique is often to <em>create two weaknesses</em>. One target can always be defended; two cannot. By attacking e6, White forces Black's bishop to become passive, after which the king infiltrates the weakened queenside.</p>
-<p><strong>Plan A</strong> (Kf1) is too slow. <strong>Plan B</strong> (Bf4) gives up the strong e3 bishop without concrete benefit — Bg5 is more forcing.</p>
+        <p><strong>56...Kg6!</strong> activates the king — in bishop vs knight endgames with pawns on both flanks, the bishop generally wins because it can control squares from a distance while the king infiltrates. After <strong>56...Kg6 57. Kg3 Kh5</strong> Black's king helps the h-pawn while the bishop ties down White's pieces.</p>
+<p>The key principle: <em>bishops are stronger than knights when pawns are on both wings</em>, because the bishop can switch wings instantly. The knight on f3 can only defend one area at a time. Nakamura exploited this to win in 70 moves.</p>
+<p><strong>Plan A</strong> (Bc2) is good but king activation must come first. <strong>Plan B</strong> (h4) fixes the pawn structure advantageously but the king must lead.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '8/8/4p3/2p1b1p1/2P1k1P1/4B3/8/6K1 w - - 0 55';
-const HL  = ['e3','e5','f4'];
+const FEN = '8/5pk1/5p2/1p4pp/1P4P1/5N1P/5PK1/3b4 b - - 0 56';
+const HL  = ['d1','f3','g4'];
 const CORRECT = 'C';
 
 function parseFen(fen) {

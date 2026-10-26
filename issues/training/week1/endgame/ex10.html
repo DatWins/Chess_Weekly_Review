@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nakamura vs Bortnyk · TWIC 1667 Training</title>
+<title>Wrong-Colored Bishop · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -76,7 +76,7 @@ body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line
   display: inline-block; font-family: system-ui, sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
-  background: #fdf0f0; color: #6b1a1a;
+  background: #f0fdf4; color: #166534;
 }
 h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
 .byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
@@ -193,69 +193,73 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
   <span style="color:var(--muted)">›</span>
   <a class="back" href="../../index.html">Week 1</a>
   <span style="color:var(--muted)">›</span>
-  <span class="topbar-title">Endgame Ex 10</span>
+  <span class="topbar-title">Phase 4 · Basic Endgame Ex 10</span>
   <span class="sp"></span>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Nakamura – Bortnyk · Rook Endgame</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · White to move — Tarrasch principle</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>The Wrong-Colored Bishop Draw</h1>
+  <p class="byline">Rook + Bishop Endgame · Corner Fortress</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Rook endgame — Tarrasch: rook behind the passed pawn</p>
+      <p class="board-caption">Black to move — find the fortress</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Nakamura (White) has a rook on c8 and pawns on f2 and g2. Black's rook is on a5. How does White use the Tarrasch principle to advance the position?</p>
+      <p class="question">Black has a rook but White has only bishop + king. Normally rook beats bishop, but there's a saving technique. Can Black draw, and how?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">51. f4 — advance the f-pawn</span>
+          <span class="choice-plan">Go to the corner: ...Kh3, establishing the fortress</span>
         </div>
-        <div class="choice-body">Push the f-pawn to create a protected passed pawn.</div>
+        <div class="choice-body">The famous "wrong-colored bishop" fortress: move the king to h3 (the corner opposite to the bishop's color). White's bishop cannot check on g2 or h1 because it's on the dark squares. This is a theoretical draw.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">51. Rc6+ — cut off the king</span>
+          <span class="choice-plan">Keep the rook active: ...Rb1, chasing White's king</span>
         </div>
-        <div class="choice-body">Check the king to force it further from the pawns.</div>
+        <div class="choice-body">Attack White's king with the rook. ...Rb1 forces Kf2, then ...Rb2+ Ke3 and the king is harassed. Keep checking to prevent White from organizing.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">51. g4 — advance g-pawn</span>
+          <span class="choice-plan">Push the king away: ...Kh5, gaining more space</span>
         </div>
-        <div class="choice-body">Push g4 to create a kingside pawn majority that advances quickly.</div>
+        <div class="choice-body">Move the king to h5, trying to escape White's bishop. With the king on h5 and rook on g1, Black controls the g-file and can prevent White's king from approaching.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan B?</h3>
-        <p><strong>51. Rc6+!</strong> applies the Tarrasch principle — <em>cut off the opposing king</em>. After <strong>51...Kd7 52. f4</strong> White's pawns march forward with the king cut off from blocking them. The rook on c6 cuts horizontally, preventing Black's king from entering the action.</p>
-<p>The Tarrasch principle: "Rooks belong behind passed pawns" — and when not supporting your own passer, use the rook to cut off the enemy king. Nakamura's technique was textbook, advancing the pawns to queen in just 20 more moves.</p>
-<p><strong>Plan A</strong> (f4) is fine but less accurate — cutting off the king first ensures cleaner technique. <strong>Plan C</strong> (g4) is premature without first cutting off the king.</p>
+        <h3>Why Plan A?</h3>
+        <p>Black draws with <strong>...Kh3</strong>, the famous "wrong-colored bishop" fortress. This is a critical saving technique to know.</p>
+<p>With the White bishop on h8 (a dark square), and Black's king on h3 (also accessible), here is the fortress: if Black's king sits on h3 with the rook somewhere on the g-file or h-file, White's bishop cannot deliver check on g2 or h1 (they are light squares!) and therefore cannot drive the king away from the corner.</p>
+<p>White cannot win because: (1) the bishop is on dark squares and cannot attack g2 or h1 where Black needs to be, (2) White's king cannot approach without being checked by Black's rook, and (3) the corner provides a natural fortress.</p>
+<p>This ending illustrates the "wrong bishop" concept: a bishop of the wrong color for the promotion square (or in this case, for delivering mate) cannot win even with superior material.</p>
+<p>Plan B (rook activity) is temporary—White will eventually find a way to force Black's king into a losing position if Black doesn't establish the fortress.</p>
+<p>Plan C is also playable but less concrete. The h3-corner is the clearest drawing method to memorize.</p>
+<p>Always know your drawing resources! Rook vs bishop with the wrong color is a draw you must be able to hold.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '2R5/8/3k4/r7/8/3K4/5PP1/8 w - - 0 51';
-const HL  = ['c8','a5','d6'];
-const CORRECT = 'B';
+const FEN = '7B/8/8/8/7k/8/6K1/6r1 b - - 0 65';
+const HL  = ["h8","h4","g1"];
+const CORRECT = 'A';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

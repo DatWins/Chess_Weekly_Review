@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vachier-Lagrave vs Nakamura · TWIC 1667 Training</title>
+<title>The Outside Passed Pawn · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -76,7 +76,7 @@ body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line
   display: inline-block; font-family: system-ui, sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
-  background: #fdf0f0; color: #6b1a1a;
+  background: #f0fdf4; color: #166534;
 }
 h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
 .byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
@@ -193,69 +193,72 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
   <span style="color:var(--muted)">›</span>
   <a class="back" href="../../index.html">Week 1</a>
   <span style="color:var(--muted)">›</span>
-  <span class="topbar-title">Endgame Ex 6</span>
+  <span class="topbar-title">Phase 4 · Basic Endgame Ex 6</span>
   <span class="sp"></span>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Vachier-Lagrave – Nakamura · Rook Endgame</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · Black to move — rook activity</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>The Outside Passed Pawn Decoy</h1>
+  <p class="byline">King and Pawn Endgame · Strategic Weapon</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Rook endgame — Black to move, active rook vs passive rook</p>
+      <p class="board-caption">White to move — the outside passer wins</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Nakamura (Black) has an active rook on c4 and a c-pawn on c5. White's rook is passive on g8. What is the key technique to convert?</p>
+      <p class="question">White has a passed pawn on a4, but also pawns on g4 and Black's g6+h5. What is White's winning plan involving the outside passed pawn?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">48...Rc2+ — give check</span>
+          <span class="choice-plan">Advance a5-a6-a7, forcing Black's king to chase</span>
         </div>
-        <div class="choice-body">Check the king to drive it away and gain time for the c-pawn to advance.</div>
+        <div class="choice-body">March the a-pawn: a5, a6, a7. Black's king must abandon the kingside to chase the a-pawn. Then White's king eats the g6 and h5 pawns while Black's king is chasing on the a-file.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">48...Kd5 — advance king to escort the pawn</span>
+          <span class="choice-plan">March the king to g5, attacking h5</span>
         </div>
-        <div class="choice-body">March the king to d4 to escort the c-pawn to promotion.</div>
+        <div class="choice-body">Ignore the a-pawn for now. Bring the king to g5 to attack h5 directly. Once the pawn falls, White has g4-g5-g6 and promotes.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">48...c4 — push the pawn immediately</span>
+          <span class="choice-plan">Push g5, creating an outside passed pawn on the g-file</span>
         </div>
-        <div class="choice-body">Advance the c-pawn without delay to create immediate promotion threats.</div>
+        <div class="choice-body">g5 creates a passed pawn on the g-file. After gxh6 (or the pawn advances), White gets a passer with king support and Black is overwhelmed.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan B?</h3>
-        <p><strong>48...Kd5!</strong> is the winning technique — the king marches to escort the c-pawn. After <strong>49. Rg5+ Kd4 50. Rg4+ Kc3</strong> the king has advanced past the pawn and White cannot stop both the king from advancing and the pawn from promoting.</p>
-<p>In single-pawn rook endgames, the winning technique is the <em>Lucena position</em> — get the king in front of the pawn, cut off the opposing king, and build a bridge. Nakamura executed this flawlessly in 70 moves.</p>
-<p><strong>Plan A</strong> (Rc2+) is good but the king activation is the primary method — checks alone don't win. <strong>Plan C</strong> (c4) advances the pawn but the king must lead the way.</p>
+        <h3>Why Plan A?</h3>
+        <p>White wins with <strong>a5-a6-a7</strong>, using the outside passed pawn as a decoy. This is a fundamental king and pawn endgame pattern.</p>
+<p>Here is how it works: Black's king is near the centre. As White advances the a-pawn (a5, a6, a7), Black's king has a terrible choice: chase the a-pawn or protect the kingside pawns. It cannot do both.</p>
+<p>If Black's king chases the a-pawn: White's king marches to g5, takes h5, then g4-g5-g6-g7-g8 promotes. Black queens the a-pawn too, but a queen ending with Black's newly promoted pawn vs White's g-pawn is typically winning for White (White queens first or has a material advantage).</p>
+<p>If Black's king stays near the kingside: White's a-pawn queens! Black cannot stop it without leaving the kingside undefended.</p>
+<p>The outside passed pawn is a "decoy"—it draws the enemy king away from where the real winning action happens.</p>
+<p>Plan B is too slow—Black's king gets back in time to hold. Plan C creates a kingside passer but that doesn't help if the a-pawn is ignored.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '6R1/8/2k5/2p5/2r5/8/4K3/8 b - - 0 48';
-const HL  = ['c4','g8','c5'];
-const CORRECT = 'B';
+const FEN = '8/8/2k3p1/7p/P5P1/8/8/2K5 w - - 0 45';
+const HL  = ["a4","g6","h5"];
+const CORRECT = 'A';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');

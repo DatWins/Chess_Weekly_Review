@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aravindh vs Nakamura · TWIC 1667 Training</title>
+<title>The Philidor Defense · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -76,7 +76,7 @@ body { font-family: 'Source Serif 4', Georgia, serif; font-size: var(--fs); line
   display: inline-block; font-family: system-ui, sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
-  background: #fdf0f0; color: #6b1a1a;
+  background: #f0fdf4; color: #166534;
 }
 h1 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
 .byline { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted); margin-bottom: 24px; }
@@ -193,69 +193,73 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
   <span style="color:var(--muted)">›</span>
   <a class="back" href="../../index.html">Week 1</a>
   <span style="color:var(--muted)">›</span>
-  <span class="topbar-title">Endgame Ex 7</span>
+  <span class="topbar-title">Phase 4 · Basic Endgame Ex 7</span>
   <span class="sp"></span>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
-  <span class="phase-tag">Endgame</span>
-  <h1>Aravindh – Nakamura · Bishop vs Knight</h1>
-  <p class="byline">Titled Tuesday, Oct 2026 · TWIC 1667 · Black to move — bishop advantage</p>
+  <span class="phase-tag">Phase 4 · Basic Endgame</span>
+  <h1>The Philidor Defense — Drawing with a Rook</h1>
+  <p class="byline">Fundamental Rook Endgame · Philidor's Immortal Draw</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Bishop vs Knight endgame — Black's bishop dominates</p>
+      <p class="board-caption">Black to move — hold the draw</p>
     </div>
 
     <div class="text-col">
-      <p class="question">Nakamura (Black) has a bishop on d1 against White's knight on f3. The pawns are on both flanks. Which side has the advantage and why?</p>
+      <p class="question">White has rook + pawn vs lone rook for Black (rook not shown for clarity: imagine Black's rook on d8). White to win or Black to draw? If Black to move, what is the correct defensive technique?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">56...Bc2 — activate the bishop</span>
+          <span class="choice-plan">Position the rook on the 6th rank (Philidor): ...Rd6</span>
         </div>
-        <div class="choice-body">Move the bishop to c2 to attack White's b4 pawn and further restrict the knight.</div>
+        <div class="choice-body">The Philidor method: place the rook on the 6th rank, cutting off the White king. When the pawn advances to b5 or b6, switch to checking from behind. This is a theoretical draw.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">56...h4 — fix the pawns</span>
+          <span class="choice-plan">Keep the rook attacking the pawn from behind: ...Rb8</span>
         </div>
-        <div class="choice-body">Advance h4 to fix White's g4 pawn and create a target for the bishop.</div>
+        <div class="choice-body">Attack the pawn from b8: ...Rb8 and after b5, still ...Rb8. Keep pressure on the pawn. The rook behind the enemy pawn is a defensive anchor.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">56...Kg6 — activate the king</span>
+          <span class="choice-plan">Move the king toward the pawn: ...Ka4</span>
         </div>
-        <div class="choice-body">Bring the king into the action before committing to a bishop plan.</div>
+        <div class="choice-body">March the king to attack the b4 pawn directly. After Ka4 Ka2 Kxa3, Black has taken the pawn—but wait, can the king get there in time?</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — C is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan C.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan C?</h3>
-        <p><strong>56...Kg6!</strong> activates the king — in bishop vs knight endgames with pawns on both flanks, the bishop generally wins because it can control squares from a distance while the king infiltrates. After <strong>56...Kg6 57. Kg3 Kh5</strong> Black's king helps the h-pawn while the bishop ties down White's pieces.</p>
-<p>The key principle: <em>bishops are stronger than knights when pawns are on both wings</em>, because the bishop can switch wings instantly. The knight on f3 can only defend one area at a time. Nakamura exploited this to win in 70 moves.</p>
-<p><strong>Plan A</strong> (Bc2) is good but king activation must come first. <strong>Plan B</strong> (h4) fixes the pawn structure advantageously but the king must lead.</p>
+        <h3>Why Plan A?</h3>
+        <p>The correct defensive technique is the <strong>Philidor Defense</strong>: place the Black rook on the 6th rank (if we imagine Black's rook on d8, play <strong>...Rd6</strong>, or from any position: occupy the 3rd rank from the pawn's perspective).</p>
+<p>The Philidor method in this position (rook on d-file, pawn on b4): play ...Rd6, cutting off White's king. Now:</p>
+<p>— If b5+, Black plays ...Kb4 attacking the pawn, and after Kb2 Rxd1, Black wins? No—but the point is, once the pawn advances, Black switches to checking from behind: ...Rd1-Rb1+, checking the White king forever from behind the pawn.</p>
+<p>The key: before the pawn advances, the rook should be on the 6th rank (cutting off the king). After the pawn passes the 5th rank, switch to checking from behind.</p>
+<p>Plan B (...Rb8, rook behind the pawn) is good and also works in some positions, but the Philidor method is more reliable when the attacking king is active.</p>
+<p>Plan C (...Ka4) is too slow—the king cannot reach b4 before White reorganizes with Ka2-Kb3-Ra1-Rc1 supporting the pawn.</p>
+<p>Memorize both the Lucena (winning) and Philidor (drawing) methods — they are the two pillars of rook endgame theory.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const FEN = '8/5pk1/5p2/1p4pp/1P4P1/5N1P/5PK1/3b4 b - - 0 56';
-const HL  = ['d1','f3','g4'];
-const CORRECT = 'C';
+const FEN = '8/8/8/1k6/1P6/8/8/1K1R4 b - - 0 55';
+const HL  = ["d1","b4","b5"];
+const CORRECT = 'A';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');
