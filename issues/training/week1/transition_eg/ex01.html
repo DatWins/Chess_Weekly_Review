@@ -271,18 +271,18 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
         <div class="choice-body">Simplify to bishop vs knight ending. The bishop should dominate the knight in an open position. Win on technique.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan A?</h3>
-        <p>White should play <strong>Rd6</strong>, invading with the rook. In rook and minor piece endings, the key principle is <em>active rook placement first</em>—get your rook to an aggressive position before simplifying.</p>
-<p>After Rd6, the knight on g6 has no good square: Ne7 allows Rd7, pinning the knight. Nf8 allows Bh6, winning the f7 pawn. Nh8 simply leaves the knight offside. White will win a pawn and convert the advantage.</p>
-<p>Plan B (Bh6) is good tactically but less clean—after ...Nf8 Bxf8 Rxf8, we reach a rook ending that should be winning but requires technique. Rd6 is cleaner.</p>
-<p>Plan C (trading rooks) is premature. In bishop vs knight endings, the bishop is stronger in open positions, but here the pawns on f7 and g7 make conversion tricky. Keep the tension and invade with the rook first.</p>
-<p>Key principle: with a rook on the board, activate it before simplifying. A rook on the 6th rank is worth half a pawn.</p>
+        <h3>Why Plan B?</h3>
+        <p>White should play <strong>Bh6</strong>, the single diagonal step from f4 to h6. The bishop immediately eyes g7 and threatens <strong>Rxg6</strong> if the knight moves, or <strong>Rd8</strong> winning the rook outright.</p>
+<p>Plan A (Rd6) looks active but walks into a tactic: after <strong>1.Rd6 Ne5!</strong> the knight forks both the rook on d6 and the bishop on f4. White loses a piece for nothing — a decisive blunder.</p>
+<p>After 1.Bh6, Black has no good reply. If <strong>...Nf8</strong>, then <strong>2.Bxf8 Rxf8 3.Rd8</strong> wins the exchange. If <strong>...gxh6</strong>, then <strong>2.Rxg6+ Kh7 3.Rxh6+</strong> wins material. The bishop on h6 creates threats that cannot all be met at once.</p>
+<p>Plan C (Rxe8+) simplifies too early. After the trade Black's knight is perfectly placed to blockade — keep the rook on the board where it supports the attack.</p>
+<p>Key principle: before moving your rook to an "active" square, check for knight forks. Here Bh6 sidesteps the tactic and wins cleanly.</p>
       </div>
     </div>
   </div>
@@ -291,7 +291,7 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 <script>
 const FEN = '4r1k1/5pp1/6np/3R4/5B2/8/5PPP/6K1 w - - 0 30';
 const HL  = ["d5","f4","g6"];
-const CORRECT = 'A';
+const CORRECT = 'B';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');
