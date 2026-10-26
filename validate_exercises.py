@@ -344,9 +344,18 @@ def validate(stockfish_path: str | None, depth: int, no_engine: bool,
                 try:
                     top_moves = analyse_position(engine, fen, depth, MULTIPV)
                 except Exception as e:
-                    print(f"  SKIP  {label} — engine error: {e}")
-                    results["SKIP"] += 1
-                    continue
+                    # Engine may have crashed — restart once and retry
+                    try:
+                        engine.quit()
+                    except Exception:
+                        pass
+                    try:
+                        engine = chess.engine.SimpleEngine.popen_uci(sf_path)
+                        top_moves = analyse_position(engine, fen, depth, MULTIPV)
+                    except Exception as e2:
+                        print(f"  SKIP  {label} — engine error: {e2}")
+                        results["SKIP"] += 1
+                        continue
 
                 if not top_moves:
                     print(f"  SKIP  {label} — engine returned no moves")
