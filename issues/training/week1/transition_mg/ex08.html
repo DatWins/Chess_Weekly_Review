@@ -229,14 +229,14 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
 <div class="page">
   <span class="phase-tag">Phase 1 · Transition to Middlegame</span>
-  <h1>Kings in No Man's Land</h1>
+  <h1>The Rook Must Retreat</h1>
   <p class="byline">So–Woodward · TWIC 1667 · Position after 14. Rc3</p>
   <hr>
 
   <div class="layout">
     <div class="board-col">
       <div id="board"></div>
-      <p class="board-caption">Black to move — both kings exposed!</p>
+      <p class="board-caption">Black to move — knight on b4, White rook on c3</p>
       <div class="ex-nav">
         <a class="ex-nav-btn" href="ex07.html">← Ex 7</a>
         <a class="ex-nav-index" href="../../index.html">all exercises</a>
@@ -245,44 +245,44 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
     </div>
 
     <div class="text-col">
-      <p class="question">Both kings are exposed in the centre and the middlegame is razor-sharp. Black has a knight on b4 creating pressure. What is Black's most dangerous continuation?</p>
+      <p class="question">Black's knight sits aggressively on b4. Both tactical ideas look tempting — but the White rook on c3 guards everything. Which plan exploits the position correctly?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">Play ...Nd3+, forking king and rook</span>
+          <span class="choice-plan">Play ...Nd5!, gaining a tempo on the rook</span>
         </div>
-        <div class="choice-body">The knight on b4 can jump to d3 with check, forking the king on e1 and the rook on h1. After Ke2, the knight on d3 is powerful and Black has tremendous pressure.</div>
+        <div class="choice-body">The knight leaps to d5, attacking the White rook on c3. White must spend a tempo moving the rook, and Black gains a dominant outpost in the centre — a knight on d5 that cannot be easily challenged.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">Play ...Nc2+, winning a rook</span>
+          <span class="choice-plan">Play ...Nc2+, forking king and rook on a1</span>
         </div>
-        <div class="choice-body">The knight forks king and rook from c2: ...Nc2+ Ke2 Nxa1. Black wins the exchange! White has two minor pieces for the rook but Black's position should be winning.</div>
+        <div class="choice-body">The knight jumps to c2 with check. After Ke2, the plan is ...Nxa1 winning the exchange. Surely a rook for a knight is a great deal?</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">Activate the Bc8 with ...Bd7</span>
+          <span class="choice-plan">Play ...Nd3+, forking king and rook on h1</span>
         </div>
-        <div class="choice-body">Develop the bishop to d7, preparing to bring it to c6 or e8. Completing development is always sound, and the bishop will support the knight.</div>
+        <div class="choice-body">The knight jumps to d3 with check, seemingly forking the king on e1 and the h1 rook (via the e3 transit square). After the king moves, Black wins the rook.</div>
       </div>
 
-      <div class="verdict ok" id="v-ok">✓ Correct — B is the best plan.</div>
-      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan B.</div>
+      <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
+      <div class="verdict no" id="v-no">✗ Not quite. The answer is Plan A.</div>
 
       <button class="more-btn" id="more-btn" onclick="showExplanation()">Full explanation ↓</button>
 
       <div class="explanation" id="explanation">
-        <h3>Why Plan B?</h3>
-        <p>Black should play <strong>...Nc2+</strong>! This wins material immediately. After Ke2 (forced, as Kd1 allows ...Nxa1 and Kf1 allows the same), Black plays ...Nxa1, winning the rook for a knight.</p>
-<p>The material imbalance is two minor pieces vs a rook and a pawn—typically roughly equal—but here Black's position is better because White's remaining pieces are awkward and the king is still in the centre.</p>
-<p>Plan A (...Nd3+) looks dramatic but it's less concrete. After Ke2, the knight on d3 is well-placed but Black hasn't actually won anything yet. White can play Rxd3, sacrificing the exchange, and continue fighting.</p>
-<p>Plan C (...Bd7) is too quiet—in sharp, unbalanced positions with exposed kings, you must seek concrete solutions, not quiet developing moves. Hesitation when you have tactics available is a common mistake at the 1800 level.</p>
-<p>Rule: when you see a winning tactic, calculate it carefully and play it. Don't be scared off by "it seems too simple."</p>
+        <h3>Why ...Nd5! — and why the other moves lose</h3>
+        <p><strong>The key:</strong> the White rook is on c3, not a1. This single fact destroys both tactical ideas.</p>
+        <p><strong>Plan B fails: ...Nc2+ loses the knight.</strong> After ...Nc2+, White plays <strong>Rxc2!</strong> — the rook on c3 steps one square down and captures the knight. The fork never lands. Black loses a piece for nothing.</p>
+        <p><strong>Plan C fails: ...Nd3+ also loses the knight.</strong> After ...Nd3+, White plays <strong>Rxd3!</strong> — the c3 rook simply takes the knight on d3. Black is a piece down with no compensation.</p>
+        <p><strong>The correct plan is ...Nd5!</strong> The knight jumps to the powerful central outpost on d5. From d5, the knight attacks the c3 rook directly — a rook cannot move diagonally, so it cannot capture back. White must waste a tempo moving the rook (Rc1, Rc2, or Re3), and Black has a dominant knight cemented in the centre.</p>
+        <p><strong>The lesson:</strong> before launching a "fork" or "check," always ask: can a piece recapture? Here the c3 rook guards c2 and d3 simultaneously. Seeing this in advance separates the 1800 player who calculates one move from the 2000 player who calculates the defence.</p>
       </div>
     </div>
   </div>
@@ -290,8 +290,8 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
 <script>
 const FEN = 'r1b4r/pp2kp1p/4pp2/8/1n6/P1R2NP1/1P2PP1P/4KB1R b K - 0 15';
-const HL  = ["e7","e1","b4"];
-const CORRECT = 'B';
+const HL  = ["b4","d5","c3"];
+const CORRECT = 'A';
 
 function parseFen(fen) {
   const ranks = fen.split(' ')[0].split('/');
