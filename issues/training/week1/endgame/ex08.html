@@ -182,6 +182,35 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 .explanation p { margin-bottom: 10px; color: var(--muted); }
 .explanation p:last-child { margin-bottom: 0; }
 .explanation strong { color: var(--ink); }
+
+.ex-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 6px;
+}
+.ex-nav-btn {
+  font-family: system-ui, sans-serif;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--main);
+  text-decoration: none;
+  background: var(--btn);
+  border: 1px solid var(--btnb);
+  border-radius: 6px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+.ex-nav-btn:hover { text-decoration: underline; }
+.ex-nav-btn.disabled { visibility: hidden; }
+.ex-nav-index {
+  font-family: system-ui, sans-serif;
+  font-size: .72rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+.ex-nav-index:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -208,6 +237,11 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
     <div class="board-col">
       <div id="board"></div>
       <p class="board-caption">White to move — force zugzwang</p>
+      <div class="ex-nav">
+        <a class="ex-nav-btn" href="ex07.html">← Ex 7</a>
+        <a class="ex-nav-index" href="../../index.html">all exercises</a>
+        <a class="ex-nav-btn" href="ex09.html">Ex 9 →</a>
+      </div>
     </div>
 
     <div class="text-col">
@@ -282,24 +316,29 @@ function parseFen(fen) {
 
 function buildBoard() {
   const board = parseFen(FEN);
+  const flip = FEN.split(' ')[1] === 'b';
   const el = document.getElementById('board');
   el.innerHTML = '';
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
+      const br = flip ? 7 - r : r;
+      const bc = flip ? 7 - c : c;
       const sq = document.createElement('div');
-      const file = String.fromCharCode(97 + c);
-      const rank = 8 - r;
+      const file = String.fromCharCode(97 + bc);
+      const rank = 8 - br;
       const sqName = file + rank;
-      sq.className = 'sq ' + ((r + c) % 2 === 0 ? 'light' : 'dark');
+      sq.className = 'sq ' + ((br + bc) % 2 === 0 ? 'light' : 'dark');
       if (HL.includes(sqName)) sq.classList.add('hl');
-      const piece = board[r][c];
+      const piece = board[br][bc];
       if (piece) {
         const p = document.createElement('div');
         p.className = 'pc ' + piece;
         sq.appendChild(p);
       }
-      if (r === 7) { const fc = document.createElement('span'); fc.className = 'coord-file'; fc.textContent = file; sq.appendChild(fc); }
-      if (c === 0) { const rc = document.createElement('span'); rc.className = 'coord-rank'; rc.textContent = rank; sq.appendChild(rc); }
+      const isLastRow = r === 7;
+      const isFirstCol = c === 0;
+      if (isLastRow) { const fc = document.createElement('span'); fc.className = 'coord-file'; fc.textContent = file; sq.appendChild(fc); }
+      if (isFirstCol) { const rc = document.createElement('span'); rc.className = 'coord-rank'; rc.textContent = rank; sq.appendChild(rc); }
       el.appendChild(sq);
     }
   }

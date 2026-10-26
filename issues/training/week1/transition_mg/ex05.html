@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Where Should the Queen Go? · TWIC 1667 Training</title>
+<title>The Rook Maneuver · TWIC 1667 Training</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root {
@@ -182,6 +182,35 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 .explanation p { margin-bottom: 10px; color: var(--muted); }
 .explanation p:last-child { margin-bottom: 0; }
 .explanation strong { color: var(--ink); }
+
+.ex-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 6px;
+}
+.ex-nav-btn {
+  font-family: system-ui, sans-serif;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--main);
+  text-decoration: none;
+  background: var(--btn);
+  border: 1px solid var(--btnb);
+  border-radius: 6px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+.ex-nav-btn:hover { text-decoration: underline; }
+.ex-nav-btn.disabled { visibility: hidden; }
+.ex-nav-index {
+  font-family: system-ui, sans-serif;
+  font-size: .72rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+.ex-nav-index:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -200,7 +229,7 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
 <div class="page">
   <span class="phase-tag">Phase 1 · Transition to Middlegame</span>
-  <h1>Where Should the Queen Go?</h1>
+  <h1>The Rook Must Work</h1>
   <p class="byline">Kuybokarov–Tabatabaei · TWIC 1667 · Position after 15…Nf6</p>
   <hr>
 
@@ -208,33 +237,38 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
     <div class="board-col">
       <div id="board"></div>
       <p class="board-caption">White to move</p>
+      <div class="ex-nav">
+        <a class="ex-nav-btn" href="ex04.html">← Ex 4</a>
+        <a class="ex-nav-index" href="../../index.html">all exercises</a>
+        <a class="ex-nav-btn" href="ex06.html">Ex 6 →</a>
+      </div>
     </div>
 
     <div class="text-col">
-      <p class="question">White's queen on b4 eyes the d6 square and puts pressure on d5. What is the most purposeful plan from here?</p>
+      <p class="question">White's queen on b4 presses d5, but the d-file is the real prize. Black's d5 pawn is the target — how does White build maximum pressure on it?</p>
 
       <div class="choice" id="cA" onclick="pick('A')">
         <div class="choice-head">
           <span class="choice-letter">A</span>
-          <span class="choice-plan">Qb4–d6, invading the outpost</span>
+          <span class="choice-plan">Re1–e3–d3, doubling on the d-file</span>
         </div>
-        <div class="choice-body">March the queen to d6, a dominant square deep in Black's position. From d6 the queen ties down Black's pieces, eyes e7, and makes progress concrete.</div>
+        <div class="choice-body">Swing the rook to e3 then d3, aiming directly at the d5 pawn. Combined with the queen on b4, this creates concrete pressure Black must constantly address.</div>
       </div>
 
       <div class="choice" id="cB" onclick="pick('B')">
         <div class="choice-head">
           <span class="choice-letter">B</span>
-          <span class="choice-plan">e5, advancing to gain space</span>
+          <span class="choice-plan">e4–e5, gaining space</span>
         </div>
-        <div class="choice-body">Advance the e-pawn to e5 to kick the knight and gain space. If Black's knight retreats, White will have a powerful pawn duo on a4-e5 controlling the centre.</div>
+        <div class="choice-body">Advance the e-pawn to e5, kicking the knight on f6 and seizing central space. If the knight retreats to d7, White has a powerful pawn wedge on e5.</div>
       </div>
 
       <div class="choice" id="cC" onclick="pick('C')">
         <div class="choice-head">
           <span class="choice-letter">C</span>
-          <span class="choice-plan">Nb1–d2–f3, improving the worst piece</span>
+          <span class="choice-plan">Qb4–d6, invading the outpost</span>
         </div>
-        <div class="choice-body">The knight on b1 is doing nothing. Develop it immediately via Nd2–Nf3, increasing control of d4 and f4. Active pieces beat a temporary queen invasion.</div>
+        <div class="choice-body">March the queen to d6, a dominant central square. From d6 the queen controls e7, eyes c7, and ties down Black's pieces — a powerful invasion deep into Black's camp.</div>
       </div>
 
       <div class="verdict ok" id="v-ok">✓ Correct — A is the best plan.</div>
@@ -244,14 +278,14 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
       <div class="explanation" id="explanation">
         <h3>Why Plan A?</h3>
-        <p>White should play <strong>Qd6</strong>. When you can plant your queen on a powerful central outpost that cannot easily be driven away, you should do it immediately. From d6, the queen:</p>
-<p>— Controls e7, preventing Black's rook from going there<br>
-— Eyes c7, tying down Black's queen<br>
-— Supports potential piece invasions via e5 or c5<br>
-— Makes Black's position passively uncomfortable</p>
-<p>The queen on d6 is not a temporary visitor—it's a resident. Black will struggle to dislodge it without making serious concessions.</p>
-<p>Plan B (e5) is premature—the knight on f6 simply goes to e4 or d7, and Black's position becomes more solid. Plan C (Nd2) is too slow; improving the knight takes two moves, and meanwhile Black can organize counterplay with ...c5 or ...d4.</p>
-<p>Principle: a dominant queen placement in the middlegame is often worth more than an extra minor piece on an average square.</p>
+        <p>White should play <strong>Re3</strong>, intending Rd3. The d5 pawn is Black's most vulnerable target — it is advanced and cannot be protected by another pawn. The rook maneuver Re1–e3–d3 points a gun at it:</p>
+<p>— After Rd3, White's queen on b4 and rook on d3 both bear down on d5<br>
+— Black is forced to defend passively with pieces rather than creating counterplay<br>
+— White can then add Rg3 or Nb1–d2–f3, building pressure methodically<br>
+— Black's bishop on b7 is blocked and the rook on a8 has no clear activation</p>
+<p><strong>Plan B (e5)</strong> looks aggressive but after e5 Nd7, the knight retreats to a solid square and Black may follow with ...f6, challenging the centre. White gains space but no concrete target to attack.</p>
+<p><strong>Plan C (Qd6)</strong> is a positional blunder — it looks like an invasion but the queen simply gets captured. Black's queen on d8 is on the same file, with an empty d7 square between them: after Qd6, Qxd6 wins a queen for free. This is the key lesson: always check whether an "outpost" square is actually defended or whether an enemy piece on that file or diagonal can recapture. Here the d-file is open to Black.</p>
+<p>Principle: rooks belong on open or half-open files pointed at the enemy's weaknesses. The queen supports; the rook executes.</p>
       </div>
     </div>
   </div>
@@ -259,7 +293,7 @@ hr { border: none; height: 2px; background: linear-gradient(to right, var(--main
 
 <script>
 const FEN = 'r2q1rk1/1b3pbp/p4np1/1p1p4/PQ2P3/7P/1PB2PP1/RNB1R1K1 w - - 0 16';
-const HL  = ["b4","e4","d5"];
+const HL  = ["e1","e3","d3","d5"];
 const CORRECT = 'A';
 
 function parseFen(fen) {
@@ -282,24 +316,29 @@ function parseFen(fen) {
 
 function buildBoard() {
   const board = parseFen(FEN);
+  const flip = FEN.split(' ')[1] === 'b';
   const el = document.getElementById('board');
   el.innerHTML = '';
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
+      const br = flip ? 7 - r : r;
+      const bc = flip ? 7 - c : c;
       const sq = document.createElement('div');
-      const file = String.fromCharCode(97 + c);
-      const rank = 8 - r;
+      const file = String.fromCharCode(97 + bc);
+      const rank = 8 - br;
       const sqName = file + rank;
-      sq.className = 'sq ' + ((r + c) % 2 === 0 ? 'light' : 'dark');
+      sq.className = 'sq ' + ((br + bc) % 2 === 0 ? 'light' : 'dark');
       if (HL.includes(sqName)) sq.classList.add('hl');
-      const piece = board[r][c];
+      const piece = board[br][bc];
       if (piece) {
         const p = document.createElement('div');
         p.className = 'pc ' + piece;
         sq.appendChild(p);
       }
-      if (r === 7) { const fc = document.createElement('span'); fc.className = 'coord-file'; fc.textContent = file; sq.appendChild(fc); }
-      if (c === 0) { const rc = document.createElement('span'); rc.className = 'coord-rank'; rc.textContent = rank; sq.appendChild(rc); }
+      const isLastRow = r === 7;
+      const isFirstCol = c === 0;
+      if (isLastRow) { const fc = document.createElement('span'); fc.className = 'coord-file'; fc.textContent = file; sq.appendChild(fc); }
+      if (isFirstCol) { const rc = document.createElement('span'); rc.className = 'coord-rank'; rc.textContent = rank; sq.appendChild(rc); }
       el.appendChild(sq);
     }
   }
