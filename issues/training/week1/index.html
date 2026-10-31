@@ -20,11 +20,13 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--paper);color:var(--ink)}
 body{font-family:system-ui,'Segoe UI',sans-serif;font-size:var(--fs);line-height:1.5}
-.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 20px;background:var(--paper);border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
-.back{color:var(--main);text-decoration:none;font-weight:600;font-size:13px}
-.back:hover{text-decoration:underline}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:0;padding:0 20px;background:#1a2a50;font-size:14px;height:48px}
+.nav-brand{color:#fbfaf7;font-family:Georgia,serif;font-size:.95rem;font-weight:normal;text-decoration:none;margin-right:auto}
+.nav-links{display:flex;align-items:stretch;gap:0}
+.nav-links a{color:rgba(251,250,247,.75);text-decoration:none;font-family:system-ui,sans-serif;font-size:.82rem;font-weight:500;padding:0 14px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-links a:hover,.nav-links a.active{color:#fbfaf7;border-bottom-color:#c8ab5a}
 .sp{flex:1}
-.dk-btn{font:inherit;font-size:13px;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:6px;padding:4px 10px;cursor:pointer}
+.dk-btn{font:inherit;font-size:13px;background:rgba(255,255,255,.1);color:#fbfaf7;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 10px;cursor:pointer;margin-left:16px}
 .page{max-width:1000px;margin:0 auto;padding:32px 20px 80px}
 .kicker{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
 h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;line-height:1.2;margin-bottom:4px}
@@ -37,17 +39,21 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
 .progress-fill{height:100%;background:var(--main);border-radius:3px;transition:width .3s}
 .progress-pct{font-size:.8rem;font-weight:700;color:var(--main)}
 
-.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:40px}
-@media(max-width:800px){.phases{grid-template-columns:repeat(2,1fr)}}
+.phases{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-bottom:40px}
+@media(max-width:1050px){.phases{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.phases{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.phases{grid-template-columns:1fr}}
 
 .phase-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .phase-head{padding:14px 16px 10px;border-bottom:1px solid var(--line)}
 .phase-tag{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:8px}
+.tag-open{background:#edf7f0;color:#1a6030}
 .tag-tmg{background:var(--tmg-bg);color:var(--tmg-c)}
 .tag-mid{background:var(--mid-bg);color:var(--mid-c)}
 .tag-teg{background:var(--teg-bg);color:var(--teg-c)}
 .tag-end{background:var(--end-bg);color:var(--end-c)}
+:root[data-theme="dark"] .tag-open{background:#1a3020;color:#3a9a50}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag-open{background:#1a3020;color:#3a9a50}}
 .phase-title{font-size:.95rem;font-weight:700;margin-bottom:2px;line-height:1.3}
 .phase-count{font-size:.78rem;color:var(--muted)}
 .ex-list{list-style:none;padding:6px 0}
@@ -67,28 +73,38 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
 <body>
 
 <div class="topbar">
-  <a class="back" href="../../../index.html">🏠 Home</a>
-  <span style="color:var(--muted);font-size:12px">›</span>
-  <a class="back" href="../../../training.html">Training</a>
-  <span style="color:var(--muted);font-size:12px">›</span>
-  <span style="color:var(--muted);font-size:13px">Week 1</span>
-  <span class="sp"></span>
+  <a class="nav-brand" href="../../../index.html">TWIC Weekly Review</a>
+  <nav class="nav-links">
+    <a href="../../../index.html">Home</a>
+    <a href="../../../training.html" class="active">Training</a>
+  </nav>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
   <div class="kicker">TWIC 1667 · Week 1 Training</div>
-  <h1>Week 1 — 40 Strategic Exercises</h1>
-  <p class="sub">4 phases · 10 exercises each · Work through the whole game from opening transition to endgame technique.</p>
+  <h1>Week 1 — 50 Strategic Exercises</h1>
+  <p class="sub">5 phases · 10 exercises each · Work through the whole game from opening plans to endgame technique.</p>
   <hr>
 
   <div class="progress-row">
     <span class="progress-label">Week progress</span>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-    <span class="progress-pct" id="prog-pct">0 / 40</span>
+    <span class="progress-pct" id="prog-pct">0 / 50</span>
   </div>
 
   <div class="phases">
+
+    <!-- Phase 0: Opening -->
+    <div class="phase-card">
+      <div class="phase-head">
+        <span class="phase-tag tag-open">Phase 0</span>
+        <div class="phase-title">Opening Plans</div>
+        <div class="phase-count">10 exercises · TWIC 1667</div>
+      </div>
+      <div class="phase-progress"><div class="phase-prog-fill" id="pp-open" style="width:0%"></div></div>
+      <ul class="ex-list" id="open-list"></ul>
+    </div>
 
     <!-- Phase 1: Transition to Middlegame -->
     <div class="phase-card">
@@ -139,6 +155,18 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
 
 <script>
 const EXERCISES = {
+  open: [
+    {num:1, title:'Andreikin – Maghsoodloo · Réti Opening', file:'opening/ex01.html'},
+    {num:2, title:'Nakamura – Nihal · English Opening (A13)', file:'opening/ex02.html'},
+    {num:3, title:'Caruana – Moussard · Trompowsky Attack (A45)', file:'opening/ex03.html'},
+    {num:4, title:'So – Svane · Giuoco Piano (C50)', file:'opening/ex04.html'},
+    {num:5, title:'Nakamura – Nguyen · English, 1.c4 e6', file:'opening/ex05.html'},
+    {num:6, title:'Vachier-Lagrave – Nakamura · Ruy Lopez, Berlin Defence', file:'opening/ex06.html'},
+    {num:7, title:'Aravindh – Nakamura · Berlin, d3 System', file:'opening/ex07.html'},
+    {num:8, title:'Bortnyk – Nakamura · Four Knights (C46)', file:'opening/ex08.html'},
+    {num:9, title:'Caruana – Niemann · Nimzo-Indian Defence (E32)', file:'opening/ex09.html'},
+    {num:10,title:'Shankland – Caruana · Queen\'s Gambit Declined (D37)', file:'opening/ex10.html'}
+  ],
   tmg: [
     {num:1, title:'Shankland–Niemann · Stake a Claim in the Centre', file:'transition_mg/ex01.html'},
     {num:2, title:'Erigaisi–Stefansson · When Kings Run, Pawns Speak', file:'transition_mg/ex02.html'},
@@ -215,21 +243,23 @@ function markDone(key) {
 }
 
 function updateProgress() {
-  const total = 40;
+  const total = 50;
   const n = done.size;
   const pct = Math.round(n / total * 100);
   document.getElementById('prog-fill').style.width = pct + '%';
   document.getElementById('prog-pct').textContent = n + ' / ' + total;
   // Phase bars
-  const prefixes = [['tmg','t'],['mid','m'],['teg','g'],['end','e']];
+  const prefixes = [['open','o'],['tmg','t'],['mid','m'],['teg','g'],['end','e']];
   prefixes.forEach(([pp, pre]) => {
-    const items = EXERCISES[pp === 'tmg' ? 'tmg' : pp === 'mid' ? 'mid' : pp === 'teg' ? 'teg' : 'end'];
+    const items = EXERCISES[pp];
+    if (!items) return;
     const cnt = items.filter(ex => done.has(pre + ex.num)).length;
     const el = document.getElementById('pp-' + pp);
     if (el) el.style.width = (cnt / items.length * 100) + '%';
   });
 }
 
+renderList('open-list', EXERCISES.open, 'o', 'pp-open');
 renderList('tmg-list', EXERCISES.tmg, 't', 'pp-tmg');
 renderList('mid-list', EXERCISES.mid, 'm', 'pp-mid');
 renderList('teg-list', EXERCISES.teg, 'g', 'pp-teg');

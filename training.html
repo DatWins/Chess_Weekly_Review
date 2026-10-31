@@ -11,11 +11,13 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--paper);color:var(--ink)}
 body{font-family:system-ui,'Segoe UI',sans-serif;font-size:var(--fs);line-height:1.5}
-.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 20px;background:var(--paper);border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
-.back{color:var(--main);text-decoration:none;font-weight:600;font-size:13px}
-.back:hover{text-decoration:underline}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:0;padding:0 20px;background:#1a2a50;font-size:14px;height:48px}
+.nav-brand{color:#fbfaf7;font-family:Georgia,serif;font-size:.95rem;font-weight:normal;text-decoration:none;margin-right:auto}
+.nav-links{display:flex;align-items:stretch;gap:0}
+.nav-links a{color:rgba(251,250,247,.75);text-decoration:none;font-family:system-ui,sans-serif;font-size:.82rem;font-weight:500;padding:0 14px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-links a:hover,.nav-links a.active{color:#fbfaf7;border-bottom-color:#c8ab5a}
 .sp{flex:1}
-.dk-btn{font:inherit;font-size:13px;background:var(--btn);color:var(--ink);border:1px solid var(--btnb);border-radius:6px;padding:4px 10px;cursor:pointer}
+.dk-btn{font:inherit;font-size:13px;background:rgba(255,255,255,.1);color:#fbfaf7;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 10px;cursor:pointer;margin-left:16px}
 .page{max-width:860px;margin:0 auto;padding:36px 20px 80px}
 .kicker{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
 h1{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:800;line-height:1.1;margin-bottom:6px}
@@ -52,28 +54,34 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
 .wk-tag.o{background:var(--openbg);color:var(--open)}
 .wk-tag.m{background:var(--midbg);color:var(--mid)}
 .wk-tag.e{background:var(--endbg);color:var(--end)}
+.wk-tag.tmg{background:#dbeafe;color:#1e40af}
+.wk-tag.teg{background:#fef9c3;color:#854d0e}
+:root[data-theme="dark"] .wk-tag.tmg{background:#1a2840;color:#93c5fd}
+:root[data-theme="dark"] .wk-tag.teg{background:#2a2010;color:#fde047}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .wk-tag.tmg{background:#1a2840;color:#93c5fd}:root:not([data-theme="light"]) .wk-tag.teg{background:#2a2010;color:#fde047}}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <a class="back" href="index.html">🏠 Home</a>
-  <span style="color:var(--muted);font-size:12px">›</span>
-  <span style="color:var(--muted);font-size:13px">Training Library</span>
-  <span class="sp"></span>
+  <a class="nav-brand" href="index.html">TWIC Weekly Review</a>
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="#" class="active">Training</a>
+  </nav>
   <button class="dk-btn" id="dk">Dark</button>
 </div>
 
 <div class="page">
   <div class="kicker">TWIC Weekly Review</div>
   <h1>Strategic Training Library</h1>
-  <p class="sub">210 exercises per week — 70 opening, 70 middlegame, 70 endgame positions drawn from master games. Guess the plan, then study the why.</p>
+  <p class="sub">50 exercises per week — 5 phases from opening transition to endgame technique, drawn from TWIC master games. Guess the plan, then study the why.</p>
   <hr>
 
   <div class="explain">
     <div class="pill pill-open">
       <div class="pill-label">Opening</div>
-      <p>Pawn structure, development choices, typical plans — 10 positions per day where the move order matters.</p>
+      <p>Pawn structure, development choices, typical plans — positions where the move order and setup matters.</p>
     </div>
     <div class="pill pill-mid">
       <div class="pill-label">Middlegame</div>
@@ -81,7 +89,7 @@ hr{border:none;height:2px;background:linear-gradient(to right,var(--main) 48px,v
     </div>
     <div class="pill pill-end">
       <div class="pill-label">Endgame</div>
-      <p>Technique and precision — 10 endgames per day where the winning idea is one critical plan away.</p>
+      <p>Technique and precision — endgames where the winning idea is one critical plan away.</p>
     </div>
   </div>
 
@@ -100,9 +108,9 @@ const WEEKS = [
     title: 'TWIC Master Games — Week 1',
     date: 'Oct 2026',
     href: 'issues/training/week1/index.html',
-    total: 30,
-    ready: 30,
-    phases: ['o','m','e']
+    total: 50,
+    ready: 50,
+    phases: ['o','tmg','m','teg','e']
   }
   // More weeks will be added here as they are completed
 ];
@@ -121,7 +129,8 @@ function renderWeeks() {
     ready_total += w.ready;
 
     const pct = Math.round(done / w.total * 100);
-    const tags = w.phases.map(p => `<span class="wk-tag ${p}">${{o:'Opening',m:'Middlegame',e:'Endgame'}[p]}</span>`).join('');
+    const LABELS = {o:'Opening',tmg:'→ Middlegame',m:'Middlegame',teg:'→ Endgame',e:'Endgame'};
+    const tags = w.phases.map(p => `<span class="wk-tag ${p}">${LABELS[p]||p}</span>`).join('');
     return `<a class="week-card" href="${w.href}">
       <div class="wk-num">Week ${w.num}</div>
       <div class="wk-title">${w.title}</div>
