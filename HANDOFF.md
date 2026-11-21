@@ -101,3 +101,59 @@ There is **no link** from Chess_Weekly_Review to positional_analysis (by design 
 - GitHub Pages source: root of `main` branch
 - No build system — push HTML/JSON directly
 - Shallow clone is fine for new work: `git clone --depth 1 https://github.com/DatWins/Chess_Weekly_Review`
+
+---
+
+## ⚠️ Critical: HTML structure for the board to work
+
+The JS board renderer depends on the **aside being a direct sibling of `</main>`**. This is the layout that works:
+
+```html
+<main id="main">
+  <article>
+    … article content, game sections, move links …
+  </article>
+</main>
+<aside class="bp">
+  <div class="bhead"><span id="who"></span><b id="cur"></b></div>
+  <div id="live"></div>
+  <div class="ctrls">
+    <button id="bStart">⏮</button>
+    <button id="bPrev">◀</button>
+    <button id="bNext">▶</button>
+    <button id="bEnd">⏭</button>
+    <button id="bFlip">⇅</button>
+  </div>
+  <div class="choose" id="choose"></div>
+  <div class="msg" id="msg"></div>
+  <div class="path" id="path"></div>
+</aside>
+```
+
+**If you use a Python builder to generate the HTML:** make sure the builder emits `<main id="main">` as the article wrapper (not `<div class="wrap">`), and places `</main>` before `<aside class="bp">`. Do NOT copy the wrapper tag from the template's existing article — extract the template shell (navbar, CSS, JS) but write the wrapper yourself.
+
+**If the board is blank:** check that `</main>` appears *before* `<aside` in the file. Run:
+```python
+t = open('issue.html').read()
+print(t.find('</main>'), t.find('<aside'))  # first number must be smaller
+```
+
+## ⚠️ NODES injection order
+
+The `const NODES = {...}` object must be declared **before** the chess.js renderer code in the `<script>` block. If you're building a new HTML file from a template, put NODES first, then append the template's script content (after stripping the template's own NODES with a regex).
+
+## Move links — no onclick allowed
+
+Move links **must** use `<a class="mv" data-id="NODE_ID">SAN</a>`. Never add `onclick="goNode(...)"` — the renderer attaches its own listener by class. Using onclick will cause double-firing and break navigation.
+
+## Checking an issue before pushing
+
+```python
+html = open('issue.html').read()
+assert html.count('onclick="goNode') == 0       # no onclick on moves
+assert 'id="bStart"' in html                     # controls present
+assert 'id="live"' in html                       # board div present
+assert 'const NODES' in html                     # nodes data present
+aside = html.find('<aside'); main_e = html.find('</main>')
+assert main_e > 0 and aside > main_e             # aside after </main>
+```
