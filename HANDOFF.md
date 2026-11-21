@@ -104,6 +104,50 @@ There is **no link** from Chess_Weekly_Review to positional_analysis (by design 
 
 ---
 
+## Opening tree viewer (tree.html)
+
+Each issue can have a zoomable opening-tree PNG viewer at `issues/<slug>/tree.html`. Every game HTML file already has a "📊 View opening tree →" link pointing to it; the link is a 404 until you generate the file.
+
+### Generating tree.html (run locally on Windows)
+
+**One-time setup:**
+```
+pip install python-chess cairosvg graphviz Pillow
+```
+Also install the **Graphviz binary** from https://graphviz.org/download/ and make sure it's on your PATH.
+
+**Per issue:**
+```
+python tools/build_tree.py issues/twic1668_taimanov/twic1668_taimanov.pgn
+```
+Writes `tree.html` next to the PGN. Then commit and push — that's it.
+
+**Options (if tree looks too crowded or too sparse):**
+```
+--max-plies 10     # shallower tree (default 12)
+--min-games 2      # require more games per branch (auto if omitted)
+--cap 60           # max board positions when auto min-games (default 80)
+--title "..."      # custom page title (auto-derived from filename if omitted)
+```
+
+**What it looks like:** board diagram at each position, edge labels with the move + game count + score percentage, edge thickness proportional to game count. Pan/zoom viewer, same style as datwins.github.io/what_ya_playing.
+
+### Adding tree-link to new issue HTML
+
+When writing a new issue HTML by hand or with a builder, add this after the byline line:
+```html
+<p class="tree-link"><a href="tree.html">📊 View opening tree →</a></p>
+```
+And this CSS (already present in all existing issues):
+```css
+p.tree-link{margin:.5em 0 .9em;font-family:system-ui,"Segoe UI",sans-serif;font-size:.85em}
+p.tree-link a{color:var(--main);font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
+p.tree-link a:hover{opacity:.75}
+```
+`build_taimanov.py` already includes both; copy this pattern for any future Python builder.
+
+---
+
 ## ⚠️ Critical: HTML structure for the board to work
 
 The JS board renderer depends on the **aside being a direct sibling of `</main>`**. This is the layout that works:
