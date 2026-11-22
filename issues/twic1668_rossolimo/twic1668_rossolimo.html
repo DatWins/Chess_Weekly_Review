@@ -282,6 +282,1759 @@ showed that Black can fight back — but it requires precise preparation.</p>
 </aside>
 </div>
 <script>
+
+/*
+ * Copyright (c) 2020, Jeff Hlywa (jhlywa@gmail.com)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ *----------------------------------------------------------------------------*/
+
+/* minified license below  */
+
+/* @license
+ * Copyright (c) 2018, Jeff Hlywa (jhlywa@gmail.com)
+ * Released under the BSD license
+ * https://github.com/jhlywa/chess.js/blob/master/LICENSE
+ */
+
+var Chess = function(fen) {
+  var BLACK = 'b'
+  var WHITE = 'w'
+
+  var EMPTY = -1
+
+  var PAWN = 'p'
+  var KNIGHT = 'n'
+  var BISHOP = 'b'
+  var ROOK = 'r'
+  var QUEEN = 'q'
+  var KING = 'k'
+
+  var SYMBOLS = 'pnbrqkPNBRQK'
+
+  var DEFAULT_POSITION =
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+  var POSSIBLE_RESULTS = ['1-0', '0-1', '1/2-1/2', '*']
+
+  var PAWN_OFFSETS = {
+    b: [16, 32, 17, 15],
+    w: [-16, -32, -17, -15]
+  }
+
+  var PIECE_OFFSETS = {
+    n: [-18, -33, -31, -14, 18, 33, 31, 14],
+    b: [-17, -15, 17, 15],
+    r: [-16, 1, 16, -1],
+    q: [-17, -16, -15, 1, 17, 16, 15, -1],
+    k: [-17, -16, -15, 1, 17, 16, 15, -1]
+  }
+
+  // prettier-ignore
+  var ATTACKS = [
+    20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20, 0,
+     0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
+     0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
+     0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
+     0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+    24,24,24,24,24,24,56,  0, 56,24,24,24,24,24,24, 0,
+     0, 0, 0, 0, 0, 2,53, 56, 53, 2, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0,20, 2, 24,  2,20, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0,20, 0, 0, 24,  0, 0,20, 0, 0, 0, 0, 0,
+     0, 0, 0,20, 0, 0, 0, 24,  0, 0, 0,20, 0, 0, 0, 0,
+     0, 0,20, 0, 0, 0, 0, 24,  0, 0, 0, 0,20, 0, 0, 0,
+     0,20, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0,20, 0, 0,
+    20, 0, 0, 0, 0, 0, 0, 24,  0, 0, 0, 0, 0, 0,20
+  ];
+
+  // prettier-ignore
+  var RAYS = [
+     17,  0,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0,  0, 15, 0,
+      0, 17,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0, 15,  0, 0,
+      0,  0, 17,  0,  0,  0,  0, 16,  0,  0,  0,  0, 15,  0,  0, 0,
+      0,  0,  0, 17,  0,  0,  0, 16,  0,  0,  0, 15,  0,  0,  0, 0,
+      0,  0,  0,  0, 17,  0,  0, 16,  0,  0, 15,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,  0, 17,  0, 16,  0, 15,  0,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,  0,  0, 17, 16, 15,  0,  0,  0,  0,  0,  0, 0,
+      1,  1,  1,  1,  1,  1,  1,  0, -1, -1,  -1,-1, -1, -1, -1, 0,
+      0,  0,  0,  0,  0,  0,-15,-16,-17,  0,  0,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,  0,-15,  0,-16,  0,-17,  0,  0,  0,  0,  0, 0,
+      0,  0,  0,  0,-15,  0,  0,-16,  0,  0,-17,  0,  0,  0,  0, 0,
+      0,  0,  0,-15,  0,  0,  0,-16,  0,  0,  0,-17,  0,  0,  0, 0,
+      0,  0,-15,  0,  0,  0,  0,-16,  0,  0,  0,  0,-17,  0,  0, 0,
+      0,-15,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,-17,  0, 0,
+    -15,  0,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,  0,-17
+  ];
+
+  var SHIFTS = { p: 0, n: 1, b: 2, r: 3, q: 4, k: 5 }
+
+  var FLAGS = {
+    NORMAL: 'n',
+    CAPTURE: 'c',
+    BIG_PAWN: 'b',
+    EP_CAPTURE: 'e',
+    PROMOTION: 'p',
+    KSIDE_CASTLE: 'k',
+    QSIDE_CASTLE: 'q'
+  }
+
+  var BITS = {
+    NORMAL: 1,
+    CAPTURE: 2,
+    BIG_PAWN: 4,
+    EP_CAPTURE: 8,
+    PROMOTION: 16,
+    KSIDE_CASTLE: 32,
+    QSIDE_CASTLE: 64
+  }
+
+  var RANK_1 = 7
+  var RANK_2 = 6
+  var RANK_3 = 5
+  var RANK_4 = 4
+  var RANK_5 = 3
+  var RANK_6 = 2
+  var RANK_7 = 1
+  var RANK_8 = 0
+
+  // prettier-ignore
+  var SQUARES = {
+    a8:   0, b8:   1, c8:   2, d8:   3, e8:   4, f8:   5, g8:   6, h8:   7,
+    a7:  16, b7:  17, c7:  18, d7:  19, e7:  20, f7:  21, g7:  22, h7:  23,
+    a6:  32, b6:  33, c6:  34, d6:  35, e6:  36, f6:  37, g6:  38, h6:  39,
+    a5:  48, b5:  49, c5:  50, d5:  51, e5:  52, f5:  53, g5:  54, h5:  55,
+    a4:  64, b4:  65, c4:  66, d4:  67, e4:  68, f4:  69, g4:  70, h4:  71,
+    a3:  80, b3:  81, c3:  82, d3:  83, e3:  84, f3:  85, g3:  86, h3:  87,
+    a2:  96, b2:  97, c2:  98, d2:  99, e2: 100, f2: 101, g2: 102, h2: 103,
+    a1: 112, b1: 113, c1: 114, d1: 115, e1: 116, f1: 117, g1: 118, h1: 119
+  };
+
+  var ROOKS = {
+    w: [
+      { square: SQUARES.a1, flag: BITS.QSIDE_CASTLE },
+      { square: SQUARES.h1, flag: BITS.KSIDE_CASTLE }
+    ],
+    b: [
+      { square: SQUARES.a8, flag: BITS.QSIDE_CASTLE },
+      { square: SQUARES.h8, flag: BITS.KSIDE_CASTLE }
+    ]
+  }
+
+  var board = new Array(128)
+  var kings = { w: EMPTY, b: EMPTY }
+  var turn = WHITE
+  var castling = { w: 0, b: 0 }
+  var ep_square = EMPTY
+  var half_moves = 0
+  var move_number = 1
+  var history = []
+  var header = {}
+
+  /* if the user passes in a fen string, load it, else default to
+   * starting position
+   */
+  if (typeof fen === 'undefined') {
+    load(DEFAULT_POSITION)
+  } else {
+    load(fen)
+  }
+
+  function clear(keep_headers) {
+    if (typeof keep_headers === 'undefined') {
+      keep_headers = false
+    }
+
+    board = new Array(128)
+    kings = { w: EMPTY, b: EMPTY }
+    turn = WHITE
+    castling = { w: 0, b: 0 }
+    ep_square = EMPTY
+    half_moves = 0
+    move_number = 1
+    history = []
+    if (!keep_headers) header = {}
+    update_setup(generate_fen())
+  }
+
+  function reset() {
+    load(DEFAULT_POSITION)
+  }
+
+  function load(fen, keep_headers) {
+    if (typeof keep_headers === 'undefined') {
+      keep_headers = false
+    }
+
+    var tokens = fen.split(/\s+/)
+    var position = tokens[0]
+    var square = 0
+
+    if (!validate_fen(fen).valid) {
+      return false
+    }
+
+    clear(keep_headers)
+
+    for (var i = 0; i < position.length; i++) {
+      var piece = position.charAt(i)
+
+      if (piece === '/') {
+        square += 8
+      } else if (is_digit(piece)) {
+        square += parseInt(piece, 10)
+      } else {
+        var color = piece < 'a' ? WHITE : BLACK
+        put({ type: piece.toLowerCase(), color: color }, algebraic(square))
+        square++
+      }
+    }
+
+    turn = tokens[1]
+
+    if (tokens[2].indexOf('K') > -1) {
+      castling.w |= BITS.KSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('Q') > -1) {
+      castling.w |= BITS.QSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('k') > -1) {
+      castling.b |= BITS.KSIDE_CASTLE
+    }
+    if (tokens[2].indexOf('q') > -1) {
+      castling.b |= BITS.QSIDE_CASTLE
+    }
+
+    ep_square = tokens[3] === '-' ? EMPTY : SQUARES[tokens[3]]
+    half_moves = parseInt(tokens[4], 10)
+    move_number = parseInt(tokens[5], 10)
+
+    update_setup(generate_fen())
+
+    return true
+  }
+
+  /* TODO: this function is pretty much crap - it validates structure but
+   * completely ignores content (e.g. doesn't verify that each side has a king)
+   * ... we should rewrite this, and ditch the silly error_number field while
+   * we're at it
+   */
+  function validate_fen(fen) {
+    var errors = {
+      0: 'No errors.',
+      1: 'FEN string must contain six space-delimited fields.',
+      2: '6th field (move number) must be a positive integer.',
+      3: '5th field (half move counter) must be a non-negative integer.',
+      4: '4th field (en-passant square) is invalid.',
+      5: '3rd field (castling availability) is invalid.',
+      6: '2nd field (side to move) is invalid.',
+      7: "1st field (piece positions) does not contain 8 '/'-delimited rows.",
+      8: '1st field (piece positions) is invalid [consecutive numbers].',
+      9: '1st field (piece positions) is invalid [invalid piece].',
+      10: '1st field (piece positions) is invalid [row too large].',
+      11: 'Illegal en-passant square'
+    }
+
+    /* 1st criterion: 6 space-seperated fields? */
+    var tokens = fen.split(/\s+/)
+    if (tokens.length !== 6) {
+      return { valid: false, error_number: 1, error: errors[1] }
+    }
+
+    /* 2nd criterion: move number field is a integer value > 0? */
+    if (isNaN(tokens[5]) || parseInt(tokens[5], 10) <= 0) {
+      return { valid: false, error_number: 2, error: errors[2] }
+    }
+
+    /* 3rd criterion: half move counter is an integer >= 0? */
+    if (isNaN(tokens[4]) || parseInt(tokens[4], 10) < 0) {
+      return { valid: false, error_number: 3, error: errors[3] }
+    }
+
+    /* 4th criterion: 4th field is a valid e.p.-string? */
+    if (!/^(-|[abcdefgh][36])$/.test(tokens[3])) {
+      return { valid: false, error_number: 4, error: errors[4] }
+    }
+
+    /* 5th criterion: 3th field is a valid castle-string? */
+    if (!/^(KQ?k?q?|Qk?q?|kq?|q|-)$/.test(tokens[2])) {
+      return { valid: false, error_number: 5, error: errors[5] }
+    }
+
+    /* 6th criterion: 2nd field is "w" (white) or "b" (black)? */
+    if (!/^(w|b)$/.test(tokens[1])) {
+      return { valid: false, error_number: 6, error: errors[6] }
+    }
+
+    /* 7th criterion: 1st field contains 8 rows? */
+    var rows = tokens[0].split('/')
+    if (rows.length !== 8) {
+      return { valid: false, error_number: 7, error: errors[7] }
+    }
+
+    /* 8th criterion: every row is valid? */
+    for (var i = 0; i < rows.length; i++) {
+      /* check for right sum of fields AND not two numbers in succession */
+      var sum_fields = 0
+      var previous_was_number = false
+
+      for (var k = 0; k < rows[i].length; k++) {
+        if (!isNaN(rows[i][k])) {
+          if (previous_was_number) {
+            return { valid: false, error_number: 8, error: errors[8] }
+          }
+          sum_fields += parseInt(rows[i][k], 10)
+          previous_was_number = true
+        } else {
+          if (!/^[prnbqkPRNBQK]$/.test(rows[i][k])) {
+            return { valid: false, error_number: 9, error: errors[9] }
+          }
+          sum_fields += 1
+          previous_was_number = false
+        }
+      }
+      if (sum_fields !== 8) {
+        return { valid: false, error_number: 10, error: errors[10] }
+      }
+    }
+
+    if (
+      (tokens[3][1] == '3' && tokens[1] == 'w') ||
+      (tokens[3][1] == '6' && tokens[1] == 'b')
+    ) {
+      return { valid: false, error_number: 11, error: errors[11] }
+    }
+
+    /* everything's okay! */
+    return { valid: true, error_number: 0, error: errors[0] }
+  }
+
+  function generate_fen() {
+    var empty = 0
+    var fen = ''
+
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      if (board[i] == null) {
+        empty++
+      } else {
+        if (empty > 0) {
+          fen += empty
+          empty = 0
+        }
+        var color = board[i].color
+        var piece = board[i].type
+
+        fen += color === WHITE ? piece.toUpperCase() : piece.toLowerCase()
+      }
+
+      if ((i + 1) & 0x88) {
+        if (empty > 0) {
+          fen += empty
+        }
+
+        if (i !== SQUARES.h1) {
+          fen += '/'
+        }
+
+        empty = 0
+        i += 8
+      }
+    }
+
+    var cflags = ''
+    if (castling[WHITE] & BITS.KSIDE_CASTLE) {
+      cflags += 'K'
+    }
+    if (castling[WHITE] & BITS.QSIDE_CASTLE) {
+      cflags += 'Q'
+    }
+    if (castling[BLACK] & BITS.KSIDE_CASTLE) {
+      cflags += 'k'
+    }
+    if (castling[BLACK] & BITS.QSIDE_CASTLE) {
+      cflags += 'q'
+    }
+
+    /* do we have an empty castling flag? */
+    cflags = cflags || '-'
+    var epflags = ep_square === EMPTY ? '-' : algebraic(ep_square)
+
+    return [fen, turn, cflags, epflags, half_moves, move_number].join(' ')
+  }
+
+  function set_header(args) {
+    for (var i = 0; i < args.length; i += 2) {
+      if (typeof args[i] === 'string' && typeof args[i + 1] === 'string') {
+        header[args[i]] = args[i + 1]
+      }
+    }
+    return header
+  }
+
+  /* called when the initial board setup is changed with put() or remove().
+   * modifies the SetUp and FEN properties of the header object.  if the FEN is
+   * equal to the default position, the SetUp and FEN are deleted
+   * the setup is only updated if history.length is zero, ie moves haven't been
+   * made.
+   */
+  function update_setup(fen) {
+    if (history.length > 0) return
+
+    if (fen !== DEFAULT_POSITION) {
+      header['SetUp'] = '1'
+      header['FEN'] = fen
+    } else {
+      delete header['SetUp']
+      delete header['FEN']
+    }
+  }
+
+  function get(square) {
+    var piece = board[SQUARES[square]]
+    return piece ? { type: piece.type, color: piece.color } : null
+  }
+
+  function put(piece, square) {
+    /* check for valid piece object */
+    if (!('type' in piece && 'color' in piece)) {
+      return false
+    }
+
+    /* check for piece */
+    if (SYMBOLS.indexOf(piece.type.toLowerCase()) === -1) {
+      return false
+    }
+
+    /* check for valid square */
+    if (!(square in SQUARES)) {
+      return false
+    }
+
+    var sq = SQUARES[square]
+
+    /* don't let the user place more than one king */
+    if (
+      piece.type == KING &&
+      !(kings[piece.color] == EMPTY || kings[piece.color] == sq)
+    ) {
+      return false
+    }
+
+    board[sq] = { type: piece.type, color: piece.color }
+    if (piece.type === KING) {
+      kings[piece.color] = sq
+    }
+
+    update_setup(generate_fen())
+
+    return true
+  }
+
+  function remove(square) {
+    var piece = get(square)
+    board[SQUARES[square]] = null
+    if (piece && piece.type === KING) {
+      kings[piece.color] = EMPTY
+    }
+
+    update_setup(generate_fen())
+
+    return piece
+  }
+
+  function build_move(board, from, to, flags, promotion) {
+    var move = {
+      color: turn,
+      from: from,
+      to: to,
+      flags: flags,
+      piece: board[from].type
+    }
+
+    if (promotion) {
+      move.flags |= BITS.PROMOTION
+      move.promotion = promotion
+    }
+
+    if (board[to]) {
+      move.captured = board[to].type
+    } else if (flags & BITS.EP_CAPTURE) {
+      move.captured = PAWN
+    }
+    return move
+  }
+
+  function generate_moves(options) {
+    function add_move(board, moves, from, to, flags) {
+      /* if pawn promotion */
+      if (
+        board[from].type === PAWN &&
+        (rank(to) === RANK_8 || rank(to) === RANK_1)
+      ) {
+        var pieces = [QUEEN, ROOK, BISHOP, KNIGHT]
+        for (var i = 0, len = pieces.length; i < len; i++) {
+          moves.push(build_move(board, from, to, flags, pieces[i]))
+        }
+      } else {
+        moves.push(build_move(board, from, to, flags))
+      }
+    }
+
+    var moves = []
+    var us = turn
+    var them = swap_color(us)
+    var second_rank = { b: RANK_7, w: RANK_2 }
+
+    var first_sq = SQUARES.a8
+    var last_sq = SQUARES.h1
+    var single_square = false
+
+    /* do we want legal moves? */
+    var legal =
+      typeof options !== 'undefined' && 'legal' in options
+        ? options.legal
+        : true
+
+    /* are we generating moves for a single square? */
+    if (typeof options !== 'undefined' && 'square' in options) {
+      if (options.square in SQUARES) {
+        first_sq = last_sq = SQUARES[options.square]
+        single_square = true
+      } else {
+        /* invalid square */
+        return []
+      }
+    }
+
+    for (var i = first_sq; i <= last_sq; i++) {
+      /* did we run off the end of the board */
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      var piece = board[i]
+      if (piece == null || piece.color !== us) {
+        continue
+      }
+
+      if (piece.type === PAWN) {
+        /* single square, non-capturing */
+        var square = i + PAWN_OFFSETS[us][0]
+        if (board[square] == null) {
+          add_move(board, moves, i, square, BITS.NORMAL)
+
+          /* double square */
+          var square = i + PAWN_OFFSETS[us][1]
+          if (second_rank[us] === rank(i) && board[square] == null) {
+            add_move(board, moves, i, square, BITS.BIG_PAWN)
+          }
+        }
+
+        /* pawn captures */
+        for (j = 2; j < 4; j++) {
+          var square = i + PAWN_OFFSETS[us][j]
+          if (square & 0x88) continue
+
+          if (board[square] != null && board[square].color === them) {
+            add_move(board, moves, i, square, BITS.CAPTURE)
+          } else if (square === ep_square) {
+            add_move(board, moves, i, ep_square, BITS.EP_CAPTURE)
+          }
+        }
+      } else {
+        for (var j = 0, len = PIECE_OFFSETS[piece.type].length; j < len; j++) {
+          var offset = PIECE_OFFSETS[piece.type][j]
+          var square = i
+
+          while (true) {
+            square += offset
+            if (square & 0x88) break
+
+            if (board[square] == null) {
+              add_move(board, moves, i, square, BITS.NORMAL)
+            } else {
+              if (board[square].color === us) break
+              add_move(board, moves, i, square, BITS.CAPTURE)
+              break
+            }
+
+            /* break, if knight or king */
+            if (piece.type === 'n' || piece.type === 'k') break
+          }
+        }
+      }
+    }
+
+    /* check for castling if: a) we're generating all moves, or b) we're doing
+     * single square move generation on the king's square
+     */
+    if (!single_square || last_sq === kings[us]) {
+      /* king-side castling */
+      if (castling[us] & BITS.KSIDE_CASTLE) {
+        var castling_from = kings[us]
+        var castling_to = castling_from + 2
+
+        if (
+          board[castling_from + 1] == null &&
+          board[castling_to] == null &&
+          !attacked(them, kings[us]) &&
+          !attacked(them, castling_from + 1) &&
+          !attacked(them, castling_to)
+        ) {
+          add_move(board, moves, kings[us], castling_to, BITS.KSIDE_CASTLE)
+        }
+      }
+
+      /* queen-side castling */
+      if (castling[us] & BITS.QSIDE_CASTLE) {
+        var castling_from = kings[us]
+        var castling_to = castling_from - 2
+
+        if (
+          board[castling_from - 1] == null &&
+          board[castling_from - 2] == null &&
+          board[castling_from - 3] == null &&
+          !attacked(them, kings[us]) &&
+          !attacked(them, castling_from - 1) &&
+          !attacked(them, castling_to)
+        ) {
+          add_move(board, moves, kings[us], castling_to, BITS.QSIDE_CASTLE)
+        }
+      }
+    }
+
+    /* return all pseudo-legal moves (this includes moves that allow the king
+     * to be captured)
+     */
+    if (!legal) {
+      return moves
+    }
+
+    /* filter out illegal moves */
+    var legal_moves = []
+    for (var i = 0, len = moves.length; i < len; i++) {
+      make_move(moves[i])
+      if (!king_attacked(us)) {
+        legal_moves.push(moves[i])
+      }
+      undo_move()
+    }
+
+    return legal_moves
+  }
+
+  /* convert a move from 0x88 coordinates to Standard Algebraic Notation
+   * (SAN)
+   *
+   * @param {boolean} sloppy Use the sloppy SAN generator to work around over
+   * disambiguation bugs in Fritz and Chessbase.  See below:
+   *
+   * r1bqkbnr/ppp2ppp/2n5/1B1pP3/4P3/8/PPPP2PP/RNBQK1NR b KQkq - 2 4
+   * 4. ... Nge7 is overly disambiguated because the knight on c6 is pinned
+   * 4. ... Ne7 is technically the valid SAN
+   */
+  function move_to_san(move, sloppy) {
+    var output = ''
+
+    if (move.flags & BITS.KSIDE_CASTLE) {
+      output = 'O-O'
+    } else if (move.flags & BITS.QSIDE_CASTLE) {
+      output = 'O-O-O'
+    } else {
+      var disambiguator = get_disambiguator(move, sloppy)
+
+      if (move.piece !== PAWN) {
+        output += move.piece.toUpperCase() + disambiguator
+      }
+
+      if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
+        if (move.piece === PAWN) {
+          output += algebraic(move.from)[0]
+        }
+        output += 'x'
+      }
+
+      output += algebraic(move.to)
+
+      if (move.flags & BITS.PROMOTION) {
+        output += '=' + move.promotion.toUpperCase()
+      }
+    }
+
+    make_move(move)
+    if (in_check()) {
+      if (in_checkmate()) {
+        output += '#'
+      } else {
+        output += '+'
+      }
+    }
+    undo_move()
+
+    return output
+  }
+
+  // parses all of the decorators out of a SAN string
+  function stripped_san(move) {
+    return move.replace(/=/, '').replace(/[+#]?[?!]*$/, '')
+  }
+
+  function attacked(color, square) {
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      /* did we run off the end of the board */
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      /* if empty square or wrong color */
+      if (board[i] == null || board[i].color !== color) continue
+
+      var piece = board[i]
+      var difference = i - square
+      var index = difference + 119
+
+      if (ATTACKS[index] & (1 << SHIFTS[piece.type])) {
+        if (piece.type === PAWN) {
+          if (difference > 0) {
+            if (piece.color === WHITE) return true
+          } else {
+            if (piece.color === BLACK) return true
+          }
+          continue
+        }
+
+        /* if the piece is a knight or a king */
+        if (piece.type === 'n' || piece.type === 'k') return true
+
+        var offset = RAYS[index]
+        var j = i + offset
+
+        var blocked = false
+        while (j !== square) {
+          if (board[j] != null) {
+            blocked = true
+            break
+          }
+          j += offset
+        }
+
+        if (!blocked) return true
+      }
+    }
+
+    return false
+  }
+
+  function king_attacked(color) {
+    return attacked(swap_color(color), kings[color])
+  }
+
+  function in_check() {
+    return king_attacked(turn)
+  }
+
+  function in_checkmate() {
+    return in_check() && generate_moves().length === 0
+  }
+
+  function in_stalemate() {
+    return !in_check() && generate_moves().length === 0
+  }
+
+  function insufficient_material() {
+    var pieces = {}
+    var bishops = []
+    var num_pieces = 0
+    var sq_color = 0
+
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      sq_color = (sq_color + 1) % 2
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
+
+      var piece = board[i]
+      if (piece) {
+        pieces[piece.type] = piece.type in pieces ? pieces[piece.type] + 1 : 1
+        if (piece.type === BISHOP) {
+          bishops.push(sq_color)
+        }
+        num_pieces++
+      }
+    }
+
+    /* k vs. k */
+    if (num_pieces === 2) {
+      return true
+    } else if (
+      /* k vs. kn .... or .... k vs. kb */
+      num_pieces === 3 &&
+      (pieces[BISHOP] === 1 || pieces[KNIGHT] === 1)
+    ) {
+      return true
+    } else if (num_pieces === pieces[BISHOP] + 2) {
+      /* kb vs. kb where any number of bishops are all on the same color */
+      var sum = 0
+      var len = bishops.length
+      for (var i = 0; i < len; i++) {
+        sum += bishops[i]
+      }
+      if (sum === 0 || sum === len) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  function in_threefold_repetition() {
+    /* TODO: while this function is fine for casual use, a better
+     * implementation would use a Zobrist key (instead of FEN). the
+     * Zobrist key would be maintained in the make_move/undo_move functions,
+     * avoiding the costly that we do below.
+     */
+    var moves = []
+    var positions = {}
+    var repetition = false
+
+    while (true) {
+      var move = undo_move()
+      if (!move) break
+      moves.push(move)
+    }
+
+    while (true) {
+      /* remove the last two fields in the FEN string, they're not needed
+       * when checking for draw by rep */
+      var fen = generate_fen()
+        .split(' ')
+        .slice(0, 4)
+        .join(' ')
+
+      /* has the position occurred three or move times */
+      positions[fen] = fen in positions ? positions[fen] + 1 : 1
+      if (positions[fen] >= 3) {
+        repetition = true
+      }
+
+      if (!moves.length) {
+        break
+      }
+      make_move(moves.pop())
+    }
+
+    return repetition
+  }
+
+  function push(move) {
+    history.push({
+      move: move,
+      kings: { b: kings.b, w: kings.w },
+      turn: turn,
+      castling: { b: castling.b, w: castling.w },
+      ep_square: ep_square,
+      half_moves: half_moves,
+      move_number: move_number
+    })
+  }
+
+  function make_move(move) {
+    var us = turn
+    var them = swap_color(us)
+    push(move)
+
+    board[move.to] = board[move.from]
+    board[move.from] = null
+
+    /* if ep capture, remove the captured pawn */
+    if (move.flags & BITS.EP_CAPTURE) {
+      if (turn === BLACK) {
+        board[move.to - 16] = null
+      } else {
+        board[move.to + 16] = null
+      }
+    }
+
+    /* if pawn promotion, replace with new piece */
+    if (move.flags & BITS.PROMOTION) {
+      board[move.to] = { type: move.promotion, color: us }
+    }
+
+    /* if we moved the king */
+    if (board[move.to].type === KING) {
+      kings[board[move.to].color] = move.to
+
+      /* if we castled, move the rook next to the king */
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        var castling_to = move.to - 1
+        var castling_from = move.to + 1
+        board[castling_to] = board[castling_from]
+        board[castling_from] = null
+      } else if (move.flags & BITS.QSIDE_CASTLE) {
+        var castling_to = move.to + 1
+        var castling_from = move.to - 2
+        board[castling_to] = board[castling_from]
+        board[castling_from] = null
+      }
+
+      /* turn off castling */
+      castling[us] = ''
+    }
+
+    /* turn off castling if we move a rook */
+    if (castling[us]) {
+      for (var i = 0, len = ROOKS[us].length; i < len; i++) {
+        if (
+          move.from === ROOKS[us][i].square &&
+          castling[us] & ROOKS[us][i].flag
+        ) {
+          castling[us] ^= ROOKS[us][i].flag
+          break
+        }
+      }
+    }
+
+    /* turn off castling if we capture a rook */
+    if (castling[them]) {
+      for (var i = 0, len = ROOKS[them].length; i < len; i++) {
+        if (
+          move.to === ROOKS[them][i].square &&
+          castling[them] & ROOKS[them][i].flag
+        ) {
+          castling[them] ^= ROOKS[them][i].flag
+          break
+        }
+      }
+    }
+
+    /* if big pawn move, update the en passant square */
+    if (move.flags & BITS.BIG_PAWN) {
+      if (turn === 'b') {
+        ep_square = move.to - 16
+      } else {
+        ep_square = move.to + 16
+      }
+    } else {
+      ep_square = EMPTY
+    }
+
+    /* reset the 50 move counter if a pawn is moved or a piece is captured */
+    if (move.piece === PAWN) {
+      half_moves = 0
+    } else if (move.flags & (BITS.CAPTURE | BITS.EP_CAPTURE)) {
+      half_moves = 0
+    } else {
+      half_moves++
+    }
+
+    if (turn === BLACK) {
+      move_number++
+    }
+    turn = swap_color(turn)
+  }
+
+  function undo_move() {
+    var old = history.pop()
+    if (old == null) {
+      return null
+    }
+
+    var move = old.move
+    kings = old.kings
+    turn = old.turn
+    castling = old.castling
+    ep_square = old.ep_square
+    half_moves = old.half_moves
+    move_number = old.move_number
+
+    var us = turn
+    var them = swap_color(turn)
+
+    board[move.from] = board[move.to]
+    board[move.from].type = move.piece // to undo any promotions
+    board[move.to] = null
+
+    if (move.flags & BITS.CAPTURE) {
+      board[move.to] = { type: move.captured, color: them }
+    } else if (move.flags & BITS.EP_CAPTURE) {
+      var index
+      if (us === BLACK) {
+        index = move.to - 16
+      } else {
+        index = move.to + 16
+      }
+      board[index] = { type: PAWN, color: them }
+    }
+
+    if (move.flags & (BITS.KSIDE_CASTLE | BITS.QSIDE_CASTLE)) {
+      var castling_to, castling_from
+      if (move.flags & BITS.KSIDE_CASTLE) {
+        castling_to = move.to + 1
+        castling_from = move.to - 1
+      } else if (move.flags & BITS.QSIDE_CASTLE) {
+        castling_to = move.to - 2
+        castling_from = move.to + 1
+      }
+
+      board[castling_to] = board[castling_from]
+      board[castling_from] = null
+    }
+
+    return move
+  }
+
+  /* this function is used to uniquely identify ambiguous moves */
+  function get_disambiguator(move, sloppy) {
+    var moves = generate_moves({ legal: !sloppy })
+
+    var from = move.from
+    var to = move.to
+    var piece = move.piece
+
+    var ambiguities = 0
+    var same_rank = 0
+    var same_file = 0
+
+    for (var i = 0, len = moves.length; i < len; i++) {
+      var ambig_from = moves[i].from
+      var ambig_to = moves[i].to
+      var ambig_piece = moves[i].piece
+
+      /* if a move of the same piece type ends on the same to square, we'll
+       * need to add a disambiguator to the algebraic notation
+       */
+      if (piece === ambig_piece && from !== ambig_from && to === ambig_to) {
+        ambiguities++
+
+        if (rank(from) === rank(ambig_from)) {
+          same_rank++
+        }
+
+        if (file(from) === file(ambig_from)) {
+          same_file++
+        }
+      }
+    }
+
+    if (ambiguities > 0) {
+      /* if there exists a similar moving piece on the same rank and file as
+       * the move in question, use the square as the disambiguator
+       */
+      if (same_rank > 0 && same_file > 0) {
+        return algebraic(from)
+      } else if (same_file > 0) {
+        /* if the moving piece rests on the same file, use the rank symbol as the
+         * disambiguator
+         */
+        return algebraic(from).charAt(1)
+      } else {
+        /* else use the file symbol */
+        return algebraic(from).charAt(0)
+      }
+    }
+
+    return ''
+  }
+
+  function ascii() {
+    var s = '   +------------------------+\n'
+    for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      /* display the rank */
+      if (file(i) === 0) {
+        s += ' ' + '87654321'[rank(i)] + ' |'
+      }
+
+      /* empty piece */
+      if (board[i] == null) {
+        s += ' . '
+      } else {
+        var piece = board[i].type
+        var color = board[i].color
+        var symbol = color === WHITE ? piece.toUpperCase() : piece.toLowerCase()
+        s += ' ' + symbol + ' '
+      }
+
+      if ((i + 1) & 0x88) {
+        s += '|\n'
+        i += 8
+      }
+    }
+    s += '   +------------------------+\n'
+    s += '     a  b  c  d  e  f  g  h\n'
+
+    return s
+  }
+
+  // convert a move from Standard Algebraic Notation (SAN) to 0x88 coordinates
+  function move_from_san(move, sloppy) {
+    // strip off any move decorations: e.g Nf3+?!
+    var clean_move = stripped_san(move)
+
+    // if we're using the sloppy parser run a regex to grab piece, to, and from
+    // this should parse invalid SAN like: Pe2-e4, Rc1c4, Qf3xf7
+    if (sloppy) {
+      var matches = clean_move.match(
+        /([pnbrqkPNBRQK])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBN])?/
+      )
+      if (matches) {
+        var piece = matches[1]
+        var from = matches[2]
+        var to = matches[3]
+        var promotion = matches[4]
+      }
+    }
+
+    var moves = generate_moves()
+    for (var i = 0, len = moves.length; i < len; i++) {
+      // try the strict parser first, then the sloppy parser if requested
+      // by the user
+      if (
+        clean_move === stripped_san(move_to_san(moves[i])) ||
+        (sloppy && clean_move === stripped_san(move_to_san(moves[i], true)))
+      ) {
+        return moves[i]
+      } else {
+        if (
+          matches &&
+          (!piece || piece.toLowerCase() == moves[i].piece) &&
+          SQUARES[from] == moves[i].from &&
+          SQUARES[to] == moves[i].to &&
+          (!promotion || promotion.toLowerCase() == moves[i].promotion)
+        ) {
+          return moves[i]
+        }
+      }
+    }
+
+    return null
+  }
+
+  /*****************************************************************************
+   * UTILITY FUNCTIONS
+   ****************************************************************************/
+  function rank(i) {
+    return i >> 4
+  }
+
+  function file(i) {
+    return i & 15
+  }
+
+  function algebraic(i) {
+    var f = file(i),
+      r = rank(i)
+    return 'abcdefgh'.substring(f, f + 1) + '87654321'.substring(r, r + 1)
+  }
+
+  function swap_color(c) {
+    return c === WHITE ? BLACK : WHITE
+  }
+
+  function is_digit(c) {
+    return '0123456789'.indexOf(c) !== -1
+  }
+
+  /* pretty = external move object */
+  function make_pretty(ugly_move) {
+    var move = clone(ugly_move)
+    move.san = move_to_san(move, false)
+    move.to = algebraic(move.to)
+    move.from = algebraic(move.from)
+
+    var flags = ''
+
+    for (var flag in BITS) {
+      if (BITS[flag] & move.flags) {
+        flags += FLAGS[flag]
+      }
+    }
+    move.flags = flags
+
+    return move
+  }
+
+  function clone(obj) {
+    var dupe = obj instanceof Array ? [] : {}
+
+    for (var property in obj) {
+      if (typeof property === 'object') {
+        dupe[property] = clone(obj[property])
+      } else {
+        dupe[property] = obj[property]
+      }
+    }
+
+    return dupe
+  }
+
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '')
+  }
+
+  /*****************************************************************************
+   * DEBUGGING UTILITIES
+   ****************************************************************************/
+  function perft(depth) {
+    var moves = generate_moves({ legal: false })
+    var nodes = 0
+    var color = turn
+
+    for (var i = 0, len = moves.length; i < len; i++) {
+      make_move(moves[i])
+      if (!king_attacked(color)) {
+        if (depth - 1 > 0) {
+          var child_nodes = perft(depth - 1)
+          nodes += child_nodes
+        } else {
+          nodes++
+        }
+      }
+      undo_move()
+    }
+
+    return nodes
+  }
+
+  return {
+    /***************************************************************************
+     * PUBLIC CONSTANTS (is there a better way to do this?)
+     **************************************************************************/
+    WHITE: WHITE,
+    BLACK: BLACK,
+    PAWN: PAWN,
+    KNIGHT: KNIGHT,
+    BISHOP: BISHOP,
+    ROOK: ROOK,
+    QUEEN: QUEEN,
+    KING: KING,
+    SQUARES: (function() {
+      /* from the ECMA-262 spec (section 12.6.4):
+       * "The mechanics of enumerating the properties ... is
+       * implementation dependent"
+       * so: for (var sq in SQUARES) { keys.push(sq); } might not be
+       * ordered correctly
+       */
+      var keys = []
+      for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+        if (i & 0x88) {
+          i += 7
+          continue
+        }
+        keys.push(algebraic(i))
+      }
+      return keys
+    })(),
+    FLAGS: FLAGS,
+
+    /***************************************************************************
+     * PUBLIC API
+     **************************************************************************/
+    load: function(fen) {
+      return load(fen)
+    },
+
+    reset: function() {
+      return reset()
+    },
+
+    moves: function(options) {
+      /* The internal representation of a chess move is in 0x88 format, and
+       * not meant to be human-readable.  The code below converts the 0x88
+       * square coordinates to algebraic coordinates.  It also prunes an
+       * unnecessary move keys resulting from a verbose call.
+       */
+
+      var ugly_moves = generate_moves(options)
+      var moves = []
+
+      for (var i = 0, len = ugly_moves.length; i < len; i++) {
+        /* does the user want a full move object (most likely not), or just
+         * SAN
+         */
+        if (
+          typeof options !== 'undefined' &&
+          'verbose' in options &&
+          options.verbose
+        ) {
+          moves.push(make_pretty(ugly_moves[i]))
+        } else {
+          moves.push(move_to_san(ugly_moves[i], false))
+        }
+      }
+
+      return moves
+    },
+
+    in_check: function() {
+      return in_check()
+    },
+
+    in_checkmate: function() {
+      return in_checkmate()
+    },
+
+    in_stalemate: function() {
+      return in_stalemate()
+    },
+
+    in_draw: function() {
+      return (
+        half_moves >= 100 ||
+        in_stalemate() ||
+        insufficient_material() ||
+        in_threefold_repetition()
+      )
+    },
+
+    insufficient_material: function() {
+      return insufficient_material()
+    },
+
+    in_threefold_repetition: function() {
+      return in_threefold_repetition()
+    },
+
+    game_over: function() {
+      return (
+        half_moves >= 100 ||
+        in_checkmate() ||
+        in_stalemate() ||
+        insufficient_material() ||
+        in_threefold_repetition()
+      )
+    },
+
+    validate_fen: function(fen) {
+      return validate_fen(fen)
+    },
+
+    fen: function() {
+      return generate_fen()
+    },
+
+    board: function() {
+      var output = [],
+        row = []
+
+      for (var i = SQUARES.a8; i <= SQUARES.h1; i++) {
+        if (board[i] == null) {
+          row.push(null)
+        } else {
+          row.push({ type: board[i].type, color: board[i].color })
+        }
+        if ((i + 1) & 0x88) {
+          output.push(row)
+          row = []
+          i += 8
+        }
+      }
+
+      return output
+    },
+
+    pgn: function(options) {
+      /* using the specification from http://www.chessclub.com/help/PGN-spec
+       * example for html usage: .pgn({ max_width: 72, newline_char: "<br />" })
+       */
+      var newline =
+        typeof options === 'object' && typeof options.newline_char === 'string'
+          ? options.newline_char
+          : '\n'
+      var max_width =
+        typeof options === 'object' && typeof options.max_width === 'number'
+          ? options.max_width
+          : 0
+      var result = []
+      var header_exists = false
+
+      /* add the PGN header headerrmation */
+      for (var i in header) {
+        /* TODO: order of enumerated properties in header object is not
+         * guaranteed, see ECMA-262 spec (section 12.6.4)
+         */
+        result.push('[' + i + ' "' + header[i] + '"]' + newline)
+        header_exists = true
+      }
+
+      if (header_exists && history.length) {
+        result.push(newline)
+      }
+
+      /* pop all of history onto reversed_history */
+      var reversed_history = []
+      while (history.length > 0) {
+        reversed_history.push(undo_move())
+      }
+
+      var moves = []
+      var move_string = ''
+
+      /* build the list of moves.  a move_string looks like: "3. e3 e6" */
+      while (reversed_history.length > 0) {
+        var move = reversed_history.pop()
+
+        /* if the position started with black to move, start PGN with 1. ... */
+        if (!history.length && move.color === 'b') {
+          move_string = move_number + '. ...'
+        } else if (move.color === 'w') {
+          /* store the previous generated move_string if we have one */
+          if (move_string.length) {
+            moves.push(move_string)
+          }
+          move_string = move_number + '.'
+        }
+
+        move_string = move_string + ' ' + move_to_san(move, false)
+        make_move(move)
+      }
+
+      /* are there any other leftover moves? */
+      if (move_string.length) {
+        moves.push(move_string)
+      }
+
+      /* is there a result? */
+      if (typeof header.Result !== 'undefined') {
+        moves.push(header.Result)
+      }
+
+      /* history should be back to what is was before we started generating PGN,
+       * so join together moves
+       */
+      if (max_width === 0) {
+        return result.join('') + moves.join(' ')
+      }
+
+      /* wrap the PGN output at max_width */
+      var current_width = 0
+      for (var i = 0; i < moves.length; i++) {
+        /* if the current move will push past max_width */
+        if (current_width + moves[i].length > max_width && i !== 0) {
+          /* don't end the line with whitespace */
+          if (result[result.length - 1] === ' ') {
+            result.pop()
+          }
+
+          result.push(newline)
+          current_width = 0
+        } else if (i !== 0) {
+          result.push(' ')
+          current_width++
+        }
+        result.push(moves[i])
+        current_width += moves[i].length
+      }
+
+      return result.join('')
+    },
+
+    load_pgn: function(pgn, options) {
+      // allow the user to specify the sloppy move parser to work around over
+      // disambiguation bugs in Fritz and Chessbase
+      var sloppy =
+        typeof options !== 'undefined' && 'sloppy' in options
+          ? options.sloppy
+          : false
+
+      function mask(str) {
+        return str.replace(/\\/g, '\\')
+      }
+
+      function has_keys(object) {
+        for (var key in object) {
+          return true
+        }
+        return false
+      }
+
+      function parse_pgn_header(header, options) {
+        var newline_char =
+          typeof options === 'object' &&
+          typeof options.newline_char === 'string'
+            ? options.newline_char
+            : '\r?\n'
+        var header_obj = {}
+        var headers = header.split(new RegExp(mask(newline_char)))
+        var key = ''
+        var value = ''
+
+        for (var i = 0; i < headers.length; i++) {
+          key = headers[i].replace(/^\[([A-Z][A-Za-z]*)\s.*\]$/, '$1')
+          value = headers[i].replace(/^\[[A-Za-z]+\s"(.*)"\]$/, '$1')
+          if (trim(key).length > 0) {
+            header_obj[key] = value
+          }
+        }
+
+        return header_obj
+      }
+
+      var newline_char =
+        typeof options === 'object' && typeof options.newline_char === 'string'
+          ? options.newline_char
+          : '\r?\n'
+
+      // RegExp to split header. Takes advantage of the fact that header and movetext
+      // will always have a blank line between them (ie, two newline_char's).
+      // With default newline_char, will equal: /^(\[((?:\r?\n)|.)*\])(?:\r?\n){2}/
+      var header_regex = new RegExp(
+        '^(\\[((?:' +
+          mask(newline_char) +
+          ')|.)*\\])' +
+          '(?:' +
+          mask(newline_char) +
+          '){2}'
+      )
+
+      // If no header given, begin with moves.
+      var header_string = header_regex.test(pgn)
+        ? header_regex.exec(pgn)[1]
+        : ''
+
+      // Put the board in the starting position
+      reset()
+
+      /* parse PGN header */
+      var headers = parse_pgn_header(header_string, options)
+      for (var key in headers) {
+        set_header([key, headers[key]])
+      }
+
+      /* load the starting position indicated by [Setup '1'] and
+       * [FEN position] */
+      if (headers['SetUp'] === '1') {
+        if (!('FEN' in headers && load(headers['FEN'], true))) {
+          // second argument to load: don't clear the headers
+          return false
+        }
+      }
+
+      /* delete header to get the moves */
+      var ms = pgn
+        .replace(header_string, '')
+        .replace(new RegExp(mask(newline_char), 'g'), ' ')
+
+      /* delete comments */
+      ms = ms.replace(/(\{[^}]+\})+?/g, '')
+
+      /* delete recursive annotation variations */
+      var rav_regex = /(\([^\(\)]+\))+?/g
+      while (rav_regex.test(ms)) {
+        ms = ms.replace(rav_regex, '')
+      }
+
+      /* delete move numbers */
+      ms = ms.replace(/\d+\.(\.\.)?/g, '')
+
+      /* delete ... indicating black to move */
+      ms = ms.replace(/\.\.\./g, '')
+
+      /* delete numeric annotation glyphs */
+      ms = ms.replace(/\$\d+/g, '')
+
+      /* trim and get array of moves */
+      var moves = trim(ms).split(new RegExp(/\s+/))
+
+      /* delete empty entries */
+      moves = moves
+        .join(',')
+        .replace(/,,+/g, ',')
+        .split(',')
+      var move = ''
+
+      for (var half_move = 0; half_move < moves.length - 1; half_move++) {
+        move = move_from_san(moves[half_move], sloppy)
+
+        /* move not possible! (don't clear the board to examine to show the
+         * latest valid position)
+         */
+        if (move == null) {
+          return false
+        } else {
+          make_move(move)
+        }
+      }
+
+      /* examine last move */
+      move = moves[moves.length - 1]
+      if (POSSIBLE_RESULTS.indexOf(move) > -1) {
+        if (has_keys(header) && typeof header.Result === 'undefined') {
+          set_header(['Result', move])
+        }
+      } else {
+        move = move_from_san(move, sloppy)
+        if (move == null) {
+          return false
+        } else {
+          make_move(move)
+        }
+      }
+      return true
+    },
+
+    header: function() {
+      return set_header(arguments)
+    },
+
+    ascii: function() {
+      return ascii()
+    },
+
+    turn: function() {
+      return turn
+    },
+
+    move: function(move, options) {
+      /* The move function can be called with in the following parameters:
+       *
+       * .move('Nxb7')      <- where 'move' is a case-sensitive SAN string
+       *
+       * .move({ from: 'h7', <- where the 'move' is a move object (additional
+       *         to :'h8',      fields are ignored)
+       *         promotion: 'q',
+       *      })
+       */
+
+      // allow the user to specify the sloppy move parser to work around over
+      // disambiguation bugs in Fritz and Chessbase
+      var sloppy =
+        typeof options !== 'undefined' && 'sloppy' in options
+          ? options.sloppy
+          : false
+
+      var move_obj = null
+
+      if (typeof move === 'string') {
+        move_obj = move_from_san(move, sloppy)
+      } else if (typeof move === 'object') {
+        var moves = generate_moves()
+
+        /* convert the pretty move object to an ugly move object */
+        for (var i = 0, len = moves.length; i < len; i++) {
+          if (
+            move.from === algebraic(moves[i].from) &&
+            move.to === algebraic(moves[i].to) &&
+            (!('promotion' in moves[i]) ||
+              move.promotion === moves[i].promotion)
+          ) {
+            move_obj = moves[i]
+            break
+          }
+        }
+      }
+
+      /* failed to find move */
+      if (!move_obj) {
+        return null
+      }
+
+      /* need to make a copy of move because we can't generate SAN after the
+       * move is made
+       */
+      var pretty_move = make_pretty(move_obj)
+
+      make_move(move_obj)
+
+      return pretty_move
+    },
+
+    undo: function() {
+      var move = undo_move()
+      return move ? make_pretty(move) : null
+    },
+
+    clear: function() {
+      return clear()
+    },
+
+    put: function(piece, square) {
+      return put(piece, square)
+    },
+
+    get: function(square) {
+      return get(square)
+    },
+
+    remove: function(square) {
+      return remove(square)
+    },
+
+    perft: function(depth) {
+      return perft(depth)
+    },
+
+    square_color: function(square) {
+      if (square in SQUARES) {
+        var sq_0x88 = SQUARES[square]
+        return (rank(sq_0x88) + file(sq_0x88)) % 2 === 0 ? 'light' : 'dark'
+      }
+
+      return null
+    },
+
+    history: function(options) {
+      var reversed_history = []
+      var move_history = []
+      var verbose =
+        typeof options !== 'undefined' &&
+        'verbose' in options &&
+        options.verbose
+
+      while (history.length > 0) {
+        reversed_history.push(undo_move())
+      }
+
+      while (reversed_history.length > 0) {
+        var move = reversed_history.pop()
+        if (verbose) {
+          move_history.push(make_pretty(move))
+        } else {
+          move_history.push(move_to_san(move))
+        }
+        make_move(move)
+      }
+
+      return move_history
+    }
+  }
+}
+
+/* export Chess object if using node or any other CommonJS compatible
+ * environment */
+if (typeof exports !== 'undefined') exports.Chess = Chess
+/* export Chess object for any RequireJS compatible environment */
+if (typeof define !== 'undefined')
+  define(function() {
+    return Chess
+  })
+
+</script>
+<script>
 const NODES = {"g0_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g0_1"], "", "", "", "", true], "g0_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g0_0", ["g0_2"], "e4", "e4", "e2", "e4", true], "g0_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g0_1", ["g0_3"], "c5", "c5", "c7", "c5", true], "g0_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g0_2", ["g0_4"], "Nf3", "♘f3", "g1", "f3", true], "g0_4": ["r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "g0_3", ["g0_5"], "Nc6", "♘c6", "b8", "c6", true], "g0_5": ["r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "g0_4", ["g0_6"], "Bb5", "♗b5", "f1", "b5", true], "g0_6": ["r1bqkbnr/pp1ppp1p/2n3p1/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "g0_5", ["g0_7"], "g6", "g6", "g7", "g6", true], "g0_7": ["r1bqkbnr/pp1ppp1p/2B3p1/2p5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4", "g0_6", ["g0_8"], "Bxc6", "♗xc6", "b5", "c6", true], "g0_8": ["r1bqkbnr/p2ppp1p/2p3p1/2p5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5", "g0_7", ["g0_9"], "bxc6", "bxc6", "b7", "c6", true], "g0_9": ["r1bqkbnr/p2ppp1p/2p3p1/2p5/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 5", "g0_8", ["g0_10"], "O-O", "O-O", "e1", "g1", true], "g0_10": ["r1bqk1nr/p2pppbp/2p3p1/2p5/4P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 2 6", "g0_9", ["g0_11"], "Bg7", "♗g7", "f8", "g7", true], "g0_11": ["r1bqk1nr/p2pppbp/2p3p1/2p5/4P3/5N2/PPPP1PPP/RNBQR1K1 b kq - 3 6", "g0_10", ["g0_12"], "Re1", "♖e1", "f1", "e1", true], "g0_12": ["r1b1k1nr/p1qpppbp/2p3p1/2p5/4P3/5N2/PPPP1PPP/RNBQR1K1 w kq - 4 7", "g0_11", ["g0_13"], "Qc7", "♕c7", "d8", "c7", true], "g0_13": ["r1b1k1nr/p1qpppbp/2p3p1/2p5/4P3/N4N2/PPPP1PPP/R1BQR1K1 b kq - 5 7", "g0_12", ["g0_14"], "Na3", "♘a3", "b1", "a3", true], "g0_14": ["r1b1k1nr/p1q1ppbp/2p3p1/2pp4/4P3/N4N2/PPPP1PPP/R1BQR1K1 w kq d6 0 8", "g0_13", ["g0_15"], "d5", "d5", "d7", "d5", true], "g0_15": ["r1b1k1nr/p1q1ppbp/2p3p1/2pp4/4P3/N2P1N2/PPP2PPP/R1BQR1K1 b kq - 0 8", "g0_14", ["g0_16"], "d3", "d3", "d2", "d3", true], "g0_16": ["1rb1k1nr/p1q1ppbp/2p3p1/2pp4/4P3/N2P1N2/PPP2PPP/R1BQR1K1 w k - 1 9", "g0_15", ["g0_17"], "Rb8", "♖b8", "a8", "b8", true], "g0_17": ["1rb1k1nr/p1q1ppbp/2p3p1/2pP4/8/N2P1N2/PPP2PPP/R1BQR1K1 b k - 0 9", "g0_16", ["g0_18"], "exd5", "exd5", "e4", "d5", true], "g0_18": ["1rb1k1nr/p1q1ppbp/6p1/2pp4/8/N2P1N2/PPP2PPP/R1BQR1K1 w k - 0 10", "g0_17", ["g0_19"], "cxd5", "cxd5", "c6", "d5", true], "g0_19": ["1rb1k1nr/p1q1ppbp/6p1/2pp4/2P5/N2P1N2/PP3PPP/R1BQR1K1 b k c3 0 10", "g0_18", ["g0_20"], "c4", "c4", "c2", "c4", true], "g0_20": ["1rb1k1nr/p1q1ppbp/6p1/2p5/2p5/N2P1N2/PP3PPP/R1BQR1K1 w k - 0 11", "g0_19", ["g0_21"], "dxc4", "dxc4", "d5", "c4", true], "g0_21": ["1rb1k1nr/p1q1ppbp/6p1/2p5/2P5/N4N2/PP3PPP/R1BQR1K1 b k - 0 11", "g0_20", ["g0_22"], "dxc4", "dxc4", "d3", "c4", true], "g0_22": ["1rb1k1nr/2q1ppbp/p5p1/2p5/2P5/N4N2/PP3PPP/R1BQR1K1 w k - 0 12", "g0_21", ["g0_23"], "a6", "a6", "a7", "a6", true], "g0_23": ["1rb1k1nr/2q1ppbp/p5p1/2p5/Q1P5/N4N2/PP3PPP/R1B1R1K1 b k - 1 12", "g0_22", ["g0_24"], "Qa4+", "♕a4+", "d1", "a4", true], "g0_24": ["1rb2knr/2q1ppbp/p5p1/2p5/Q1P5/N4N2/PP3PPP/R1B1R1K1 w - - 2 13", "g0_23", ["g0_25"], "Kf8", "♔f8", "e8", "f8", true], "g0_25": ["1rb2knr/2q1ppbp/p5p1/2p5/Q1P5/N4N2/PP1B1PPP/R3R1K1 b - - 3 13", "g0_24", ["g0_26"], "Bd2", "♗d2", "c1", "d2", true], "g0_26": ["1r3knr/1bq1ppbp/p5p1/2p5/Q1P5/N4N2/PP1B1PPP/R3R1K1 w - - 4 14", "g0_25", ["g0_27"], "Bb7", "♗b7", "c8", "b7", true], "g0_27": ["1r3knr/1bq1ppbp/p5p1/B1p5/Q1P5/N4N2/PP3PPP/R3R1K1 b - - 5 14", "g0_26", ["g0_28"], "Ba5", "♗a5", "d2", "a5", true], "g0_28": ["1rq2knr/1b2ppbp/p5p1/B1p5/Q1P5/N4N2/PP3PPP/R3R1K1 w - - 6 15", "g0_27", ["g0_29"], "Qc8", "♕c8", "c7", "c8", true], "g0_29": ["1rq2knr/1b2ppbp/p5p1/B1p5/Q1P5/N4N2/PP3PPP/3RR1K1 b - - 7 15", "g0_28", ["g0_30"], "Rad1", "♖ad1", "a1", "d1", true], "g0_30": ["1rq2knr/4ppbp/p1b3p1/B1p5/Q1P5/N4N2/PP3PPP/3RR1K1 w - - 8 16", "g0_29", ["g0_31"], "Bc6", "♗c6", "b7", "c6", true], "g0_31": ["1rq2knr/4ppbp/p1b3p1/B1p5/2P5/N4N2/PPQ2PPP/3RR1K1 b - - 9 16", "g0_30", ["g0_32"], "Qc2", "♕c2", "a4", "c2", true], "g0_32": ["1r3knr/1q2ppbp/p1b3p1/B1p5/2P5/N4N2/PPQ2PPP/3RR1K1 w - - 10 17", "g0_31", ["g0_33"], "Qb7", "♕b7", "c8", "b7", true], "g0_33": ["1r3knr/1q2ppbp/p1b3p1/B1p5/2P5/N3RN2/PPQ2PPP/3R2K1 b - - 11 17", "g0_32", ["g0_34"], "Re3", "♖e3", "e1", "e3", true], "g0_34": ["4rknr/1q2ppbp/p1b3p1/B1p5/2P5/N3RN2/PPQ2PPP/3R2K1 w - - 12 18", "g0_33", ["g0_35"], "Re8", "♖e8", "b8", "e8", true], "g0_35": ["4rknr/1q2ppbp/p1b3p1/2p5/2P5/N1B1RN2/PPQ2PPP/3R2K1 b - - 13 18", "g0_34", ["g0_36"], "Bc3", "♗c3", "a5", "c3", true], "g0_36": ["4rk1r/1q2ppbp/p1b3pn/2p5/2P5/N1B1RN2/PPQ2PPP/3R2K1 w - - 14 19", "g0_35", ["g0_37"], "Nh6", "♘h6", "g8", "h6", true], "g0_37": ["4rk1r/1q2ppBp/p1b3pn/2p5/2P5/N3RN2/PPQ2PPP/3R2K1 b - - 0 19", "g0_36", ["g0_38"], "Bxg7+", "♗xg7+", "c3", "g7", true], "g0_38": ["4r2r/1q2ppkp/p1b3pn/2p5/2P5/N3RN2/PPQ2PPP/3R2K1 w - - 0 20", "g0_37", ["g0_39"], "Kxg7", "♔xg7", "f8", "g7", true], "g0_39": ["4r2r/1q2ppkp/p1b3pn/2p5/2P5/N1Q1RN2/PP3PPP/3R2K1 b - - 1 20", "g0_38", ["g0_40"], "Qc3+", "♕c3+", "c2", "c3", true], "g0_40": ["4r2r/1q2p1kp/p1b2ppn/2p5/2P5/N1Q1RN2/PP3PPP/3R2K1 w - - 0 21", "g0_39", ["g0_41"], "f6", "f6", "f7", "f6", true], "g0_41": ["4r2r/1q2p1kp/p1b2ppn/Q1p5/2P5/N3RN2/PP3PPP/3R2K1 b - - 1 21", "g0_40", ["g0_42"], "Qa5", "♕a5", "c3", "a5", true], "g0_42": ["4r2r/1q2p1kp/p1b2pp1/Q1p2n2/2P5/N3RN2/PP3PPP/3R2K1 w - - 2 22", "g0_41", ["g0_43"], "Nf5", "♘f5", "h6", "f5", true], "g0_43": ["4r2r/1q2p1kp/p1b2pp1/Q1p2n2/2P5/NR3N2/PP3PPP/3R2K1 b - - 3 22", "g0_42", ["g0_44"], "Rb3", "♖b3", "e3", "b3", true], "g0_44": ["2q1r2r/4p1kp/p1b2pp1/Q1p2n2/2P5/NR3N2/PP3PPP/3R2K1 w - - 4 23", "g0_43", ["g0_45"], "Qc8", "♕c8", "b7", "c8", true], "g0_45": ["2q1r2r/4p1kp/p1b2pp1/Q1p2n2/2P5/1R3N2/PPN2PPP/3R2K1 b - - 5 23", "g0_44", ["g0_46"], "Nc2", "♘c2", "a3", "c2", true], "g0_46": ["2qr3r/4p1kp/p1b2pp1/Q1p2n2/2P5/1R3N2/PPN2PPP/3R2K1 w - - 6 24", "g0_45", ["g0_47"], "Rd8", "♖d8", "e8", "d8", true], "g0_47": ["2qr3r/4p1kp/p1b2pp1/Q1p2n2/2P5/1R3N2/PPN2PPP/4R1K1 b - - 7 24", "g0_46", ["g0_48"], "Re1", "♖e1", "d1", "e1", true], "g0_48": ["b1qr3r/4p1kp/p4pp1/Q1p2n2/2P5/1R3N2/PPN2PPP/4R1K1 w - - 8 25", "g0_47", ["g0_49"], "Ba8", "♗a8", "c6", "a8", true], "g0_49": ["b1qr3r/4p1kp/p4pp1/Q1p2n2/2P5/R4N2/PPN2PPP/4R1K1 b - - 9 25", "g0_48", ["g0_50"], "Ra3", "♖a3", "b3", "a3", true], "g0_50": ["b1qr3r/6kp/p4pp1/Q1p1pn2/2P5/R4N2/PPN2PPP/4R1K1 w - e6 0 26", "g0_49", ["g0_51"], "e5", "e5", "e7", "e5", true], "g0_51": ["b1qr3r/6kp/p4pp1/Q1p1pn2/2P5/R7/PPNN1PPP/4R1K1 b - - 1 26", "g0_50", ["g0_52"], "Nd2", "♘d2", "f3", "d2", true], "g0_52": ["b1q4r/6kp/p2r1pp1/Q1p1pn2/2P5/R7/PPNN1PPP/4R1K1 w - - 2 27", "g0_51", ["g0_53"], "Rd6", "♖d6", "d8", "d6", true], "g0_53": ["b1q4r/6kp/p2r1pp1/Q1p1pn2/2P5/R3N3/PP1N1PPP/4R1K1 b - - 3 27", "g0_52", ["g0_54"], "Ne3", "♘e3", "c2", "e3", true], "g0_54": ["b1qr4/6kp/p2r1pp1/Q1p1pn2/2P5/R3N3/PP1N1PPP/4R1K1 w - - 4 28", "g0_53", ["g0_55"], "Rhd8", "♖hd8", "h8", "d8", true], "g0_55": ["b1qr4/6kp/p2r1pp1/Q1p1pN2/2P5/R7/PP1N1PPP/4R1K1 b - - 0 28", "g0_54", ["g0_56"], "Nxf5+", "♘xf5+", "e3", "f5", true], "g0_56": ["b1qr4/6kp/p2r1p2/Q1p1pp2/2P5/R7/PP1N1PPP/4R1K1 w - - 0 29", "g0_55", ["g0_57"], "gxf5", "gxf5", "g6", "f5", true], "g0_57": ["b1qr4/6kp/p2r1p2/Q1p1pp2/2P5/R7/PP3PPP/4RNK1 b - - 1 29", "g0_56", ["g0_58"], "Nf1", "♘f1", "d2", "f1", true], "g0_58": ["b1qr4/6kp/p2r1p2/Q1p1p3/2P2p2/R7/PP3PPP/4RNK1 w - - 0 30", "g0_57", ["g0_59"], "f4", "f4", "f5", "f4", true], "g0_59": ["b1qr4/6kp/p2r1p2/Q1p1p3/2P2p2/R4P2/PP4PP/4RNK1 b - - 0 30", "g0_58", ["g0_60"], "f3", "f3", "f2", "f3", true], "g0_60": ["b1qr3k/7p/p2r1p2/Q1p1p3/2P2p2/R4P2/PP4PP/4RNK1 w - - 1 31", "g0_59", ["g0_61"], "Kh8", "♔h8", "g7", "h8", true], "g0_61": ["b1qr3k/7p/p2r1p2/Q1p1p3/2P2p2/1R3P2/PP4PP/4RNK1 b - - 2 31", "g0_60", ["g0_62"], "Rb3", "♖b3", "a3", "b3", true], "g0_62": ["b1q3rk/7p/p2r1p2/Q1p1p3/2P2p2/1R3P2/PP4PP/4RNK1 w - - 3 32", "g0_61", ["g0_63"], "Rg8", "♖g8", "d8", "g8", true], "g0_63": ["b1q3rk/7p/p2r1p2/Q1p1p3/2P2p2/1R3P2/PP2R1PP/5NK1 b - - 4 32", "g0_62", ["g0_64"], "Re2", "♖e2", "e1", "e2", true], "g0_64": ["b1q3rk/7p/p4p2/Q1p1p3/2P2p2/1R3P2/PP2R1PP/3r1NK1 w - - 5 33", "g0_63", ["g0_65"], "Rd1", "♖d1", "d6", "d1", true], "g0_65": ["b1q3rk/7p/pQ3p2/2p1p3/2P2p2/1R3P2/PP2R1PP/3r1NK1 b - - 6 33", "g0_64", ["g0_66"], "Qb6", "♕b6", "a5", "b6", true], "g0_66": ["b5rk/7p/pQ3p2/2p1pq2/2P2p2/1R3P2/PP2R1PP/3r1NK1 w - - 7 34", "g0_65", ["g0_67"], "Qf5", "♕f5", "c8", "f5", true], "g0_67": ["b5rk/7p/p4p2/2Q1pq2/2P2p2/1R3P2/PP2R1PP/3r1NK1 b - - 0 34", "g0_66", ["g0_68"], "Qxc5", "♕xc5", "b6", "c5", true], "g0_68": ["b5rk/7p/p4pq1/2Q1p3/2P2p2/1R3P2/PP2R1PP/3r1NK1 w - - 1 35", "g0_67", ["g0_69"], "Qg6", "♕g6", "f5", "g6", true], "g0_69": ["b5rk/4Q2p/p4pq1/4p3/2P2p2/1R3P2/PP2R1PP/3r1NK1 b - - 2 35", "g0_68", ["g0_70"], "Qe7", "♕e7", "c5", "e7", true], "g0_70": ["b5rk/4Q3/p4pq1/4p2p/2P2p2/1R3P2/PP2R1PP/3r1NK1 w - h6 0 36", "g0_69", ["g0_71"], "h5", "h5", "h7", "h5", true], "g0_71": ["b5rk/4Q3/p4pq1/4p2p/2P2p1P/1R3P2/PP2R1P1/3r1NK1 b - h3 0 36", "g0_70", ["g0_72"], "h4", "h4", "h2", "h4", true], "g0_72": ["6rk/4Q3/p1b2pq1/4p2p/2P2p1P/1R3P2/PP2R1P1/3r1NK1 w - - 1 37", "g0_71", ["g0_73"], "Bc6", "♗c6", "a8", "c6", true], "g0_73": ["6rk/2Q5/p1b2pq1/4p2p/2P2p1P/1R3P2/PP2R1P1/3r1NK1 b - - 2 37", "g0_72", ["g0_74"], "Qc7", "♕c7", "e7", "c7", true], "g0_74": ["6rk/2Q5/p1b2pq1/4p2p/2P2p1P/1R3P2/PP2R1P1/4rNK1 w - - 3 38", "g0_73", ["g0_75"], "Re1", "♖e1", "d1", "e1", true], "g0_75": ["6rk/2Q5/p1b2pq1/4p2p/2P2p1P/1R3P2/PP3RP1/4rNK1 b - - 4 38", "g0_74", ["g0_76"], "Rf2", "♖f2", "e2", "f2", true], "g0_76": ["6rk/2Q5/p4pq1/4p2p/b1P2p1P/1R3P2/PP3RP1/4rNK1 w - - 5 39", "g0_75", ["g0_77"], "Ba4", "♗a4", "c6", "a4", true], "g0_77": ["1R4rk/2Q5/p4pq1/4p2p/b1P2p1P/5P2/PP3RP1/4rNK1 b - - 6 39", "g0_76", ["g0_78"], "Rb8", "♖b8", "b3", "b8", true], "g0_78": ["1R4rk/2Q5/p4pq1/4p2p/b1P2p1P/5P2/PP3RP1/5rK1 w - - 0 40", "g0_77", ["g0_79"], "Rxf1+", "♖xf1+", "e1", "f1", true], "g0_79": ["1R4rk/2Q5/p4pq1/4p2p/b1P2p1P/5P2/PP3RP1/5K2 b - - 0 40", "g0_78", ["g0_80"], "Kxf1", "♔xf1", "g1", "f1", true], "g0_80": ["1R4rk/2Q5/p4p2/4p2p/b1P2p1P/5P2/PP3RP1/1q3K2 w - - 1 41", "g0_79", [], "Qb1+", "♕b1+", "g6", "b1", true], "g1_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g1_1"], "", "", "", "", true], "g1_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g1_0", ["g1_2"], "e4", "e4", "e2", "e4", true], "g1_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g1_1", ["g1_3"], "c5", "c5", "c7", "c5", true], "g1_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g1_2", ["g1_4"], "Nf3", "♘f3", "g1", "f3", true], "g1_4": ["r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "g1_3", ["g1_5"], "Nc6", "♘c6", "b8", "c6", true], "g1_5": ["r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "g1_4", ["g1_6"], "Bb5", "♗b5", "f1", "b5", true], "g1_6": ["r1bqkbnr/pp1p1ppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "g1_5", ["g1_7"], "e6", "e6", "e7", "e6", true], "g1_7": ["r1bqkbnr/pp1p1ppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4", "g1_6", ["g1_8"], "O-O", "O-O", "e1", "g1", true], "g1_8": ["r1bqkb1r/pp1pnppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 2 5", "g1_7", ["g1_9"], "Nge7", "♘ge7", "g8", "e7", true], "g1_9": ["r1bqkb1r/pp1pnppp/2n1p3/1Bp5/3PP3/5N2/PPP2PPP/RNBQ1RK1 b kq d3 0 5", "g1_8", ["g1_10"], "d4", "d4", "d2", "d4", true], "g1_10": ["r1bqkb1r/pp1pnppp/2n1p3/1B6/3pP3/5N2/PPP2PPP/RNBQ1RK1 w kq - 0 6", "g1_9", ["g1_11"], "cxd4", "cxd4", "c5", "d4", true], "g1_11": ["r1bqkb1r/pp1pnppp/2n1p3/1B6/3NP3/8/PPP2PPP/RNBQ1RK1 b kq - 0 6", "g1_10", ["g1_12"], "Nxd4", "♘xd4", "f3", "d4", true], "g1_12": ["r1bqkb1r/pp1p1ppp/2n1p1n1/1B6/3NP3/8/PPP2PPP/RNBQ1RK1 w kq - 1 7", "g1_11", ["g1_13"], "Ng6", "♘g6", "e7", "g6", true], "g1_13": ["r1bqkb1r/pp1p1ppp/2n1p1n1/8/3NP3/8/PPP1BPPP/RNBQ1RK1 b kq - 2 7", "g1_12", ["g1_14"], "Be2", "♗e2", "b5", "e2", true], "g1_14": ["r1bqk2r/pp1pbppp/2n1p1n1/8/3NP3/8/PPP1BPPP/RNBQ1RK1 w kq - 3 8", "g1_13", ["g1_15"], "Be7", "♗e7", "f8", "e7", true], "g1_15": ["r1bqk2r/pp1pbppp/2n1p1n1/8/2PNP3/8/PP2BPPP/RNBQ1RK1 b kq c3 0 8", "g1_14", ["g1_16"], "c4", "c4", "c2", "c4", true], "g1_16": ["r1bq1rk1/pp1pbppp/2n1p1n1/8/2PNP3/8/PP2BPPP/RNBQ1RK1 w - - 1 9", "g1_15", ["g1_17"], "O-O", "O-O", "e8", "g8", true], "g1_17": ["r1bq1rk1/pp1pbppp/2n1p1n1/8/2PNP3/2N5/PP2BPPP/R1BQ1RK1 b - - 2 9", "g1_16", ["g1_18"], "Nc3", "♘c3", "b1", "c3", true], "g1_18": ["r1bq1rk1/p2pbppp/1pn1p1n1/8/2PNP3/2N5/PP2BPPP/R1BQ1RK1 w - - 0 10", "g1_17", ["g1_19"], "b6", "b6", "b7", "b6", true], "g1_19": ["r1bq1rk1/p2pbppp/1pn1p1n1/8/2PNP3/2N1B3/PP2BPPP/R2Q1RK1 b - - 1 10", "g1_18", ["g1_20"], "Be3", "♗e3", "c1", "e3", true], "g1_20": ["r1bq1rk1/p2pbppp/1p2p1n1/8/2PnP3/2N1B3/PP2BPPP/R2Q1RK1 w - - 0 11", "g1_19", ["g1_21"], "Nxd4", "♘xd4", "c6", "d4", true], "g1_21": ["r1bq1rk1/p2pbppp/1p2p1n1/8/2PQP3/2N1B3/PP2BPPP/R4RK1 b - - 0 11", "g1_20", ["g1_22"], "Qxd4", "♕xd4", "d1", "d4", true], "g1_22": ["r1bq1rk1/p2p1ppp/1p2pbn1/8/2PQP3/2N1B3/PP2BPPP/R4RK1 w - - 1 12", "g1_21", ["g1_23"], "Bf6", "♗f6", "e7", "f6", true], "g1_23": ["r1bq1rk1/p2p1ppp/1p2pbn1/8/2P1P3/2N1B3/PP1QBPPP/R4RK1 b - - 2 12", "g1_22", ["g1_24"], "Qd2", "♕d2", "d4", "d2", true], "g1_24": ["r2q1rk1/pb1p1ppp/1p2pbn1/8/2P1P3/2N1B3/PP1QBPPP/R4RK1 w - - 3 13", "g1_23", ["g1_25"], "Bb7", "♗b7", "c8", "b7", true], "g1_25": ["r2q1rk1/pb1p1ppp/1p2pbn1/8/2P1P3/2N1BP2/PP1QB1PP/R4RK1 b - - 0 13", "g1_24", ["g1_26"], "f3", "f3", "f2", "f3", true], "g1_26": ["r4rk1/pb1pqppp/1p2pbn1/8/2P1P3/2N1BP2/PP1QB1PP/R4RK1 w - - 1 14", "g1_25", ["g1_27"], "Qe7", "♕e7", "d8", "e7", true], "g1_27": ["r4rk1/pb1pqppp/1p2pbn1/8/2P1P3/2N1BP2/PP1QB1PP/3R1RK1 b - - 2 14", "g1_26", ["g1_28"], "Rad1", "♖ad1", "a1", "d1", true], "g1_28": ["3r1rk1/pb1pqppp/1p2pbn1/8/2P1P3/2N1BP2/PP1QB1PP/3R1RK1 w - - 3 15", "g1_27", ["g1_29"], "Rad8", "♖ad8", "a8", "d8", true], "g1_29": ["3r1rk1/pb1pqppp/1p2pbn1/8/2P1P3/2N1BP2/PP1QB1PP/3RR1K1 b - - 4 15", "g1_28", ["g1_30"], "Rfe1", "♖fe1", "f1", "e1", true], "g1_30": ["3r1rk1/pb1pqppp/1p2p1n1/4b3/2P1P3/2N1BP2/PP1QB1PP/3RR1K1 w - - 5 16", "g1_29", ["g1_31"], "Be5", "♗e5", "f6", "e5", true], "g1_31": ["3r1rk1/pb1pqppp/1p2p1n1/4b3/2P1P3/2N1BP2/PP1Q2PP/3RRBK1 b - - 6 16", "g1_30", ["g1_32"], "Bf1", "♗f1", "e2", "f1", true], "g1_32": ["3r1rk1/pb1pqpp1/1p2p1np/4b3/2P1P3/2N1BP2/PP1Q2PP/3RRBK1 w - - 0 17", "g1_31", ["g1_33"], "h6", "h6", "h7", "h6", true], "g1_33": ["3r1rk1/pb1pqpp1/1p2p1np/4b3/2P1P3/2N1BPP1/PP1Q3P/3RRBK1 b - - 0 17", "g1_32", ["g1_34"], "g3", "g3", "g2", "g3", true], "g1_34": ["3r1rk1/pb1p1pp1/1p2pqnp/4b3/2P1P3/2N1BPP1/PP1Q3P/3RRBK1 w - - 1 18", "g1_33", ["g1_35"], "Qf6", "♕f6", "e7", "f6", true], "g1_35": ["3r1rk1/pb1p1pp1/1p2pqnp/4b3/2P1P3/2N1BPP1/PP1Q2BP/3RR1K1 b - - 2 18", "g1_34", ["g1_36"], "Bg2", "♗g2", "f1", "g2", true], "g1_36": ["3r1rk1/pb1p1pp1/1p2pqnp/8/2P1P3/2b1BPP1/PP1Q2BP/3RR1K1 w - - 0 19", "g1_35", ["g1_37"], "Bxc3", "♗xc3", "e5", "c3", true], "g1_37": ["3r1rk1/pb1p1pp1/1p2pqnp/8/2P1P3/2P1BPP1/P2Q2BP/3RR1K1 b - - 0 19", "g1_36", ["g1_38"], "bxc3", "bxc3", "b2", "c3", true], "g1_38": ["3r1rk1/pb3pp1/1p1ppqnp/8/2P1P3/2P1BPP1/P2Q2BP/3RR1K1 w - - 0 20", "g1_37", ["g1_39"], "d6", "d6", "d7", "d6", true], "g1_39": ["3r1rk1/pb3pp1/1p1ppqnp/8/2P1PP2/2P1B1P1/P2Q2BP/3RR1K1 b - - 0 20", "g1_38", ["g1_40"], "f4", "f4", "f3", "f4", true], "g1_40": ["3r1rk1/p4pp1/bp1ppqnp/8/2P1PP2/2P1B1P1/P2Q2BP/3RR1K1 w - - 1 21", "g1_39", ["g1_41"], "Ba6", "♗a6", "b7", "a6", true], "g1_41": ["3r1rk1/p4pp1/bp1ppqnp/8/2P1PP2/2P1B1P1/P2Q3P/3RRBK1 b - - 2 21", "g1_40", ["g1_42"], "Bf1", "♗f1", "g2", "f1", true], "g1_42": ["3r1rk1/p3qpp1/bp1pp1np/8/2P1PP2/2P1B1P1/P2Q3P/3RRBK1 w - - 3 22", "g1_41", ["g1_43"], "Qe7", "♕e7", "f6", "e7", true], "g1_43": ["3r1rk1/p3qpp1/bp1pp1np/8/2P1PP2/2P1B1P1/P1Q4P/3RRBK1 b - - 4 22", "g1_42", ["g1_44"], "Qc2", "♕c2", "d2", "c2", true], "g1_44": ["3rqrk1/p4pp1/bp1pp1np/8/2P1PP2/2P1B1P1/P1Q4P/3RRBK1 w - - 5 23", "g1_43", ["g1_45"], "Qe8", "♕e8", "e7", "e8", true], "g1_45": ["3rqrk1/p4pp1/bp1pp1np/8/2P1PP2/2P1B1P1/P1QR3P/4RBK1 b - - 6 23", "g1_44", ["g1_46"], "Rd2", "♖d2", "d1", "d2", true], "g1_46": ["3r1rk1/p4pp1/bpqpp1np/8/2P1PP2/2P1B1P1/P1QR3P/4RBK1 w - - 7 24", "g1_45", ["g1_47"], "Qc6", "♕c6", "e8", "c6", true], "g1_47": ["3r1rk1/p4pp1/bpqpp1np/8/2P1PP2/2P1B1P1/P1QR3P/3R1BK1 b - - 8 24", "g1_46", ["g1_48"], "Red1", "♖ed1", "e1", "d1", true], "g1_48": ["3r1rk1/p4pp1/1pqpp1np/8/2b1PP2/2P1B1P1/P1QR3P/3R1BK1 w - - 0 25", "g1_47", ["g1_49"], "Bxc4", "♗xc4", "a6", "c4", true], "g1_49": ["3r1rk1/p4pp1/1pqpp1np/8/2B1PP2/2P1B1P1/P1QR3P/3R2K1 b - - 0 25", "g1_48", ["g1_50"], "Bxc4", "♗xc4", "f1", "c4", true], "g1_50": ["3r1rk1/p4pp1/1p1pp1np/8/2q1PP2/2P1B1P1/P1QR3P/3R2K1 w - - 0 26", "g1_49", ["g1_51"], "Qxc4", "♕xc4", "c6", "c4", true], "g1_51": ["3r1rk1/p4pp1/1p1Rp1np/8/2q1PP2/2P1B1P1/P1Q4P/3R2K1 b - - 0 26", "g1_50", ["g1_52"], "Rxd6", "♖xd6", "d2", "d6", true], "g1_52": ["5rk1/p4pp1/1p1rp1np/8/2q1PP2/2P1B1P1/P1Q4P/3R2K1 w - - 0 27", "g1_51", ["g1_53"], "Rxd6", "♖xd6", "d8", "d6", true], "g1_53": ["5rk1/p4pp1/1p1Rp1np/8/2q1PP2/2P1B1P1/P1Q4P/6K1 b - - 0 27", "g1_52", ["g1_54"], "Rxd6", "♖xd6", "d1", "d6", true], "g1_54": ["5rk1/p1q2pp1/1p1Rp1np/8/4PP2/2P1B1P1/P1Q4P/6K1 w - - 1 28", "g1_53", ["g1_55"], "Qc7", "♕c7", "c4", "c7", true], "g1_55": ["5rk1/p1q2pp1/1p2p1np/8/4PP2/2P1B1P1/P1Q4P/3R2K1 b - - 2 28", "g1_54", ["g1_56"], "Rd1", "♖d1", "d6", "d1", true], "g1_56": ["2r3k1/p1q2pp1/1p2p1np/8/4PP2/2P1B1P1/P1Q4P/3R2K1 w - - 3 29", "g1_55", ["g1_57"], "Rc8", "♖c8", "f8", "c8", true], "g1_57": ["2r3k1/p1q2pp1/1p2p1np/8/4PP2/2P1B1P1/P1Q2K1P/3R4 b - - 4 29", "g1_56", ["g1_58"], "Kf2", "♔f2", "g1", "f2", true], "g1_58": ["2r2nk1/p1q2pp1/1p2p2p/8/4PP2/2P1B1P1/P1Q2K1P/3R4 w - - 5 30", "g1_57", ["g1_59"], "Nf8", "♘f8", "g6", "f8", true], "g1_59": ["2r2nk1/p1q2pp1/1p2p2p/8/3BPP2/2P3P1/P1Q2K1P/3R4 b - - 6 30", "g1_58", ["g1_60"], "Bd4", "♗d4", "e3", "d4", true], "g1_60": ["2r3k1/p1qn1pp1/1p2p2p/8/3BPP2/2P3P1/P1Q2K1P/3R4 w - - 7 31", "g1_59", ["g1_61"], "Nd7", "♘d7", "f8", "d7", true], "g1_61": ["2r3k1/p1qn1pp1/1p2p2p/8/3BPP2/2P3P1/P3QK1P/3R4 b - - 8 31", "g1_60", ["g1_62"], "Qe2", "♕e2", "c2", "e2", true], "g1_62": ["2r3k1/p1qn1pp1/1p5p/4p3/3BPP2/2P3P1/P3QK1P/3R4 w - - 0 32", "g1_61", ["g1_63"], "e5", "e5", "e6", "e5", true], "g1_63": ["2r3k1/p1qn1pp1/1p5p/4P3/3BP3/2P3P1/P3QK1P/3R4 b - - 0 32", "g1_62", ["g1_64"], "fxe5", "fxe5", "f4", "e5", true], "g1_64": ["2r3k1/p1q2pp1/1p5p/4n3/3BP3/2P3P1/P3QK1P/3R4 w - - 0 33", "g1_63", ["g1_65"], "Nxe5", "♘xe5", "d7", "e5", true], "g1_65": ["2r3k1/p1q2pp1/1p5p/4n3/3BP3/2P3P1/P3Q1KP/3R4 b - - 1 33", "g1_64", ["g1_66"], "Kg2", "♔g2", "f2", "g2", true], "g1_66": ["4r1k1/p1q2pp1/1p5p/4n3/3BP3/2P3P1/P3Q1KP/3R4 w - - 2 34", "g1_65", ["g1_67"], "Re8", "♖e8", "c8", "e8", true], "g1_67": ["4r1k1/p1q2pp1/1p5p/1Q2n3/3BP3/2P3P1/P5KP/3R4 b - - 3 34", "g1_66", ["g1_68"], "Qb5", "♕b5", "e2", "b5", true], "g1_68": ["4r1k1/p1q2pp1/1pn4p/1Q6/3BP3/2P3P1/P5KP/3R4 w - - 4 35", "g1_67", ["g1_69"], "Nc6", "♘c6", "e5", "c6", true], "g1_69": ["4r1k1/p1q2pp1/1pn4p/1Q6/3BP3/2P3P1/P5KP/4R3 b - - 5 35", "g1_68", ["g1_70"], "Re1", "♖e1", "d1", "e1", true], "g1_70": ["3r2k1/p1q2pp1/1pn4p/1Q6/3BP3/2P3P1/P5KP/4R3 w - - 6 36", "g1_69", ["g1_71"], "Rd8", "♖d8", "e8", "d8", true], "g1_71": ["3r2k1/p1q2pp1/1pn4p/1Q6/4P3/2P1B1P1/P5KP/4R3 b - - 7 36", "g1_70", ["g1_72"], "Be3", "♗e3", "d4", "e3", true], "g1_72": ["4r1k1/p1q2pp1/1pn4p/1Q6/4P3/2P1B1P1/P5KP/4R3 w - - 8 37", "g1_71", ["g1_73"], "Re8", "♖e8", "d8", "e8", true], "g1_73": ["4r1k1/p1q2pp1/1pn4p/1Q6/3BP3/2P3P1/P5KP/4R3 b - - 9 37", "g1_72", ["g1_74"], "Bd4", "♗d4", "e3", "d4", true], "g1_74": ["6k1/p1q2pp1/1pn1r2p/1Q6/3BP3/2P3P1/P5KP/4R3 w - - 10 38", "g1_73", ["g1_75"], "Re6", "♖e6", "e8", "e6", true], "g1_75": ["6k1/p1q2pp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/4R3 b - - 11 38", "g1_74", ["g1_76"], "Qf5", "♕f5", "b5", "f5", true], "g1_76": ["6k1/p4pp1/1pnqr2p/5Q2/3BP3/2P3P1/P5KP/4R3 w - - 12 39", "g1_75", ["g1_77"], "Qd6", "♕d6", "c7", "d6", true], "g1_77": ["6k1/p4pp1/1pnqr2p/5Q2/3BP3/2P3P1/P5KP/3R4 b - - 13 39", "g1_76", ["g1_78"], "Rd1", "♖d1", "e1", "d1", true], "g1_78": ["6k1/p3qpp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/3R4 w - - 14 40", "g1_77", ["g1_79"], "Qe7", "♕e7", "d6", "e7", true], "g1_79": ["6k1/p3qpp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/4R3 b - - 15 40", "g1_78", ["g1_80"], "Re1", "♖e1", "d1", "e1", true], "g1_80": ["6k1/p4pp1/1pnqr2p/5Q2/3BP3/2P3P1/P5KP/4R3 w - - 16 41", "g1_79", ["g1_81"], "Qd6", "♕d6", "e7", "d6", true], "g1_81": ["6k1/p4pp1/1pnqr2p/5Q2/3BP3/2P3P1/P5KP/3R4 b - - 17 41", "g1_80", ["g1_82"], "Rd1", "♖d1", "e1", "d1", true], "g1_82": ["6k1/p3qpp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/3R4 w - - 18 42", "g1_81", ["g1_83"], "Qe7", "♕e7", "d6", "e7", true], "g1_83": ["6k1/p3qpp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/4R3 b - - 19 42", "g1_82", ["g1_84"], "Re1", "♖e1", "d1", "e1", true], "g1_84": ["6k1/p2q1pp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/4R3 w - - 20 43", "g1_83", ["g1_85"], "Qd7", "♕d7", "e7", "d7", true], "g1_85": ["6k1/p2q1pp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/3R4 b - - 21 43", "g1_84", ["g1_86"], "Rd1", "♖d1", "e1", "d1", true], "g1_86": ["4q1k1/p4pp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/3R4 w - - 22 44", "g1_85", ["g1_87"], "Qe8", "♕e8", "d7", "e8", true], "g1_87": ["4q1k1/p4pp1/1pn1r2p/5Q2/3BP3/2P3P1/P5KP/4R3 b - - 23 44", "g1_86", ["g1_88"], "Re1", "♖e1", "d1", "e1", true], "g1_88": ["4q1k1/p4pp1/1pnr3p/5Q2/3BP3/2P3P1/P5KP/4R3 w - - 24 45", "g1_87", ["g1_89"], "Rd6", "♖d6", "e6", "d6", true], "g1_89": ["4q1k1/p4pp1/1pnr3p/5Q2/3BP3/2P3P1/P5KP/3R4 b - - 25 45", "g1_88", ["g1_90"], "Rd1", "♖d1", "e1", "d1", true], "g1_90": ["3nq1k1/p4pp1/1p1r3p/5Q2/3BP3/2P3P1/P5KP/3R4 w - - 26 46", "g1_89", ["g1_91"], "Nd8", "♘d8", "c6", "d8", true], "g1_91": ["3nq1k1/p4pp1/1p1r3p/8/3BP1Q1/2P3P1/P5KP/3R4 b - - 27 46", "g1_90", ["g1_92"], "Qg4", "♕g4", "f5", "g4", true], "g1_92": ["4q1k1/p4pp1/1p1rn2p/8/3BP1Q1/2P3P1/P5KP/3R4 w - - 28 47", "g1_91", ["g1_93"], "Ne6", "♘e6", "d8", "e6", true], "g1_93": ["4q1k1/p4pp1/1p1rn2p/8/4P1Q1/2P1B1P1/P5KP/3R4 b - - 29 47", "g1_92", ["g1_94"], "Be3", "♗e3", "d4", "e3", true], "g1_94": ["4q1k1/p4pp1/1p2n2p/8/4P1Q1/2P1B1P1/P5KP/3r4 w - - 0 48", "g1_93", ["g1_95"], "Rxd1", "♖xd1", "d6", "d1", true], "g1_95": ["4q1k1/p4pp1/1p2n2p/8/4P3/2P1B1P1/P5KP/3Q4 b - - 0 48", "g1_94", ["g1_96"], "Qxd1", "♕xd1", "g4", "d1", true], "g1_96": ["6k1/p4pp1/1pq1n2p/8/4P3/2P1B1P1/P5KP/3Q4 w - - 1 49", "g1_95", ["g1_97"], "Qc6", "♕c6", "e8", "c6", true], "g1_97": ["6k1/p4pp1/1pq1n2p/8/4P3/2PQB1P1/P5KP/8 b - - 2 49", "g1_96", ["g1_98"], "Qd3", "♕d3", "d1", "d3", true], "g1_98": ["6k1/p4pp1/1p2n2p/8/q3P3/2PQB1P1/P5KP/8 w - - 3 50", "g1_97", ["g1_99"], "Qa4", "♕a4", "c6", "a4", true], "g1_99": ["6k1/p4pp1/1p2n2p/3Q4/q3P3/2P1B1P1/P5KP/8 b - - 4 50", "g1_98", ["g1_100"], "Qd5", "♕d5", "d3", "d5", true], "g1_100": ["6k1/p4pp1/1p2n2p/3Q4/4P3/2P1B1P1/P1q3KP/8 w - - 5 51", "g1_99", ["g1_101"], "Qc2+", "♕c2+", "a4", "c2", true], "g1_101": ["6k1/p4pp1/1p2n2p/3Q4/4P3/2P3P1/P1q2BKP/8 b - - 6 51", "g1_100", ["g1_102"], "Bf2", "♗f2", "e3", "f2", true], "g1_102": ["6k1/p4pp1/1p5p/3Q2n1/4P3/2P3P1/P1q2BKP/8 w - - 7 52", "g1_101", ["g1_103"], "Ng5", "♘g5", "e6", "g5", true], "g1_103": ["Q5k1/p4pp1/1p5p/6n1/4P3/2P3P1/P1q2BKP/8 b - - 8 52", "g1_102", ["g1_104"], "Qa8+", "♕a8+", "d5", "a8", true], "g1_104": ["Q7/p4ppk/1p5p/6n1/4P3/2P3P1/P1q2BKP/8 w - - 9 53", "g1_103", ["g1_105"], "Kh7", "♔h7", "g8", "h7", true], "g1_105": ["8/Q4ppk/1p5p/6n1/4P3/2P3P1/P1q2BKP/8 b - - 0 53", "g1_104", ["g1_106"], "Qxa7", "♕xa7", "a8", "a7", true], "g1_106": ["8/Q4ppk/1p5p/6n1/4q3/2P3P1/P4BKP/8 w - - 0 54", "g1_105", ["g1_107"], "Qxe4+", "♕xe4+", "c2", "e4", true], "g1_107": ["8/Q4ppk/1p5p/6n1/4q3/2P3P1/P4B1P/5K2 b - - 1 54", "g1_106", ["g1_108"], "Kf1", "♔f1", "g2", "f1", true], "g1_108": ["8/Q4ppk/1p5p/6n1/8/2Pq2P1/P4B1P/5K2 w - - 2 55", "g1_107", ["g1_109"], "Qd3+", "♕d3+", "e4", "d3", true], "g1_109": ["8/Q4ppk/1p5p/6n1/8/2Pq2P1/P4BKP/8 b - - 3 55", "g1_108", ["g1_110"], "Kg2", "♔g2", "f1", "g2", true], "g1_110": ["8/Q4ppk/1p5p/6n1/8/2P2qP1/P4BKP/8 w - - 4 56", "g1_109", ["g1_111"], "Qf3+", "♕f3+", "d3", "f3", true], "g1_111": ["8/Q4ppk/1p5p/6n1/8/2P2qP1/P4B1P/5K2 b - - 5 56", "g1_110", ["g1_112"], "Kf1", "♔f1", "g2", "f1", true], "g1_112": ["8/Q4ppk/1p5p/8/4n3/2P2qP1/P4B1P/5K2 w - - 6 57", "g1_111", ["g1_113"], "Ne4", "♘e4", "g5", "e4", true], "g1_113": ["8/5ppk/1Q5p/8/4n3/2P2qP1/P4B1P/5K2 b - - 0 57", "g1_112", ["g1_114"], "Qxb6", "♕xb6", "a7", "b6", true], "g1_114": ["8/5ppk/1Q5p/8/4n3/2Pq2P1/P4B1P/5K2 w - - 1 58", "g1_113", ["g1_115"], "Qd3+", "♕d3+", "f3", "d3", true], "g1_115": ["8/5ppk/1Q5p/8/4n3/2Pq2P1/P4BKP/8 b - - 2 58", "g1_114", ["g1_116"], "Kg2", "♔g2", "f1", "g2", true], "g1_116": ["8/5ppk/1Q5p/8/8/2Pq2P1/P2n1BKP/8 w - - 3 59", "g1_115", ["g1_117"], "Nd2", "♘d2", "e4", "d2", true], "g1_117": ["8/5ppk/1Q5p/8/6P1/2Pq4/P2n1BKP/8 b - - 0 59", "g1_116", ["g1_118"], "g4", "g4", "g3", "g4", true], "g1_118": ["8/5ppk/1Q5p/8/6P1/2P2q2/P2n1BKP/8 w - - 1 60", "g1_117", ["g1_119"], "Qf3+", "♕f3+", "d3", "f3", true], "g1_119": ["8/5ppk/1Q5p/8/6P1/2P2q2/P2n1B1P/6K1 b - - 2 60", "g1_118", ["g1_120"], "Kg1", "♔g1", "g2", "g1", true], "g1_120": ["8/5ppk/1Q5p/8/6P1/2P4q/P2n1B1P/6K1 w - - 3 61", "g1_119", [], "Qh3", "♕h3", "f3", "h3", true], "g2_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g2_1"], "", "", "", "", true], "g2_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g2_0", ["g2_2"], "e4", "e4", "e2", "e4", true], "g2_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g2_1", ["g2_3"], "c5", "c5", "c7", "c5", true], "g2_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g2_2", ["g2_4"], "Nf3", "♘f3", "g1", "f3", true], "g2_4": ["r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "g2_3", ["g2_5"], "Nc6", "♘c6", "b8", "c6", true], "g2_5": ["r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "g2_4", ["g2_6"], "Bb5", "♗b5", "f1", "b5", true], "g2_6": ["r1bqkbnr/pp1p1ppp/2n5/1Bp1p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq e6 0 4", "g2_5", ["g2_7"], "e5", "e5", "e7", "e5", true], "g2_7": ["r1bqkbnr/pp1p1ppp/2n5/1Bp1p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4", "g2_6", ["g2_8"], "O-O", "O-O", "e1", "g1", true], "g2_8": ["r1bqk1nr/pp1pbppp/2n5/1Bp1p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 2 5", "g2_7", ["g2_9"], "Be7", "♗e7", "f8", "e7", true], "g2_9": ["r1bqk1nr/pp1pbppp/2n5/1Bp1p3/4P3/5N2/PPPP1PPP/RNBQR1K1 b kq - 3 5", "g2_8", ["g2_10"], "Re1", "♖e1", "f1", "e1", true], "g2_10": ["r1bqk1nr/pp1pbppp/8/1Bp1p3/3nP3/5N2/PPPP1PPP/RNBQR1K1 w kq - 4 6", "g2_9", ["g2_11"], "Nd4", "♘d4", "c6", "d4", true], "g2_11": ["r1bqk1nr/pp1pbppp/8/1Bp1p3/3NP3/8/PPPP1PPP/RNBQR1K1 b kq - 0 6", "g2_10", ["g2_12"], "Nxd4", "♘xd4", "f3", "d4", true], "g2_12": ["r1bqk1nr/pp1pbppp/8/1B2p3/3pP3/8/PPPP1PPP/RNBQR1K1 w kq - 0 7", "g2_11", ["g2_13"], "cxd4", "cxd4", "c5", "d4", true], "g2_13": ["r1bqk1nr/pp1pbppp/8/1B2p3/3pP3/2P5/PP1P1PPP/RNBQR1K1 b kq - 0 7", "g2_12", ["g2_14"], "c3", "c3", "c2", "c3", true], "g2_14": ["r1bqk2r/pp1pbppp/5n2/1B2p3/3pP3/2P5/PP1P1PPP/RNBQR1K1 w kq - 1 8", "g2_13", ["g2_15"], "Nf6", "♘f6", "g8", "f6", true], "g2_15": ["r1bqk2r/pp1pbppp/5n2/1B2p3/3PP3/8/PP1P1PPP/RNBQR1K1 b kq - 0 8", "g2_14", ["g2_16"], "cxd4", "cxd4", "c3", "d4", true], "g2_16": ["r1bqk2r/pp1pbppp/5n2/1B6/3pP3/8/PP1P1PPP/RNBQR1K1 w kq - 0 9", "g2_15", ["g2_17"], "exd4", "exd4", "e5", "d4", true], "g2_17": ["r1bqk2r/pp1pbppp/5n2/1B2P3/3p4/8/PP1P1PPP/RNBQR1K1 b kq - 0 9", "g2_16", ["g2_18"], "e5", "e5", "e4", "e5", true], "g2_18": ["r1bqk2r/pp1pbppp/8/1B1nP3/3p4/8/PP1P1PPP/RNBQR1K1 w kq - 1 10", "g2_17", ["g2_19"], "Nd5", "♘d5", "f6", "d5", true], "g2_19": ["r1bqk2r/pp1pbppp/8/3nP3/2Bp4/8/PP1P1PPP/RNBQR1K1 b kq - 2 10", "g2_18", ["g2_20"], "Bc4", "♗c4", "b5", "c4", true], "g2_20": ["r1bqk2r/pp1pbppp/8/4P3/1nBp4/8/PP1P1PPP/RNBQR1K1 w kq - 3 11", "g2_19", ["g2_21"], "Nb4", "♘b4", "d5", "b4", true], "g2_21": ["r1bqk2r/pp1pbppp/8/4P3/1nBp4/3P4/PP3PPP/RNBQR1K1 b kq - 0 11", "g2_20", ["g2_22"], "d3", "d3", "d2", "d3", true], "g2_22": ["r1bq1rk1/pp1pbppp/8/4P3/1nBp4/3P4/PP3PPP/RNBQR1K1 w - - 1 12", "g2_21", ["g2_23"], "O-O", "O-O", "e8", "g8", true], "g2_23": ["r1bq1rk1/pp1pbppp/8/4P3/1nBp4/3P4/PP1N1PPP/R1BQR1K1 b - - 2 12", "g2_22", ["g2_24"], "Nd2", "♘d2", "b1", "d2", true], "g2_24": ["r1bq1rk1/pp2bppp/8/3pP3/1nBp4/3P4/PP1N1PPP/R1BQR1K1 w - d6 0 13", "g2_23", ["g2_25"], "d5", "d5", "d7", "d5", true], "g2_25": ["r1bq1rk1/pp2bppp/3P4/8/1nBp4/3P4/PP1N1PPP/R1BQR1K1 b - - 0 13", "g2_24", ["g2_26"], "exd6", "exd6", "e5", "d6", true], "g2_26": ["r1b2rk1/pp2bppp/3q4/8/1nBp4/3P4/PP1N1PPP/R1BQR1K1 w - - 0 14", "g2_25", ["g2_27"], "Qxd6", "♕xd6", "d8", "d6", true], "g2_27": ["r1b2rk1/pp2bppp/3q4/8/1nBp4/P2P4/1P1N1PPP/R1BQR1K1 b - - 0 14", "g2_26", ["g2_28"], "a3", "a3", "a2", "a3", true], "g2_28": ["r1b2rk1/pp2bppp/2nq4/8/2Bp4/P2P4/1P1N1PPP/R1BQR1K1 w - - 1 15", "g2_27", ["g2_29"], "Nc6", "♘c6", "b4", "c6", true], "g2_29": ["r1b2rk1/pp2bppp/2nq4/7Q/2Bp4/P2P4/1P1N1PPP/R1B1R1K1 b - - 2 15", "g2_28", ["g2_30"], "Qh5", "♕h5", "d1", "h5", true], "g2_30": ["r1b2rk1/pp2bppp/2n3q1/7Q/2Bp4/P2P4/1P1N1PPP/R1B1R1K1 w - - 3 16", "g2_29", ["g2_31"], "Qg6", "♕g6", "d6", "g6", true], "g2_31": ["r1b2rk1/pp2bppp/2n3Q1/8/2Bp4/P2P4/1P1N1PPP/R1B1R1K1 b - - 0 16", "g2_30", ["g2_32"], "Qxg6", "♕xg6", "h5", "g6", true], "g2_32": ["r1b2rk1/pp2bpp1/2n3p1/8/2Bp4/P2P4/1P1N1PPP/R1B1R1K1 w - - 0 17", "g2_31", ["g2_33"], "hxg6", "hxg6", "h7", "g6", true], "g2_33": ["r1b2rk1/pp2bpp1/2n3p1/8/2Bp4/P2P1N2/1P3PPP/R1B1R1K1 b - - 1 17", "g2_32", ["g2_34"], "Nf3", "♘f3", "d2", "f3", true], "g2_34": ["r1b2rk1/pp3pp1/2n2bp1/8/2Bp4/P2P1N2/1P3PPP/R1B1R1K1 w - - 2 18", "g2_33", ["g2_35"], "Bf6", "♗f6", "e7", "f6", true], "g2_35": ["r1b2rk1/pp3pp1/2n2bp1/8/2Bp1B2/P2P1N2/1P3PPP/R3R1K1 b - - 3 18", "g2_34", ["g2_36"], "Bf4", "♗f4", "c1", "f4", true], "g2_36": ["r4rk1/pp1b1pp1/2n2bp1/8/2Bp1B2/P2P1N2/1P3PPP/R3R1K1 w - - 4 19", "g2_35", ["g2_37"], "Bd7", "♗d7", "c8", "d7", true], "g2_37": ["r4rk1/pp1b1pp1/2n2bp1/8/1PBp1B2/P2P1N2/5PPP/R3R1K1 b - b3 0 19", "g2_36", ["g2_38"], "b4", "b4", "b2", "b4", true], "g2_38": ["r3r1k1/pp1b1pp1/2n2bp1/8/1PBp1B2/P2P1N2/5PPP/R3R1K1 w - - 1 20", "g2_37", ["g2_39"], "Rfe8", "♖fe8", "f8", "e8", true], "g2_39": ["r3r1k1/pp1b1pp1/2n2bp1/8/1PBp1B2/P2P1N1P/5PP1/R3R1K1 b - - 0 20", "g2_38", ["g2_40"], "h3", "h3", "h2", "h3", true], "g2_40": ["r3r1k1/1p1b1pp1/p1n2bp1/8/1PBp1B2/P2P1N1P/5PP1/R3R1K1 w - - 0 21", "g2_39", ["g2_41"], "a6", "a6", "a7", "a6", true], "g2_41": ["r3r1k1/1p1b1pp1/p1n2bp1/8/1PBp1B2/P2P1N1P/5PP1/R3RK2 b - - 1 21", "g2_40", ["g2_42"], "Kf1", "♔f1", "g1", "f1", true], "g2_42": ["r5k1/1p1b1pp1/p1n2bp1/8/1PBp1B2/P2P1N1P/5PP1/R3rK2 w - - 0 22", "g2_41", ["g2_43"], "Rxe1+", "♖xe1+", "e8", "e1", true], "g2_43": ["r5k1/1p1b1pp1/p1n2bp1/8/1PBp1B2/P2P1N1P/5PP1/4RK2 b - - 0 22", "g2_42", ["g2_44"], "Rxe1", "♖xe1", "a1", "e1", true], "g2_44": ["r2n2k1/1p1b1pp1/p4bp1/8/1PBp1B2/P2P1N1P/5PP1/4RK2 w - - 1 23", "g2_43", ["g2_45"], "Nd8", "♘d8", "c6", "d8", true], "g2_45": ["r2n2k1/1p1b1pp1/p4bp1/4B3/1PBp4/P2P1N1P/5PP1/4RK2 b - - 2 23", "g2_44", ["g2_46"], "Be5", "♗e5", "f4", "e5", true], "g2_46": ["r5k1/1p1b1pp1/p1n2bp1/4B3/1PBp4/P2P1N1P/5PP1/4RK2 w - - 3 24", "g2_45", ["g2_47"], "Nc6", "♘c6", "d8", "c6", true], "g2_47": ["r5k1/1p1b1pp1/p1n2bp1/8/1PBp1B2/P2P1N1P/5PP1/4RK2 b - - 4 24", "g2_46", ["g2_48"], "Bf4", "♗f4", "e5", "f4", true], "g2_48": ["r2n2k1/1p1b1pp1/p4bp1/8/1PBp1B2/P2P1N1P/5PP1/4RK2 w - - 5 25", "g2_47", ["g2_49"], "Nd8", "♘d8", "c6", "d8", true], "g2_49": ["r2n2k1/1p1b1pp1/p4bp1/4N3/1PBp1B2/P2P3P/5PP1/4RK2 b - - 6 25", "g2_48", ["g2_50"], "Ne5", "♘e5", "f3", "e5", true], "g2_50": ["r2n2k1/1p3pp1/p4bp1/1b2N3/1PBp1B2/P2P3P/5PP1/4RK2 w - - 7 26", "g2_49", ["g2_51"], "Bb5", "♗b5", "d7", "b5", true], "g2_51": ["r2n2k1/1p3pp1/p4bN1/1b6/1PBp1B2/P2P3P/5PP1/4RK2 b - - 0 26", "g2_50", ["g2_52"], "Nxg6", "♘xg6", "e5", "g6", true], "g2_52": ["r5k1/1p3pp1/p3nbN1/1b6/1PBp1B2/P2P3P/5PP1/4RK2 w - - 1 27", "g2_51", ["g2_53"], "Ne6", "♘e6", "d8", "e6", true], "g2_53": ["r5k1/1p3pp1/p3nbN1/1b2B3/1PBp4/P2P3P/5PP1/4RK2 b - - 2 27", "g2_52", ["g2_54"], "Be5", "♗e5", "f4", "e5", true], "g2_54": ["r5k1/1p3pp1/p3n1N1/1b2B1b1/1PBp4/P2P3P/5PP1/4RK2 w - - 3 28", "g2_53", ["g2_55"], "Bg5", "♗g5", "f6", "g5", true], "g2_55": ["r5k1/1p3pp1/p3n1N1/1b2B1b1/1PBp1P2/P2P3P/6P1/4RK2 b - f3 0 28", "g2_54", ["g2_56"], "f4", "f4", "f2", "f4", true], "g2_56": ["r5k1/1p3pp1/p3n1N1/4B1b1/1Pbp1P2/P2P3P/6P1/4RK2 w - - 0 29", "g2_55", ["g2_57"], "Bxc4", "♗xc4", "b5", "c4", true], "g2_57": ["r5k1/1p3pp1/p3n1N1/4B1b1/1PPp1P2/P6P/6P1/4RK2 b - - 0 29", "g2_56", ["g2_58"], "dxc4", "dxc4", "d3", "c4", true], "g2_58": ["r5k1/1p4p1/p3n1p1/4B1b1/1PPp1P2/P6P/6P1/4RK2 w - - 0 30", "g2_57", ["g2_59"], "fxg6", "fxg6", "f7", "g6", true], "g2_59": ["r5k1/1p4p1/p3n1p1/4B1P1/1PPp4/P6P/6P1/4RK2 b - - 0 30", "g2_58", ["g2_60"], "fxg5", "fxg5", "f4", "g5", true], "g2_60": ["r5k1/1p4p1/4n1p1/p3B1P1/1PPp4/P6P/6P1/4RK2 w - - 0 31", "g2_59", ["g2_61"], "a5", "a5", "a6", "a5", true], "g2_61": ["r5k1/1p4p1/3Bn1p1/p5P1/1PPp4/P6P/6P1/4RK2 b - - 1 31", "g2_60", ["g2_62"], "Bd6", "♗d6", "e5", "d6", true], "g2_62": ["r7/1p3kp1/3Bn1p1/p5P1/1PPp4/P6P/6P1/4RK2 w - - 2 32", "g2_61", ["g2_63"], "Kf7", "♔f7", "g8", "f7", true], "g2_63": ["r7/1p3kp1/3Bn1p1/P5P1/2Pp4/P6P/6P1/4RK2 b - - 0 32", "g2_62", ["g2_64"], "bxa5", "bxa5", "b4", "a5", true], "g2_64": ["8/1p3kp1/3Bn1p1/r5P1/2Pp4/P6P/6P1/4RK2 w - - 0 33", "g2_63", ["g2_65"], "Rxa5", "♖xa5", "a8", "a5", true], "g2_65": ["8/1p3kp1/3Bn1p1/r5P1/2Pp4/P6P/6P1/1R3K2 b - - 1 33", "g2_64", ["g2_66"], "Rb1", "♖b1", "e1", "b1", true], "g2_66": ["8/1p3kp1/3B2p1/r5n1/2Pp4/P6P/6P1/1R3K2 w - - 0 34", "g2_65", ["g2_67"], "Nxg5", "♘xg5", "e6", "g5", true], "g2_67": ["8/1R3kp1/3B2p1/r5n1/2Pp4/P6P/6P1/5K2 b - - 0 34", "g2_66", ["g2_68"], "Rxb7+", "♖xb7+", "b1", "b7", true], "g2_68": ["8/1R4p1/3Bk1p1/r5n1/2Pp4/P6P/6P1/5K2 w - - 1 35", "g2_67", ["g2_69"], "Ke6", "♔e6", "f7", "e6", true], "g2_69": ["8/1R4p1/4k1p1/r5n1/1BPp4/P6P/6P1/5K2 b - - 2 35", "g2_68", ["g2_70"], "Bb4", "♗b4", "d6", "b4", true], "g2_70": ["8/1R4p1/r3k1p1/6n1/1BPp4/P6P/6P1/5K2 w - - 3 36", "g2_69", ["g2_71"], "Ra6", "♖a6", "a5", "a6", true], "g2_71": ["8/1R4p1/r3k1p1/6n1/1BPp4/P6P/4K1P1/8 b - - 4 36", "g2_70", ["g2_72"], "Ke2", "♔e2", "f1", "e2", true], "g2_72": ["8/1R4p1/r5p1/5kn1/1BPp4/P6P/4K1P1/8 w - - 5 37", "g2_71", ["g2_73"], "Kf5", "♔f5", "e6", "f5", true], "g2_73": ["8/6p1/r5p1/1R3kn1/1BPp4/P6P/4K1P1/8 b - - 6 37", "g2_72", ["g2_74"], "Rb5+", "♖b5+", "b7", "b5", true], "g2_74": ["8/6p1/r4kp1/1R4n1/1BPp4/P6P/4K1P1/8 w - - 7 38", "g2_73", ["g2_75"], "Kf6", "♔f6", "f5", "f6", true], "g2_75": ["8/6p1/r4kp1/1R4n1/1BPp4/P2K3P/6P1/8 b - - 8 38", "g2_74", ["g2_76"], "Kd3", "♔d3", "e2", "d3", true], "g2_76": ["8/6p1/r3nkp1/1R6/1BPp4/P2K3P/6P1/8 w - - 9 39", "g2_75", ["g2_77"], "Ne6", "♘e6", "g5", "e6", true], "g2_77": ["8/6p1/r3nkp1/1R6/1BPp3P/P2K4/6P1/8 b - - 0 39", "g2_76", ["g2_78"], "h4", "h4", "h3", "h4", true], "g2_78": ["8/6p1/r4kp1/1R6/1BPp1n1P/P2K4/6P1/8 w - - 1 40", "g2_77", ["g2_79"], "Nf4+", "♘f4+", "e6", "f4", true], "g2_79": ["8/6p1/r4kp1/1R6/1BPK1n1P/P7/6P1/8 b - - 0 40", "g2_78", ["g2_80"], "Kxd4", "♔xd4", "d3", "d4", true], "g2_80": ["8/6p1/r4kp1/1R6/1BPK3P/P7/6n1/8 w - - 0 41", "g2_79", ["g2_81"], "Nxg2", "♘xg2", "f4", "g2", true], "g2_81": ["8/6p1/r4kp1/1RP5/1B1K3P/P7/6n1/8 b - - 0 41", "g2_80", ["g2_82"], "c5", "c5", "c4", "c5", true], "g2_82": ["r7/6p1/5kp1/1RP5/1B1K3P/P7/6n1/8 w - - 1 42", "g2_81", ["g2_83"], "Ra8", "♖a8", "a6", "a8", true], "g2_83": ["r7/6p1/2P2kp1/1R6/1B1K3P/P7/6n1/8 b - - 0 42", "g2_82", ["g2_84"], "c6", "c6", "c5", "c6", true], "g2_84": ["r7/6p1/2P2kp1/1R6/1B1K3n/P7/8/8 w - - 0 43", "g2_83", ["g2_85"], "Nxh4", "♘xh4", "g2", "h4", true], "g2_85": ["r7/6p1/2P2kp1/1R1K4/1B5n/P7/8/8 b - - 1 43", "g2_84", ["g2_86"], "Kd5", "♔d5", "d4", "d5", true], "g2_86": ["r7/6p1/2P2kp1/1R1K1n2/1B6/P7/8/8 w - - 2 44", "g2_85", ["g2_87"], "Nf5", "♘f5", "h4", "f5", true], "g2_87": ["r7/2P3p1/5kp1/1R1K1n2/1B6/P7/8/8 b - - 0 44", "g2_86", ["g2_88"], "c7", "c7", "c6", "c7", true], "g2_88": ["2r5/2P3p1/5kp1/1R1K1n2/1B6/P7/8/8 w - - 1 45", "g2_87", ["g2_89"], "Rc8", "♖c8", "a8", "c8", true], "g2_89": ["2r5/2P3p1/3B1kp1/1R1K1n2/8/P7/8/8 b - - 2 45", "g2_88", ["g2_90"], "Bd6", "♗d6", "b4", "d6", true], "g2_90": ["2r5/2P1n1p1/3B1kp1/1R1K4/8/P7/8/8 w - - 3 46", "g2_89", ["g2_91"], "Ne7+", "♘e7+", "f5", "e7", true], "g2_91": ["2r5/2P1B1p1/5kp1/1R1K4/8/P7/8/8 b - - 0 46", "g2_90", ["g2_92"], "Bxe7+", "♗xe7+", "d6", "e7", true], "g2_92": ["2r5/2P1k1p1/6p1/1R1K4/8/P7/8/8 w - - 0 47", "g2_91", ["g2_93"], "Kxe7", "♔xe7", "f6", "e7", true], "g2_93": ["2r5/2P1k1p1/2K3p1/1R6/8/P7/8/8 b - - 1 47", "g2_92", [], "Kc6", "♔c6", "d5", "c6", true], "g3_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g3_1"], "", "", "", "", true], "g3_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g3_0", ["g3_2"], "e4", "e4", "e2", "e4", true], "g3_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g3_1", ["g3_3"], "c5", "c5", "c7", "c5", true], "g3_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g3_2", ["g3_4"], "Nf3", "♘f3", "g1", "f3", true], "g3_4": ["rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3", "g3_3", ["g3_5"], "d6", "d6", "d7", "d6", true], "g3_5": ["rnbqkbnr/pp2pppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3", "g3_4", ["g3_6"], "Bb5+", "♗b5+", "f1", "b5", true], "g3_6": ["r1bqkbnr/pp1npppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 4", "g3_5", ["g3_7"], "Nd7", "♘d7", "b8", "d7", true], "g3_7": ["r1bqkbnr/pp1npppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 3 4", "g3_6", ["g3_8"], "O-O", "O-O", "e1", "g1", true], "g3_8": ["r1bqkbnr/1p1npppp/p2p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 5", "g3_7", ["g3_9"], "a6", "a6", "a7", "a6", true], "g3_9": ["r1bqkbnr/1p1npppp/p2p4/2p5/4P3/5N2/PPPPBPPP/RNBQ1RK1 b kq - 1 5", "g3_8", ["g3_10"], "Be2", "♗e2", "b5", "e2", true], "g3_10": ["r1bqkb1r/1p1npppp/p2p1n2/2p5/4P3/5N2/PPPPBPPP/RNBQ1RK1 w kq - 2 6", "g3_9", ["g3_11"], "Ngf6", "♘gf6", "g8", "f6", true], "g3_11": ["r1bqkb1r/1p1npppp/p2p1n2/2p5/4P3/3P1N2/PPP1BPPP/RNBQ1RK1 b kq - 0 6", "g3_10", ["g3_12"], "d3", "d3", "d2", "d3", true], "g3_12": ["r1bqkb1r/1p1n1ppp/p2ppn2/2p5/4P3/3P1N2/PPP1BPPP/RNBQ1RK1 w kq - 0 7", "g3_11", ["g3_13"], "e6", "e6", "e7", "e6", true], "g3_13": ["r1bqkb1r/1p1n1ppp/p2ppn2/2p5/P3P3/3P1N2/1PP1BPPP/RNBQ1RK1 b kq a3 0 7", "g3_12", ["g3_14"], "a4", "a4", "a2", "a4", true], "g3_14": ["r1bqkb1r/3n1ppp/pp1ppn2/2p5/P3P3/3P1N2/1PP1BPPP/RNBQ1RK1 w kq - 0 8", "g3_13", ["g3_15"], "b6", "b6", "b7", "b6", true], "g3_15": ["r1bqkb1r/3n1ppp/pp1ppn2/2p5/P3P3/3P4/1PPNBPPP/RNBQ1RK1 b kq - 1 8", "g3_14", ["g3_16"], "Nfd2", "♘fd2", "f3", "d2", true], "g3_16": ["r1bqk2r/3nbppp/pp1ppn2/2p5/P3P3/3P4/1PPNBPPP/RNBQ1RK1 w kq - 2 9", "g3_15", ["g3_17"], "Be7", "♗e7", "f8", "e7", true], "g3_17": ["r1bqk2r/3nbppp/pp1ppn2/2p5/P3PP2/3P4/1PPNB1PP/RNBQ1RK1 b kq f3 0 9", "g3_16", ["g3_18"], "f4", "f4", "f2", "f4", true], "g3_18": ["r2qk2r/1b1nbppp/pp1ppn2/2p5/P3PP2/3P4/1PPNB1PP/RNBQ1RK1 w kq - 1 10", "g3_17", ["g3_19"], "Bb7", "♗b7", "c8", "b7", true], "g3_19": ["r2qk2r/1b1nbppp/pp1ppn2/2p5/P3PP2/2NP4/1PPNB1PP/R1BQ1RK1 b kq - 2 10", "g3_18", ["g3_20"], "Nc3", "♘c3", "b1", "c3", true], "g3_20": ["r2qk2r/1b1nbppp/pp2pn2/2pp4/P3PP2/2NP4/1PPNB1PP/R1BQ1RK1 w kq - 0 11", "g3_19", ["g3_21"], "d5", "d5", "d6", "d5", true], "g3_21": ["r2qk2r/1b1nbppp/pp2pn2/2pp4/P3PP2/2NP1B2/1PPN2PP/R1BQ1RK1 b kq - 1 11", "g3_20", ["g3_22"], "Bf3", "♗f3", "e2", "f3", true], "g3_22": ["r3k2r/1bqnbppp/pp2pn2/2pp4/P3PP2/2NP1B2/1PPN2PP/R1BQ1RK1 w kq - 2 12", "g3_21", ["g3_23"], "Qc7", "♕c7", "d8", "c7", true], "g3_23": ["r3k2r/1bqnbppp/pp2pn2/2pP4/P4P2/2NP1B2/1PPN2PP/R1BQ1RK1 b kq - 0 12", "g3_22", ["g3_24"], "exd5", "exd5", "e4", "d5", true], "g3_24": ["r3k2r/1bqnbppp/pp3n2/2pp4/P4P2/2NP1B2/1PPN2PP/R1BQ1RK1 w kq - 0 13", "g3_23", ["g3_25"], "exd5", "exd5", "e6", "d5", true], "g3_25": ["r3k2r/1bqnbppp/pp3n2/2pp4/P4P2/2NP1B2/1PPN2PP/R1BQR1K1 b kq - 1 13", "g3_24", ["g3_26"], "Re1", "♖e1", "f1", "e1", true], "g3_26": ["r3k2r/1b1nbppp/pp3n2/2pp4/P4q2/2NP1B2/1PPN2PP/R1BQR1K1 w kq - 0 14", "g3_25", ["g3_27"], "Qxf4", "♕xf4", "c7", "f4", true], "g3_27": ["r3k2r/1b1nbppp/pp3n2/2pp4/P1N2q2/2NP1B2/1PP3PP/R1BQR1K1 b kq - 1 14", "g3_26", ["g3_28"], "Nc4", "♘c4", "d2", "c4", true], "g3_28": ["r3k2r/1bqnbppp/pp3n2/2pp4/P1N5/2NP1B2/1PP3PP/R1BQR1K1 w kq - 2 15", "g3_27", ["g3_29"], "Qc7", "♕c7", "f4", "c7", true], "g3_29": ["r3k2r/1bqnbppp/pp3n2/2pp4/P7/2NPNB2/1PP3PP/R1BQR1K1 b kq - 3 15", "g3_28", ["g3_30"], "Ne3", "♘e3", "c4", "e3", true], "g3_30": ["r4rk1/1bqnbppp/pp3n2/2pp4/P7/2NPNB2/1PP3PP/R1BQR1K1 w - - 4 16", "g3_29", ["g3_31"], "O-O", "O-O", "e8", "g8", true], "g3_31": ["r4rk1/1bqnbppp/pp3n2/2pN4/P7/2NP1B2/1PP3PP/R1BQR1K1 b - - 0 16", "g3_30", ["g3_32"], "Nexd5", "♘exd5", "e3", "d5", true], "g3_32": ["r4rk1/1bqnbppp/pp6/2pn4/P7/2NP1B2/1PP3PP/R1BQR1K1 w - - 0 17", "g3_31", ["g3_33"], "Nxd5", "♘xd5", "f6", "d5", true], "g3_33": ["r4rk1/1bqnbppp/pp6/2pN4/P7/3P1B2/1PP3PP/R1BQR1K1 b - - 0 17", "g3_32", ["g3_34"], "Nxd5", "♘xd5", "c3", "d5", true], "g3_34": ["r4rk1/2qnbppp/pp6/2pb4/P7/3P1B2/1PP3PP/R1BQR1K1 w - - 0 18", "g3_33", ["g3_35"], "Bxd5", "♗xd5", "b7", "d5", true], "g3_35": ["r4rk1/2qnbppp/pp6/2pB4/P7/3P4/1PP3PP/R1BQR1K1 b - - 0 18", "g3_34", ["g3_36"], "Bxd5", "♗xd5", "f3", "d5", true], "g3_36": ["4rrk1/2qnbppp/pp6/2pB4/P7/3P4/1PP3PP/R1BQR1K1 w - - 1 19", "g3_35", ["g3_37"], "Rae8", "♖ae8", "a8", "e8", true], "g3_37": ["4rrk1/2qnbppp/pp6/2pB4/P7/3P2P1/1PP4P/R1BQR1K1 b - - 0 19", "g3_36", ["g3_38"], "g3", "g3", "g2", "g3", true], "g3_38": ["4rrk1/2qn1ppp/pp1b4/2pB4/P7/3P2P1/1PP4P/R1BQR1K1 w - - 1 20", "g3_37", ["g3_39"], "Bd6", "♗d6", "e7", "d6", true], "g3_39": ["4rrk1/2qn1Bpp/pp1b4/2p5/P7/3P2P1/1PP4P/R1BQR1K1 b - - 0 20", "g3_38", ["g3_40"], "Bxf7+", "♗xf7+", "d5", "f7", true], "g3_40": ["4rr2/2qn1kpp/pp1b4/2p5/P7/3P2P1/1PP4P/R1BQR1K1 w - - 0 21", "g3_39", ["g3_41"], "Kxf7", "♔xf7", "g8", "f7", true], "g3_41": ["4rr2/2qn1kpp/pp1b4/2p4Q/P7/3P2P1/1PP4P/R1B1R1K1 b - - 1 21", "g3_40", ["g3_42"], "Qh5+", "♕h5+", "d1", "h5", true], "g3_42": ["4rr2/2qn1k1p/pp1b2p1/2p4Q/P7/3P2P1/1PP4P/R1B1R1K1 w - - 0 22", "g3_41", ["g3_43"], "g6", "g6", "g7", "g6", true], "g3_43": ["4rr2/2qn1k1Q/pp1b2p1/2p5/P7/3P2P1/1PP4P/R1B1R1K1 b - - 0 22", "g3_42", ["g3_44"], "Qxh7+", "♕xh7+", "h5", "h7", true], "g3_44": ["4rr2/2qn3Q/pp1b1kp1/2p5/P7/3P2P1/1PP4P/R1B1R1K1 w - - 1 23", "g3_43", ["g3_45"], "Kf6", "♔f6", "f7", "f6", true], "g3_45": ["4rr2/2qn3Q/pp1b1kpB/2p5/P7/3P2P1/1PP4P/R3R1K1 b - - 2 23", "g3_44", ["g3_46"], "Bh6", "♗h6", "c1", "h6", true], "g3_46": ["4rr2/2q4Q/pp1b1kpB/2p1n3/P7/3P2P1/1PP4P/R3R1K1 w - - 3 24", "g3_45", ["g3_47"], "Ne5", "♘e5", "d7", "e5", true], "g3_47": ["4rr2/2Q5/pp1b1kpB/2p1n3/P7/3P2P1/1PP4P/R3R1K1 b - - 0 24", "g3_46", ["g3_48"], "Qxc7", "♕xc7", "h7", "c7", true], "g3_48": ["4rr2/2b5/pp3kpB/2p1n3/P7/3P2P1/1PP4P/R3R1K1 w - - 0 25", "g3_47", ["g3_49"], "Bxc7", "♗xc7", "d6", "c7", true], "g3_49": ["4rr2/2b5/pp3kpB/2p1n3/P7/3P2P1/1PP4P/R4RK1 b - - 1 25", "g3_48", ["g3_50"], "Rf1+", "♖f1+", "e1", "f1", true], "g3_50": ["4rr2/2b1k3/pp4pB/2p1n3/P7/3P2P1/1PP4P/R4RK1 w - - 2 26", "g3_49", ["g3_51"], "Ke7", "♔e7", "f6", "e7", true], "g3_51": ["4rB2/2b1k3/pp4p1/2p1n3/P7/3P2P1/1PP4P/R4RK1 b - - 0 26", "g3_50", ["g3_52"], "Bxf8+", "♗xf8+", "h6", "f8", true], "g3_52": ["5r2/2b1k3/pp4p1/2p1n3/P7/3P2P1/1PP4P/R4RK1 w - - 0 27", "g3_51", ["g3_53"], "Rxf8", "♖xf8", "e8", "f8", true], "g3_53": ["5R2/2b1k3/pp4p1/2p1n3/P7/3P2P1/1PP4P/R5K1 b - - 0 27", "g3_52", ["g3_54"], "Rxf8", "♖xf8", "f1", "f8", true], "g3_54": ["5k2/2b5/pp4p1/2p1n3/P7/3P2P1/1PP4P/R5K1 w - - 0 28", "g3_53", ["g3_55"], "Kxf8", "♔xf8", "e7", "f8", true], "g3_55": ["5k2/2b5/pp4p1/2p1n3/P7/3P2P1/1PP3KP/R7 b - - 1 28", "g3_54", ["g3_56"], "Kg2", "♔g2", "g1", "g2", true], "g3_56": ["8/2b1k3/pp4p1/2p1n3/P7/3P2P1/1PP3KP/R7 w - - 2 29", "g3_55", ["g3_57"], "Ke7", "♔e7", "f8", "e7", true], "g3_57": ["8/2b1k3/pp4p1/2p1n3/P6P/3P2P1/1PP3K1/R7 b - h3 0 29", "g3_56", ["g3_58"], "h4", "h4", "h2", "h4", true], "g3_58": ["8/2b1k3/ppn3p1/2p5/P6P/3P2P1/1PP3K1/R7 w - - 1 30", "g3_57", ["g3_59"], "Nc6", "♘c6", "e5", "c6", true], "g3_59": ["8/2b1k3/ppn3p1/2p5/P5PP/3P4/1PP3K1/R7 b - - 0 30", "g3_58", ["g3_60"], "g4", "g4", "g3", "g4", true], "g3_60": ["8/4k3/ppn3p1/2p1b3/P5PP/3P4/1PP3K1/R7 w - - 1 31", "g3_59", ["g3_61"], "Be5", "♗e5", "c7", "e5", true], "g3_61": ["8/4k3/ppn3p1/2p1b3/P5PP/2PP4/1P4K1/R7 b - - 0 31", "g3_60", ["g3_62"], "c3", "c3", "c2", "c3", true], "g3_62": ["8/4k3/p1n3p1/1pp1b3/P5PP/2PP4/1P4K1/R7 w - - 0 32", "g3_61", ["g3_63"], "b5", "b5", "b6", "b5", true], "g3_63": ["8/4k3/p1n3p1/1pp1b3/P5PP/2PP1K2/1P6/R7 b - - 1 32", "g3_62", ["g3_64"], "Kf3", "♔f3", "g2", "f3", true], "g3_64": ["8/4k3/p1n3p1/2p1b3/Pp4PP/2PP1K2/1P6/R7 w - - 0 33", "g3_63", ["g3_65"], "b4", "b4", "b5", "b4", true], "g3_65": ["8/4k3/p1n3p1/2p1b3/Pp4PP/2PP1K2/1P6/2R5 b - - 1 33", "g3_64", ["g3_66"], "Rc1", "♖c1", "a1", "c1", true], "g3_66": ["8/4k3/p1n3p1/2p1b3/P5PP/2pP1K2/1P6/2R5 w - - 0 34", "g3_65", ["g3_67"], "bxc3", "bxc3", "b4", "c3", true], "g3_67": ["8/4k3/p1n3p1/2p1b3/P5PP/2PP1K2/8/2R5 b - - 0 34", "g3_66", ["g3_68"], "bxc3", "bxc3", "b2", "c3", true], "g3_68": ["8/4k3/p1n2bp1/2p5/P5PP/2PP1K2/8/2R5 w - - 1 35", "g3_67", ["g3_69"], "Bf6", "♗f6", "e5", "f6", true], "g3_69": ["8/4k3/p1n2bp1/2p5/P3K1PP/2PP4/8/2R5 b - - 2 35", "g3_68", ["g3_70"], "Ke4", "♔e4", "f3", "e4", true], "g3_70": ["8/4k3/p1n3p1/2p5/P3K1Pb/2PP4/8/2R5 w - - 0 36", "g3_69", ["g3_71"], "Bxh4", "♗xh4", "f6", "h4", true], "g3_71": ["8/4k3/p1n3p1/2pK4/P5Pb/2PP4/8/2R5 b - - 1 36", "g3_70", ["g3_72"], "Kd5", "♔d5", "e4", "d5", true], "g3_72": ["8/3k4/p1n3p1/2pK4/P5Pb/2PP4/8/2R5 w - - 2 37", "g3_71", ["g3_73"], "Kd7", "♔d7", "e7", "d7", true], "g3_73": ["8/3k4/p1n3p1/2pK4/P5Pb/2PP4/8/1R6 b - - 3 37", "g3_72", ["g3_74"], "Rb1", "♖b1", "c1", "b1", true], "g3_74": ["8/2k5/p1n3p1/2pK4/P5Pb/2PP4/8/1R6 w - - 4 38", "g3_73", ["g3_75"], "Kc7", "♔c7", "d7", "c7", true], "g3_75": ["8/2k5/p1n3p1/2pK4/P5Pb/2PP4/8/5R2 b - - 5 38", "g3_74", ["g3_76"], "Rf1", "♖f1", "b1", "f1", true], "g3_76": ["8/8/pkn3p1/2pK4/P5Pb/2PP4/8/5R2 w - - 6 39", "g3_75", ["g3_77"], "Kb6", "♔b6", "c7", "b6", true], "g3_77": ["8/8/pkn3p1/2pK4/P5Pb/2PP4/8/1R6 b - - 7 39", "g3_76", ["g3_78"], "Rb1+", "♖b1+", "f1", "b1", true], "g3_78": ["8/2k5/p1n3p1/2pK4/P5Pb/2PP4/8/1R6 w - - 8 40", "g3_77", ["g3_79"], "Kc7", "♔c7", "b6", "c7", true], "g3_79": ["8/2k5/p1n3p1/2pK4/P5Pb/2PP4/8/5R2 b - - 9 40", "g3_78", ["g3_80"], "Rf1", "♖f1", "b1", "f1", true], "g3_80": ["8/8/pkn3p1/2pK4/P5Pb/2PP4/8/5R2 w - - 10 41", "g3_79", ["g3_81"], "Kb6", "♔b6", "c7", "b6", true], "g3_81": ["8/8/pkn3p1/2pK4/P5Pb/2PP4/8/7R b - - 11 41", "g3_80", ["g3_82"], "Rh1", "♖h1", "f1", "h1", true], "g3_82": ["8/8/pkn2bp1/2pK4/P5P1/2PP4/8/7R w - - 12 42", "g3_81", ["g3_83"], "Bf6", "♗f6", "h4", "f6", true], "g3_83": ["8/8/pkn2bp1/2pK4/P5P1/2PP4/8/4R3 b - - 13 42", "g3_82", ["g3_84"], "Re1", "♖e1", "h1", "e1", true], "g3_84": ["3n4/8/pk3bp1/2pK4/P5P1/2PP4/8/4R3 w - - 14 43", "g3_83", ["g3_85"], "Nd8", "♘d8", "c6", "d8", true], "g3_85": ["3nR3/8/pk3bp1/2pK4/P5P1/2PP4/8/8 b - - 15 43", "g3_84", ["g3_86"], "Re8", "♖e8", "e1", "e8", true], "g3_86": ["3nR3/2k5/p4bp1/2pK4/P5P1/2PP4/8/8 w - - 16 44", "g3_85", ["g3_87"], "Kc7", "♔c7", "b6", "c7", true], "g3_87": ["3nR3/2k5/p4bp1/2K5/P5P1/2PP4/8/8 b - - 0 44", "g3_86", ["g3_88"], "Kxc5", "♔xc5", "d5", "c5", true], "g3_88": ["3nR3/3k4/p4bp1/2K5/P5P1/2PP4/8/8 w - - 1 45", "g3_87", ["g3_89"], "Kd7", "♔d7", "c7", "d7", true], "g3_89": ["3n2R1/3k4/p4bp1/2K5/P5P1/2PP4/8/8 b - - 2 45", "g3_88", ["g3_90"], "Rg8", "♖g8", "e8", "g8", true], "g3_90": ["3n2R1/3k4/p5p1/2K5/P5P1/2bP4/8/8 w - - 0 46", "g3_89", ["g3_91"], "Bxc3", "♗xc3", "f6", "c3", true], "g3_91": ["3n4/3k4/p5R1/2K5/P5P1/2bP4/8/8 b - - 0 46", "g3_90", ["g3_92"], "Rxg6", "♖xg6", "g8", "g6", true], "g3_92": ["8/3k4/p3n1R1/2K5/P5P1/2bP4/8/8 w - - 1 47", "g3_91", ["g3_93"], "Ne6+", "♘e6+", "d8", "e6", true], "g3_93": ["8/3k4/p3n1R1/8/P1K3P1/2bP4/8/8 b - - 2 47", "g3_92", ["g3_94"], "Kc4", "♔c4", "c5", "c4", true], "g3_94": ["8/3k4/p3n1R1/8/P1K3P1/3P4/3b4/8 w - - 3 48", "g3_93", ["g3_95"], "Bd2", "♗d2", "c3", "d2", true], "g3_95": ["8/3k4/p3n1R1/8/P1KP2P1/8/3b4/8 b - - 0 48", "g3_94", ["g3_96"], "d4", "d4", "d3", "d4", true], "g3_96": ["8/3k4/4n1R1/p7/P1KP2P1/8/3b4/8 w - - 0 49", "g3_95", ["g3_97"], "a5", "a5", "a6", "a5", true], "g3_97": ["8/3k4/4n1R1/p2P4/P1K3P1/8/3b4/8 b - - 0 49", "g3_96", ["g3_98"], "d5", "d5", "d4", "d5", true], "g3_98": ["8/3k4/6R1/p2P4/P1K2nP1/8/3b4/8 w - - 1 50", "g3_97", ["g3_99"], "Nf4", "♘f4", "e6", "f4", true], "g3_99": ["8/3k4/5R2/p2P4/P1K2nP1/8/3b4/8 b - - 2 50", "g3_98", ["g3_100"], "Rf6", "♖f6", "g6", "f6", true], "g3_100": ["8/4k3/5R2/p2P4/P1K2nP1/8/3b4/8 w - - 3 51", "g3_99", ["g3_101"], "Ke7", "♔e7", "d7", "e7", true], "g3_101": ["8/4k3/R7/p2P4/P1K2nP1/8/3b4/8 b - - 4 51", "g3_100", ["g3_102"], "Ra6", "♖a6", "f6", "a6", true], "g3_102": ["8/4k3/R7/p2P4/PbK2nP1/8/8/8 w - - 5 52", "g3_101", ["g3_103"], "Bb4", "♗b4", "d2", "b4", true], "g3_103": ["8/4k3/R7/p2P2P1/PbK2n2/8/8/8 b - - 0 52", "g3_102", ["g3_104"], "g5", "g5", "g4", "g5", true], "g3_104": ["8/4k3/R7/p2P2P1/PbK5/7n/8/8 w - - 1 53", "g3_103", ["g3_105"], "Nh3", "♘h3", "f4", "h3", true], "g3_105": ["8/4k3/R5P1/p2P4/PbK5/7n/8/8 b - - 0 53", "g3_104", ["g3_106"], "g6", "g6", "g5", "g6", true], "g3_106": ["8/4k3/R5P1/p2P4/PbK2n2/8/8/8 w - - 1 54", "g3_105", ["g3_107"], "Nf4", "♘f4", "h3", "f4", true], "g3_107": ["8/4k1P1/R7/p2P4/PbK2n2/8/8/8 b - - 0 54", "g3_106", [], "g7", "g7", "g6", "g7", true], "g4_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g4_1"], "", "", "", "", true], "g4_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g4_0", ["g4_2"], "e4", "e4", "e2", "e4", true], "g4_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g4_1", ["g4_3"], "c5", "c5", "c7", "c5", true], "g4_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g4_2", ["g4_4"], "Nf3", "♘f3", "g1", "f3", true], "g4_4": ["r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "g4_3", ["g4_5"], "Nc6", "♘c6", "b8", "c6", true], "g4_5": ["r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "g4_4", ["g4_6"], "Bb5", "♗b5", "f1", "b5", true], "g4_6": ["r1bqkbnr/pp1p1ppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "g4_5", ["g4_7"], "e6", "e6", "e7", "e6", true], "g4_7": ["r1bqkbnr/pp1p1ppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4", "g4_6", ["g4_8"], "O-O", "O-O", "e1", "g1", true], "g4_8": ["r1bqkb1r/pp1pnppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 2 5", "g4_7", ["g4_9"], "Nge7", "♘ge7", "g8", "e7", true], "g4_9": ["r1bqkb1r/pp1pnppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQR1K1 b kq - 3 5", "g4_8", ["g4_10"], "Re1", "♖e1", "f1", "e1", true], "g4_10": ["r1bqkb1r/1p1pnppp/p1n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQR1K1 w kq - 0 6", "g4_9", ["g4_11"], "a6", "a6", "a7", "a6", true], "g4_11": ["r1bqkb1r/1p1pnppp/p1n1p3/2p5/4P3/5N2/PPPP1PPP/RNBQRBK1 b kq - 1 6", "g4_10", ["g4_12"], "Bf1", "♗f1", "b5", "f1", true], "g4_12": ["r1bqkb1r/3pnppp/ppn1p3/2p5/4P3/5N2/PPPP1PPP/RNBQRBK1 w kq - 0 7", "g4_11", ["g4_13"], "b6", "b6", "b7", "b6", true], "g4_13": ["r1bqkb1r/3pnppp/ppn1p3/2p5/4P3/2P2N2/PP1P1PPP/RNBQRBK1 b kq - 0 7", "g4_12", ["g4_14"], "c3", "c3", "c2", "c3", true], "g4_14": ["r1bqkb1r/4nppp/ppn1p3/2pp4/4P3/2P2N2/PP1P1PPP/RNBQRBK1 w kq d6 0 8", "g4_13", ["g4_15"], "d5", "d5", "d7", "d5", true], "g4_15": ["r1bqkb1r/4nppp/ppn1p3/2pP4/8/2P2N2/PP1P1PPP/RNBQRBK1 b kq - 0 8", "g4_14", ["g4_16"], "exd5", "exd5", "e4", "d5", true], "g4_16": ["r1bqkb1r/5ppp/ppn1p3/2pn4/8/2P2N2/PP1P1PPP/RNBQRBK1 w kq - 0 9", "g4_15", ["g4_17"], "Nxd5", "♘xd5", "e7", "d5", true], "g4_17": ["r1bqkb1r/5ppp/ppn1p3/2pn4/3P4/2P2N2/PP3PPP/RNBQRBK1 b kq d3 0 9", "g4_16", ["g4_18"], "d4", "d4", "d2", "d4", true], "g4_18": ["r1bqkb1r/5ppp/ppn1p3/3n4/3p4/2P2N2/PP3PPP/RNBQRBK1 w kq - 0 10", "g4_17", ["g4_19"], "cxd4", "cxd4", "c5", "d4", true], "g4_19": ["r1bqkb1r/5ppp/ppn1p3/3n4/3N4/2P5/PP3PPP/RNBQRBK1 b kq - 0 10", "g4_18", ["g4_20"], "Nxd4", "♘xd4", "f3", "d4", true], "g4_20": ["r2qkb1r/1b3ppp/ppn1p3/3n4/3N4/2P5/PP3PPP/RNBQRBK1 w kq - 1 11", "g4_19", ["g4_21"], "Bb7", "♗b7", "c8", "b7", true], "g4_21": ["r2qkb1r/1b3ppp/ppn1p3/3n1N2/8/2P5/PP3PPP/RNBQRBK1 b kq - 2 11", "g4_20", ["g4_22"], "Nf5", "♘f5", "d4", "f5", true], "g4_22": ["r2qkb1r/1b3p1p/ppn1p1p1/3n1N2/8/2P5/PP3PPP/RNBQRBK1 w kq - 0 12", "g4_21", ["g4_23"], "g6", "g6", "g7", "g6", true], "g4_23": ["r2qkb1r/1b3p1p/ppn1p1p1/3n4/8/2P1N3/PP3PPP/RNBQRBK1 b kq - 1 12", "g4_22", ["g4_24"], "Ne3", "♘e3", "f5", "e3", true], "g4_24": ["r2qkb1r/1b3p1p/ppn1pnp1/8/8/2P1N3/PP3PPP/RNBQRBK1 w kq - 2 13", "g4_23", ["g4_25"], "Nf6", "♘f6", "d5", "f6", true], "g4_25": ["r2qkb1r/1b3p1p/ppn1pnp1/8/P7/2P1N3/1P3PPP/RNBQRBK1 b kq a3 0 13", "g4_24", ["g4_26"], "a4", "a4", "a2", "a4", true], "g4_26": ["r3kb1r/1b3p1p/ppn1pnp1/8/P7/2P1N3/1P3PPP/RNBqRBK1 w kq - 0 14", "g4_25", ["g4_27"], "Qxd1", "♕xd1", "d8", "d1", true], "g4_27": ["r3kb1r/1b3p1p/ppn1pnp1/8/P7/2P1N3/1P3PPP/RNBR1BK1 b kq - 0 14", "g4_26", ["g4_28"], "Rxd1", "♖xd1", "e1", "d1", true], "g4_28": ["r3kb1r/1b3p1p/pp2pnp1/n7/P7/2P1N3/1P3PPP/RNBR1BK1 w kq - 1 15", "g4_27", ["g4_29"], "Na5", "♘a5", "c6", "a5", true], "g4_29": ["r3kb1r/1b3p1p/pp2pnp1/n7/P7/2P1N3/1P1N1PPP/R1BR1BK1 b kq - 2 15", "g4_28", ["g4_30"], "Nd2", "♘d2", "b1", "d2", true], "g4_30": ["r3kb1r/1b3p1p/pp2p1p1/n7/P3n3/2P1N3/1P1N1PPP/R1BR1BK1 w kq - 3 16", "g4_29", ["g4_31"], "Ne4", "♘e4", "f6", "e4", true], "g4_31": ["r3kb1r/1b3p1p/pp2p1p1/n7/P1N1n3/2P5/1P1N1PPP/R1BR1BK1 b kq - 4 16", "g4_30", ["g4_32"], "Nec4", "♘ec4", "e3", "c4", true], "g4_32": ["3rkb1r/1b3p1p/pp2p1p1/n7/P1N1n3/2P5/1P1N1PPP/R1BR1BK1 w k - 5 17", "g4_31", ["g4_33"], "Rd8", "♖d8", "a8", "d8", true], "g4_33": ["3rkb1r/1b3p1p/pp2p1p1/n7/P1N1n3/2P5/1P1NBPPP/R1BR2K1 b k - 6 17", "g4_32", ["g4_34"], "Be2", "♗e2", "f1", "e2", true], "g4_34": ["3rk2r/1b3p1p/pp2p1p1/n1b5/P1N1n3/2P5/1P1NBPPP/R1BR2K1 w k - 7 18", "g4_33", ["g4_35"], "Bc5", "♗c5", "f8", "c5", true], "g4_35": ["3rk2r/1b3p1p/pp2p1p1/n1b5/P1N1N3/2P5/1P2BPPP/R1BR2K1 b k - 0 18", "g4_34", ["g4_36"], "Nxe4", "♘xe4", "d2", "e4", true], "g4_36": ["4k2r/1b3p1p/pp2p1p1/n1b5/P1N1N3/2P5/1P2BPPP/R1Br2K1 w k - 0 19", "g4_35", ["g4_37"], "Rxd1+", "♖xd1+", "d8", "d1", true], "g4_37": ["4k2r/1b3p1p/pp2p1p1/n1b5/P1N1N3/2P5/1P3PPP/R1BB2K1 b k - 0 19", "g4_36", ["g4_38"], "Bxd1", "♗xd1", "e2", "d1", true], "g4_38": ["4k2r/5p1p/pp2p1p1/n1b5/P1N1b3/2P5/1P3PPP/R1BB2K1 w k - 0 20", "g4_37", ["g4_39"], "Bxe4", "♗xe4", "b7", "e4", true], "g4_39": ["4k2r/5p1p/pp2p1p1/n1b5/P3b3/2P5/1P1N1PPP/R1BB2K1 b k - 1 20", "g4_38", ["g4_40"], "Nd2", "♘d2", "c4", "d2", true], "g4_40": ["4k2r/5p1p/pp2p1p1/n1b5/P7/2Pb4/1P1N1PPP/R1BB2K1 w k - 2 21", "g4_39", ["g4_41"], "Bd3", "♗d3", "e4", "d3", true], "g4_41": ["4k2r/5p1p/pp2p1p1/n1b5/PP6/2Pb4/3N1PPP/R1BB2K1 b k b3 0 21", "g4_40", ["g4_42"], "b4", "b4", "b2", "b4", true], "g4_42": ["7r/3k1p1p/pp2p1p1/n1b5/PP6/2Pb4/3N1PPP/R1BB2K1 w - - 1 22", "g4_41", ["g4_43"], "Kd7", "♔d7", "e8", "d7", true], "g4_43": ["7r/3k1p1p/pp2p1p1/n1P5/P7/2Pb4/3N1PPP/R1BB2K1 b - - 0 22", "g4_42", ["g4_44"], "bxc5", "bxc5", "b4", "c5", true], "g4_44": ["7r/3k1p1p/p3p1p1/n1p5/P7/2Pb4/3N1PPP/R1BB2K1 w - - 0 23", "g4_43", ["g4_45"], "bxc5", "bxc5", "b6", "c5", true], "g4_45": ["7r/3k1p1p/p3p1p1/n1p5/P7/1NPb4/5PPP/R1BB2K1 b - - 1 23", "g4_44", ["g4_46"], "Nb3", "♘b3", "d2", "b3", true], "g4_46": ["7r/3k1p1p/p3p1p1/2p5/P7/1nPb4/5PPP/R1BB2K1 w - - 0 24", "g4_45", ["g4_47"], "Nxb3", "♘xb3", "a5", "b3", true], "g4_47": ["7r/3k1p1p/p3p1p1/2p5/P7/1BPb4/5PPP/R1B3K1 b - - 0 24", "g4_46", ["g4_48"], "Bxb3", "♗xb3", "d1", "b3", true], "g4_48": ["7r/3k1p1p/p3p1p1/8/P1p5/1BPb4/5PPP/R1B3K1 w - - 0 25", "g4_47", ["g4_49"], "c4", "c4", "c5", "c4", true], "g4_49": ["7r/3k1p1p/p3p1p1/8/P1p5/2Pb4/5PPP/R1BB2K1 b - - 1 25", "g4_48", ["g4_50"], "Bd1", "♗d1", "b3", "d1", true], "g4_50": ["1r6/3k1p1p/p3p1p1/8/P1p5/2Pb4/5PPP/R1BB2K1 w - - 2 26", "g4_49", ["g4_51"], "Rb8", "♖b8", "h8", "b8", true], "g4_51": ["1r6/3k1p1p/p3p1p1/8/P1p2P2/2Pb4/6PP/R1BB2K1 b - f3 0 26", "g4_50", ["g4_52"], "f4", "f4", "f2", "f4", true], "g4_52": ["1r6/3k3p/p3ppp1/8/P1p2P2/2Pb4/6PP/R1BB2K1 w - - 0 27", "g4_51", ["g4_53"], "f6", "f6", "f7", "f6", true], "g4_53": ["1r6/3k3p/p3ppp1/P7/2p2P2/2Pb4/6PP/R1BB2K1 b - - 0 27", "g4_52", ["g4_54"], "a5", "a5", "a4", "a5", true], "g4_54": ["1r6/3k3p/p4pp1/P3p3/2p2P2/2Pb4/6PP/R1BB2K1 w - - 0 28", "g4_53", ["g4_55"], "e5", "e5", "e6", "e5", true], "g4_55": ["1r6/3k3p/p4pp1/P3P3/2p5/2Pb4/6PP/R1BB2K1 b - - 0 28", "g4_54", ["g4_56"], "fxe5", "fxe5", "f4", "e5", true], "g4_56": ["1r6/3k3p/p5p1/P3p3/2p5/2Pb4/6PP/R1BB2K1 w - - 0 29", "g4_55", ["g4_57"], "fxe5", "fxe5", "f6", "e5", true], "g4_57": ["1r6/3k3p/p5p1/P3p3/2p5/B1Pb4/6PP/R2B2K1 b - - 1 29", "g4_56", ["g4_58"], "Ba3", "♗a3", "c1", "a3", true], "g4_58": ["1r6/3k3p/p5p1/P7/2p1p3/B1Pb4/6PP/R2B2K1 w - - 0 30", "g4_57", ["g4_59"], "e4", "e4", "e5", "e4", true], "g4_59": ["1r6/3k3p/p5p1/P7/2p1p3/B1Pb4/5KPP/R2B4 b - - 1 30", "g4_58", ["g4_60"], "Kf2", "♔f2", "g1", "f2", true], "g4_60": ["1r6/7p/p3k1p1/P7/2p1p3/B1Pb4/5KPP/R2B4 w - - 2 31", "g4_59", ["g4_61"], "Ke6", "♔e6", "d7", "e6", true], "g4_61": ["1r6/7p/p3k1p1/P7/2p1p3/B1PbK3/6PP/R2B4 b - - 3 31", "g4_60", ["g4_62"], "Ke3", "♔e3", "f2", "e3", true], "g4_62": ["1r6/8/p3k1p1/P6p/2p1p3/B1PbK3/6PP/R2B4 w - h6 0 32", "g4_61", ["g4_63"], "h5", "h5", "h7", "h5", true], "g4_63": ["1r6/8/p3k1p1/P6p/B1p1p3/B1PbK3/6PP/R7 b - - 1 32", "g4_62", ["g4_64"], "Ba4", "♗a4", "d1", "a4", true], "g4_64": ["1r6/8/p5p1/P2k3p/B1p1p3/B1PbK3/6PP/R7 w - - 2 33", "g4_63", ["g4_65"], "Kd5", "♔d5", "e6", "d5", true], "g4_65": ["1r6/8/p5p1/P2k3p/BBp1p3/2PbK3/6PP/R7 b - - 3 33", "g4_64", ["g4_66"], "Bb4", "♗b4", "a3", "b4", true], "g4_66": ["1r6/8/p5p1/P2k4/BBp1p2p/2PbK3/6PP/R7 w - - 0 34", "g4_65", ["g4_67"], "h4", "h4", "h5", "h4", true], "g4_67": ["1r6/8/p5p1/P2k4/BBp1p2p/2PbK3/R5PP/8 b - - 1 34", "g4_66", ["g4_68"], "Ra2", "♖a2", "a1", "a2", true], "g4_68": ["8/1r6/p5p1/P2k4/BBp1p2p/2PbK3/R5PP/8 w - - 2 35", "g4_67", ["g4_69"], "Rb7", "♖b7", "b8", "b7", true], "g4_69": ["8/1r6/p5p1/P2k4/BBp1p2p/2PbK3/5RPP/8 b - - 3 35", "g4_68", ["g4_70"], "Rf2", "♖f2", "a2", "f2", true], "g4_70": ["8/1r6/p5p1/P2k4/BBp1p3/2PbK2p/5RPP/8 w - - 0 36", "g4_69", ["g4_71"], "h3", "h3", "h4", "h3", true], "g4_71": ["8/1r6/p5p1/P2k4/BBp1p3/2PbK1Pp/5R1P/8 b - - 0 36", "g4_70", ["g4_72"], "g3", "g3", "g2", "g3", true], "g4_72": ["8/1r6/p5p1/P3k3/BBp1p3/2PbK1Pp/5R1P/8 w - - 1 37", "g4_71", ["g4_73"], "Ke5", "♔e5", "d5", "e5", true], "g4_73": ["5R2/1r6/p5p1/P3k3/BBp1p3/2PbK1Pp/7P/8 b - - 2 37", "g4_72", ["g4_74"], "Rf8", "♖f8", "f2", "f8", true], "g4_74": ["5R2/2r5/p5p1/P3k3/BBp1p3/2PbK1Pp/7P/8 w - - 3 38", "g4_73", ["g4_75"], "Rc7", "♖c7", "b7", "c7", true], "g4_75": ["4BR2/2r5/p5p1/P3k3/1Bp1p3/2PbK1Pp/7P/8 b - - 4 38", "g4_74", ["g4_76"], "Be8", "♗e8", "a4", "e8", true], "g4_76": ["4BR2/2r5/p7/P3k1p1/1Bp1p3/2PbK1Pp/7P/8 w - - 0 39", "g4_75", ["g4_77"], "g5", "g5", "g6", "g5", true], "g4_77": ["4B3/2r2R2/p7/P3k1p1/1Bp1p3/2PbK1Pp/7P/8 b - - 1 39", "g4_76", ["g4_78"], "Rf7", "♖f7", "f8", "f7", true], "g4_78": ["4B3/5r2/p7/P3k1p1/1Bp1p3/2PbK1Pp/7P/8 w - - 0 40", "g4_77", ["g4_79"], "Rxf7", "♖xf7", "c7", "f7", true], "g4_79": ["8/5B2/p7/P3k1p1/1Bp1p3/2PbK1Pp/7P/8 b - - 0 40", "g4_78", ["g4_80"], "Bxf7", "♗xf7", "e8", "f7", true], "g4_80": ["8/5B2/p7/P3k1p1/1Bp1p3/2P1K1Pp/7P/5b2 w - - 1 41", "g4_79", ["g4_81"], "Bf1", "♗f1", "d3", "f1", true], "g4_81": ["4B3/8/p7/P3k1p1/1Bp1p3/2P1K1Pp/7P/5b2 b - - 2 41", "g4_80", ["g4_82"], "Be8", "♗e8", "f7", "e8", true], "g4_82": ["4B3/8/p7/P2k2p1/1Bp1p3/2P1K1Pp/7P/5b2 w - - 3 42", "g4_81", ["g4_83"], "Kd5", "♔d5", "e5", "d5", true], "g4_83": ["8/3B4/p7/P2k2p1/1Bp1p3/2P1K1Pp/7P/5b2 b - - 4 42", "g4_82", ["g4_84"], "Bd7", "♗d7", "e8", "d7", true], "g4_84": ["8/3B4/p7/P2k2p1/1Bp1p3/2P1K1Pp/6bP/8 w - - 5 43", "g4_83", ["g4_85"], "Bg2", "♗g2", "f1", "g2", true], "g4_85": ["2B5/8/p7/P2k2p1/1Bp1p3/2P1K1Pp/6bP/8 b - - 6 43", "g4_84", ["g4_86"], "Bc8", "♗c8", "d7", "c8", true], "g4_86": ["2B5/8/p1k5/P5p1/1Bp1p3/2P1K1Pp/6bP/8 w - - 7 44", "g4_85", ["g4_87"], "Kc6", "♔c6", "d5", "c6", true], "g4_87": ["8/8/B1k5/P5p1/1Bp1p3/2P1K1Pp/6bP/8 b - - 0 44", "g4_86", ["g4_88"], "Bxa6", "♗xa6", "c8", "a6", true], "g4_88": ["8/8/B1k5/P5p1/1Bp1p3/2P1K1Pp/7P/5b2 w - - 1 45", "g4_87", ["g4_89"], "Bf1", "♗f1", "g2", "f1", true], "g4_89": ["8/8/B1k5/P5p1/1Bp1K3/2P3Pp/7P/5b2 b - - 0 45", "g4_88", ["g4_90"], "Kxe4", "♔xe4", "e3", "e4", true], "g4_90": ["8/3k4/B7/P5p1/1Bp1K3/2P3Pp/7P/5b2 w - - 1 46", "g4_89", ["g4_91"], "Kd7", "♔d7", "c6", "d7", true], "g4_91": ["8/3k4/8/PB4p1/1Bp1K3/2P3Pp/7P/5b2 b - - 2 46", "g4_90", [], "Bb5+", "♗b5+", "a6", "b5", true], "g5_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g5_1"], "", "", "", "", true], "g5_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g5_0", ["g5_2"], "e4", "e4", "e2", "e4", true], "g5_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g5_1", ["g5_3"], "c5", "c5", "c7", "c5", true], "g5_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g5_2", ["g5_4"], "Nf3", "♘f3", "g1", "f3", true], "g5_4": ["rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3", "g5_3", ["g5_5"], "d6", "d6", "d7", "d6", true], "g5_5": ["rnbqkbnr/pp2pppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3", "g5_4", ["g5_6"], "Bb5+", "♗b5+", "f1", "b5", true], "g5_6": ["r1bqkbnr/pp1npppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 4", "g5_5", ["g5_7"], "Nd7", "♘d7", "b8", "d7", true], "g5_7": ["r1bqkbnr/pp1npppp/3p4/2p5/B3P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 4", "g5_6", ["g5_8"], "Ba4", "♗a4", "b5", "a4", true], "g5_8": ["r1bqkb1r/pp1npppp/3p1n2/2p5/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 5", "g5_7", ["g5_9"], "Nf6", "♘f6", "g8", "f6", true], "g5_9": ["r1bqkb1r/pp1npppp/3p1n2/2p5/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 5", "g5_8", ["g5_10"], "O-O", "O-O", "e1", "g1", true], "g5_10": ["r1bqkb1r/pp1n1ppp/3ppn2/2p5/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6", "g5_9", ["g5_11"], "e6", "e6", "e7", "e6", true], "g5_11": ["r1bqkb1r/pp1n1ppp/3ppn2/2p5/B1P1P3/5N2/PP1P1PPP/RNBQ1RK1 b kq c3 0 6", "g5_10", ["g5_12"], "c4", "c4", "c2", "c4", true], "g5_12": ["r1bqkb1r/pp1n1ppp/3pp3/2p5/B1P1n3/5N2/PP1P1PPP/RNBQ1RK1 w kq - 0 7", "g5_11", ["g5_13"], "Nxe4", "♘xe4", "f6", "e4", true], "g5_13": ["r1bqkb1r/pp1n1ppp/3pp3/2p5/B1P1n3/5N2/PP1P1PPP/RNBQR1K1 b kq - 1 7", "g5_12", ["g5_14"], "Re1", "♖e1", "f1", "e1", true], "g5_14": ["r1bqk2r/pp1nbppp/3pp3/2p5/B1P1n3/5N2/PP1P1PPP/RNBQR1K1 w kq - 2 8", "g5_13", ["g5_15"], "Be7", "♗e7", "f8", "e7", true], "g5_15": ["r1bqk2r/pp1nbppp/3pp3/1Bp5/2P1n3/5N2/PP1P1PPP/RNBQR1K1 b kq - 3 8", "g5_14", ["g5_16"], "Bxb5", "♗xb5", "a4", "b5", true], "g5_16": ["1rbqk2r/pp1nbppp/3pp3/1Bp5/2P1n3/5N2/PP1P1PPP/RNBQR1K1 w k - 4 9", "g5_15", ["g5_17"], "Rb8", "♖b8", "a8", "b8", true], "g5_17": ["1rbqk2r/pp1nbppp/3pp3/1Bp5/1PP1n3/5N2/P2P1PPP/RNBQR1K1 b k b3 0 9", "g5_16", ["g5_18"], "b4", "b4", "b2", "b4", true], "g5_18": ["1rbq1k1r/pp1nbppp/3pp3/1Bp5/1PP1n3/5N2/P2P1PPP/RNBQR1K1 w - - 1 10", "g5_17", ["g5_19"], "Kf8", "♔f8", "e8", "f8", true], "g5_19": ["1rbq1k1r/pp1nbppp/3pp3/1Bp5/1PP1n3/N4N2/P2P1PPP/R1BQR1K1 b - - 2 10", "g5_18", ["g5_20"], "Na3", "♘a3", "b1", "a3", true], "g5_20": ["1rbq2kr/pp1nbppp/3pp3/1Bp5/1PP1n3/N4N2/P2P1PPP/R1BQR1K1 w - - 3 11", "g5_19", ["g5_21"], "Kg8", "♔g8", "f8", "g8", true], "g5_21": ["1rbq2kr/pp1nbppp/3pp3/1BP5/2P1n3/N4N2/P2P1PPP/R1BQR1K1 b - - 0 11", "g5_20", ["g5_22"], "bxc5", "bxc5", "b4", "c5", true], "g5_22": ["1rbq2kr/pp1nbpp1/3pp2p/1BP5/2P1n3/N4N2/P2P1PPP/R1BQR1K1 w - - 0 12", "g5_21", ["g5_23"], "h6", "h6", "h7", "h6", true], "g5_23": ["1rbq2kr/pp1nbpp1/3Pp2p/1B6/2P1n3/N4N2/P2P1PPP/R1BQR1K1 b - - 0 12", "g5_22", ["g5_24"], "cxd6", "cxd6", "c5", "d6", true], "g5_24": ["1rbq2k1/pp1nbppr/3Pp2p/1B6/2P1n3/N4N2/P2P1PPP/R1BQR1K1 w - - 1 13", "g5_23", ["g5_25"], "Rh7", "♖h7", "h8", "h7", true], "g5_25": ["1rbq2k1/pp1nbppr/3Pp2p/1B6/2P1n3/N4N1P/P2P1PP1/R1BQR1K1 b - - 0 13", "g5_24", ["g5_26"], "h3", "h3", "h2", "h3", true], "g5_26": ["1rbq2k1/pp1n1ppr/3Ppb1p/1B6/2P1n3/N4N1P/P2P1PP1/R1BQR1K1 w - - 1 14", "g5_25", [], "Bxf6", "♗xf6", "e7", "f6", true], "g6_0": ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", null, ["g6_1"], "", "", "", "", true], "g6_1": ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "g6_0", ["g6_2"], "e4", "e4", "e2", "e4", true], "g6_2": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2", "g6_1", ["g6_3"], "c5", "c5", "c7", "c5", true], "g6_3": ["rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2", "g6_2", ["g6_4"], "Nf3", "♘f3", "g1", "f3", true], "g6_4": ["r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "g6_3", ["g6_5"], "Nc6", "♘c6", "b8", "c6", true], "g6_5": ["r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "g6_4", ["g6_6"], "Bb5", "♗b5", "f1", "b5", true], "g6_6": ["r1bqkbnr/pp1p1ppp/2n1p3/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4", "g6_5", ["g6_7"], "e6", "e6", "e7", "e6", true], "g6_7": ["r1bqkbnr/pp1p1ppp/2B1p3/2p5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4", "g6_6", ["g6_8"], "Bxc6", "♗xc6", "b5", "c6", true], "g6_8": ["r1bqkbnr/p2p1ppp/2p1p3/2p5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5", "g6_7", ["g6_9"], "bxc6", "bxc6", "b7", "c6", true], "g6_9": ["r1bqkbnr/p2p1ppp/2p1p3/2p5/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 5", "g6_8", ["g6_10"], "d3", "d3", "d2", "d3", true], "g6_10": ["r1bqkb1r/p2pnppp/2p1p3/2p5/4P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 1 6", "g6_9", ["g6_11"], "Ne7", "♘e7", "g8", "e7", true], "g6_11": ["r1bqkb1r/p2pnppp/2p1p3/2p5/4P3/1P1P1N2/P1P2PPP/RNBQK2R b KQkq - 0 6", "g6_10", ["g6_12"], "b3", "b3", "b2", "b3", true], "g6_12": ["r1bqkb1r/p3nppp/2ppp3/2p5/4P3/1P1P1N2/P1P2PPP/RNBQK2R w KQkq - 0 7", "g6_11", ["g6_13"], "d6", "d6", "d7", "d6", true], "g6_13": ["r1bqkb1r/p3nppp/2ppp3/2p1P3/8/1P1P1N2/P1P2PPP/RNBQK2R b KQkq - 0 7", "g6_12", ["g6_14"], "e5", "e5", "e4", "e5", true], "g6_14": ["r1bqkb1r/p4ppp/2ppp3/2p1Pn2/8/1P1P1N2/P1P2PPP/RNBQK2R w KQkq - 1 8", "g6_13", ["g6_15"], "Nf5", "♘f5", "e7", "f5", true], "g6_15": ["r1bqkb1r/p4ppp/2ppp3/2p1Pn2/8/1P1P1N2/PBP2PPP/RN1QK2R b KQkq - 2 8", "g6_14", ["g6_16"], "Bb2", "♗b2", "c1", "b2", true], "g6_16": ["r1bqkb1r/p4ppp/2p1p3/2ppPn2/8/1P1P1N2/PBP2PPP/RN1QK2R w KQkq - 0 9", "g6_15", ["g6_17"], "d5", "d5", "d6", "d5", true], "g6_17": ["r1bqkb1r/p4ppp/2p1p3/2ppPn2/2P5/1P1P1N2/PB3PPP/RN1QK2R b KQkq c3 0 9", "g6_16", ["g6_18"], "c4", "c4", "c2", "c4", true], "g6_18": ["r1b1kb1r/p4ppp/2p1p3/q1ppPn2/2P5/1P1P1N2/PB3PPP/RN1QK2R w KQkq - 1 10", "g6_17", ["g6_19"], "Qa5+", "♕a5+", "d8", "a5", true], "g6_19": ["r1b1kb1r/p4ppp/2p1p3/q1ppPn2/2P5/1P1P1N2/PB3PPP/RN1Q1K1R b kq - 2 10", "g6_18", ["g6_20"], "Kf1", "♔f1", "e1", "f1", true], "g6_20": ["r1b1k2r/p3bppp/2p1p3/q1ppPn2/2P5/1P1P1N2/PB3PPP/RN1Q1K1R w kq - 3 11", "g6_19", ["g6_21"], "Be7", "♗e7", "f8", "e7", true], "g6_21": ["r1b1k2r/p3bppp/2p1p3/q1ppPn2/2P5/1PNP1N2/PB3PPP/R2Q1K1R b kq - 4 11", "g6_20", ["g6_22"], "Nc3", "♘c3", "b1", "c3", true], "g6_22": ["r1b2rk1/p3bppp/2p1p3/q1ppPn2/2P5/1PNP1N2/PB3PPP/R2Q1K1R w - - 5 12", "g6_21", ["g6_23"], "O-O", "O-O", "e8", "g8", true], "g6_23": ["r1b2rk1/p3bppp/2p1p3/q1ppPn2/2P5/1PNP1N2/PB1Q1PPP/R4K1R b - - 6 12", "g6_22", ["g6_24"], "Qd2", "♕d2", "d1", "d2", true], "g6_24": ["r1b2rk1/p1q1bppp/2p1p3/2ppPn2/2P5/1PNP1N2/PB1Q1PPP/R4K1R w - - 7 13", "g6_23", ["g6_25"], "Qc7", "♕c7", "a5", "c7", true], "g6_25": ["r1b2rk1/p1q1bppp/2p1p3/2ppPn2/N1P5/1P1P1N2/PB1Q1PPP/R4K1R b - - 8 13", "g6_24", ["g6_26"], "Na4", "♘a4", "c3", "a4", true], "g6_26": ["r1b2rk1/p1q1bppp/2p1p3/2ppP3/N1Pn4/1P1P1N2/PB1Q1PPP/R4K1R w - - 9 14", "g6_25", ["g6_27"], "Nd4", "♘d4", "f5", "d4", true], "g6_27": ["r1b2rk1/p1q1bppp/2p1p3/2ppP3/N1Pn4/1P1P1N2/PB1Q1PPP/4RK1R b - - 10 14", "g6_26", ["g6_28"], "Re1", "♖e1", "a1", "e1", true], "g6_28": ["r4rk1/p1q1bppp/b1p1p3/2ppP3/N1Pn4/1P1P1N2/PB1Q1PPP/4RK1R w - - 11 15", "g6_27", ["g6_29"], "Ba6", "♗a6", "c8", "a6", true], "g6_29": ["r4rk1/p1q1bppp/b1p1p3/2ppP3/N1Pn4/1PBP1N2/P2Q1PPP/4RK1R b - - 12 15", "g6_28", ["g6_30"], "Bc3", "♗c3", "b2", "c3", true], "g6_30": ["4rrk1/p1q1bppp/b1p1p3/2ppP3/N1Pn4/1PBP1N2/P2Q1PPP/4RK1R w - - 13 16", "g6_29", ["g6_31"], "Rae8", "♖ae8", "a8", "e8", true], "g6_31": ["4rrk1/p1q1bppp/b1p1p3/2ppP3/N1Pn1Q2/1PBP1N2/P4PPP/4RK1R b - - 14 16", "g6_30", ["g6_32"], "Qf4", "♕f4", "d2", "f4", true], "g6_32": ["4rrk1/p1q1bppp/b1p1p3/2ppP3/N1P2Q2/1PBP1N2/P1n2PPP/4RK1R w - - 15 17", "g6_31", ["g6_33"], "Nc2", "♘c2", "d4", "c2", true], "g6_33": ["4rrk1/p1q1bppp/b1p1p3/2ppP3/N1P2Q2/1PBP1N2/P1n2PPP/2R2K1R b - - 16 17", "g6_32", ["g6_34"], "Rc1", "♖c1", "e1", "c1", true], "g6_34": ["4rrk1/p1q1bppp/b1p1p3/2ppP3/NnP2Q2/1PBP1N2/P4PPP/2R2K1R w - - 17 18", "g6_33", ["g6_35"], "Nb4", "♘b4", "c2", "b4", true], "g6_35": ["4rrk1/p1q1bppp/b1p1p3/2ppP3/NBP2Q2/1P1P1N2/P4PPP/2R2K1R b - - 0 18", "g6_34", ["g6_36"], "Bxb4", "♗xb4", "c3", "b4", true], "g6_36": ["4rrk1/p1q1bppp/b1p1p3/3pP3/NpP2Q2/1P1P1N2/P4PPP/2R2K1R w - - 0 19", "g6_35", ["g6_37"], "cxb4", "cxb4", "c5", "b4", true], "g6_37": ["4rrk1/p1q1bppp/b1p1p3/3pP3/NpP3Q1/1P1P1N2/P4PPP/2R2K1R b - - 1 19", "g6_36", ["g6_38"], "Qg4", "♕g4", "f4", "g4", true], "g6_38": ["3r1rk1/p1q1bppp/b1p1p3/3pP3/NpP3Q1/1P1P1N2/P4PPP/2R2K1R w - - 2 20", "g6_37", ["g6_39"], "Rd8", "♖d8", "e8", "d8", true], "g6_39": ["3r1rk1/p1q1bppp/b1p1p3/3pP3/NpP3Q1/1P1P1N2/P3KPPP/2R4R b - - 3 20", "g6_38", ["g6_40"], "Ke2", "♔e2", "f1", "e2", true], "g6_40": ["3r1rk1/p1q1bppp/b3p3/2ppP3/NpP3Q1/1P1P1N2/P3KPPP/2R4R w - - 0 21", "g6_39", ["g6_41"], "c5", "c5", "c6", "c5", true], "g6_41": ["3r1rk1/p1q1bppp/b3p3/2ppP3/NpP3Q1/1P1P1N2/P3KPPP/2R1R3 b - - 1 21", "g6_40", ["g6_42"], "Rhe1", "♖he1", "h1", "e1", true], "g6_42": ["3r1rk1/pbq1bppp/4p3/2ppP3/NpP3Q1/1P1P1N2/P3KPPP/2R1R3 w - - 2 22", "g6_41", ["g6_43"], "Bb7", "♗b7", "a6", "b7", true], "g6_43": ["3r1rk1/pbq1bppp/4p3/2ppP3/NpP3Q1/1P1P1N2/P4PPP/2R1RK2 b - - 3 22", "g6_42", ["g6_44"], "Kf1", "♔f1", "e2", "f1", true], "g6_44": ["3r1rk1/pbq1bppp/4p3/2p1P3/Npp3Q1/1P1P1N2/P4PPP/2R1RK2 w - - 0 23", "g6_43", ["g6_45"], "dxc4", "dxc4", "d5", "c4", true], "g6_45": ["3r1rk1/pbq1bppp/4p3/2p1P3/NpQ5/1P1P1N2/P4PPP/2R1RK2 b - - 0 23", "g6_44", ["g6_46"], "Qxc4", "♕xc4", "g4", "c4", true], "g6_46": ["2r2rk1/pbq1bppp/4p3/2p1P3/NpQ5/1P1P1N2/P4PPP/2R1RK2 w - - 1 24", "g6_45", ["g6_47"], "Rc8", "♖c8", "d8", "c8", true], "g6_47": ["2r2rk1/pbq1bppp/4p3/2p1P3/NpQ5/1P1P1N2/P4PPP/2R1R1K1 b - - 2 24", "g6_46", ["g6_48"], "Kg1", "♔g1", "f1", "g1", true], "g6_48": ["2r2rk1/pb2bppp/4p3/q1p1P3/NpQ5/1P1P1N2/P4PPP/2R1R1K1 w - - 3 25", "g6_47", ["g6_49"], "Qa5", "♕a5", "c7", "a5", true], "g6_49": ["2r2rk1/pb2bppp/4p3/q1p1P3/Np6/1P1P1N2/P1Q2PPP/2R1R1K1 b - - 4 25", "g6_48", ["g6_50"], "Qc2", "♕c2", "c4", "c2", true], "g6_50": ["2r2rk1/p3bppp/4p3/q1p1P3/Np6/1P1P1b2/P1Q2PPP/2R1R1K1 w - - 0 26", "g6_49", ["g6_51"], "Bxf3", "♗xf3", "b7", "f3", true], "g6_51": ["2r2rk1/p3bppp/4p3/q1p1P3/Np6/1P1P1P2/P1Q2P1P/2R1R1K1 b - - 0 26", "g6_50", ["g6_52"], "gxf3", "gxf3", "g2", "f3", true], "g6_52": ["2rr2k1/p3bppp/4p3/q1p1P3/Np6/1P1P1P2/P1Q2P1P/2R1R1K1 w - - 1 27", "g6_51", ["g6_53"], "Rfd8", "♖fd8", "f8", "d8", true], "g6_53": ["2rr2k1/p3bppp/4p3/q1p1P3/Np2R3/1P1P1P2/P1Q2P1P/2R3K1 b - - 2 27", "g6_52", ["g6_54"], "Re4", "♖e4", "e1", "e4", true], "g6_54": ["1r1r2k1/p3bppp/4p3/q1p1P3/Np2R3/1P1P1P2/P1Q2P1P/2R3K1 w - - 3 28", "g6_53", ["g6_55"], "Rb8", "♖b8", "c8", "b8", true], "g6_55": ["1r1r2k1/p3bppp/4p3/q1N1P3/1p2R3/1P1P1P2/P1Q2P1P/2R3K1 b - - 0 28", "g6_54", ["g6_56"], "Nxc5", "♘xc5", "a4", "c5", true], "g6_56": ["1r4k1/p3bppp/4p3/q1NrP3/1p2R3/1P1P1P2/P1Q2P1P/2R3K1 w - - 1 29", "g6_55", ["g6_57"], "Rd5", "♖d5", "d8", "d5", true], "g6_57": ["1r4k1/p3bppp/4p3/q1NrP3/1pR5/1P1P1P2/P1Q2P1P/2R3K1 b - - 2 29", "g6_56", ["g6_58"], "Rc4", "♖c4", "e4", "c4", true], "g6_58": ["1r4k1/p3bppp/4p3/q1N1r3/1pR5/1P1P1P2/P1Q2P1P/2R3K1 w - - 0 30", "g6_57", ["g6_59"], "Rxe5", "♖xe5", "d5", "e5", true], "g6_59": ["1r4k1/p2Nbppp/4p3/q3r3/1pR5/1P1P1P2/P1Q2P1P/2R3K1 b - - 1 30", "g6_58", ["g6_60"], "Nd7", "♘d7", "c5", "d7", true], "g6_60": ["1r4k1/p2Nbppp/4p3/q5r1/1pR5/1P1P1P2/P1Q2P1P/2R3K1 w - - 2 31", "g6_59", ["g6_61"], "Rg5+", "♖g5+", "e5", "g5", true], "g6_61": ["1r4k1/p2Nbppp/4p3/q5r1/1pR5/1P1P1P2/P1Q2P1P/2R2K2 b - - 3 31", "g6_60", ["g6_62"], "Kf1", "♔f1", "g1", "f1", true], "g6_62": ["3r2k1/p2Nbppp/4p3/q5r1/1pR5/1P1P1P2/P1Q2P1P/2R2K2 w - - 4 32", "g6_61", ["g6_63"], "Rd8", "♖d8", "b8", "d8", true], "g6_63": ["2Rr2k1/p2Nbppp/4p3/q5r1/1p6/1P1P1P2/P1Q2P1P/2R2K2 b - - 5 32", "g6_62", ["g6_64"], "Rc8", "♖c8", "c4", "c8", true], "g6_64": ["2Rr2k1/p2Nbppp/4p3/3q2r1/1p6/1P1P1P2/P1Q2P1P/2R2K2 w - - 6 33", "g6_63", ["g6_65"], "Qd5", "♕d5", "a5", "d5", true], "g6_65": ["2Rr2k1/p2Nbppp/4p3/3q2r1/1p3P2/1P1P4/P1Q2P1P/2R2K2 b - - 0 33", "g6_64", ["g6_66"], "f4", "f4", "f3", "f4", true], "g6_66": ["2Rr2k1/p2Nbppp/4p3/3q4/1p3Pr1/1P1P4/P1Q2P1P/2R2K2 w - - 1 34", "g6_65", ["g6_67"], "Rg4", "♖g4", "g5", "g4", true], "g6_67": ["2Rr2k1/p3bppp/4p3/3qN3/1p3Pr1/1P1P4/P1Q2P1P/2R2K2 b - - 2 34", "g6_66", ["g6_68"], "Ne5", "♘e5", "d7", "e5", true], "g6_68": ["2Rr2k1/p3bppp/4p3/4N3/1p3Pr1/1P1P4/P1Q2PqP/2R2K2 w - - 3 35", "g6_67", ["g6_69"], "Qg2+", "♕g2+", "d5", "g2", true], "g6_69": ["2Rr2k1/p3bppp/4p3/4N3/1p3Pr1/1P1P4/P1Q1KPqP/2R5 b - - 4 35", "g6_68", ["g6_70"], "Ke2", "♔e2", "f1", "e2", true], "g6_70": ["2Rr2k1/p3bppp/4p3/4N3/1p3r2/1P1P4/P1Q1KPqP/2R5 w - - 0 36", "g6_69", ["g6_71"], "Rxf4", "♖xf4", "g4", "f4", true], "g6_71": ["3R2k1/p3bppp/4p3/4N3/1p3r2/1P1P4/P1Q1KPqP/2R5 b - - 0 36", "g6_70", ["g6_72"], "Rxd8+", "♖xd8+", "c8", "d8", true], "g6_72": ["3b2k1/p4ppp/4p3/4N3/1p3r2/1P1P4/P1Q1KPqP/2R5 w - - 0 37", "g6_71", ["g6_73"], "Bxd8", "♗xd8", "e7", "d8", true], "g6_73": ["3b2k1/p4ppp/4p3/2Q1N3/1p3r2/1P1P4/P3KPqP/2R5 b - - 1 37", "g6_72", ["g6_74"], "Qc5", "♕c5", "c2", "c5", true], "g6_74": ["3b2k1/p4pp1/4p2p/2Q1N3/1p3r2/1P1P4/P3KPqP/2R5 w - - 0 38", "g6_73", ["g6_75"], "h6", "h6", "h7", "h6", true], "g6_75": ["3b2k1/p4pp1/4p2p/4N3/1p3r2/1P1PQ3/P3KPqP/2R5 b - - 1 38", "g6_74", ["g6_76"], "Qe3", "♕e3", "c5", "e3", true], "g6_76": ["6k1/p4pp1/4p2p/4N1b1/1p3r2/1P1PQ3/P3KPqP/2R5 w - - 2 39", "g6_75", ["g6_77"], "Bg5", "♗g5", "d8", "g5", true], "g6_77": ["6k1/p4pp1/4p2p/4N1b1/1p3r2/1P1P2Q1/P3KPqP/2R5 b - - 3 39", "g6_76", ["g6_78"], "Qg3", "♕g3", "e3", "g3", true], "g6_78": ["6k1/p4pp1/4p2p/4N1b1/1p2r3/1P1P2Q1/P3KPqP/2R5 w - - 4 40", "g6_77", ["g6_79"], "Re4+", "♖e4+", "f4", "e4", true], "g6_79": ["6k1/p4pp1/4p2p/4N1b1/1p2P3/1P4Q1/P3KPqP/2R5 b - - 0 40", "g6_78", ["g6_80"], "dxe4", "dxe4", "d3", "e4", true], "g6_80": ["6k1/p4pp1/4p2p/4N1b1/1p2q3/1P4Q1/P3KP1P/2R5 w - - 0 41", "g6_79", ["g6_81"], "Qxe4+", "♕xe4+", "g2", "e4", true], "g6_81": ["6k1/p4pp1/4p2p/4N1b1/1p2q3/1P4Q1/P4P1P/2R2K2 b - - 1 41", "g6_80", ["g6_82"], "Kf1", "♔f1", "e2", "f1", true], "g6_82": ["6k1/p4pp1/4p2p/4N3/1p2q3/1P4Q1/P4P1P/2b2K2 w - - 0 42", "g6_81", ["g6_83"], "Bxc1", "♗xc1", "g5", "c1", true], "g6_83": ["6k1/p4pp1/4p2p/8/1p2q3/1P1N2Q1/P4P1P/2b2K2 b - - 1 42", "g6_82", ["g6_84"], "Nd3", "♘d3", "e5", "d3", true], "g6_84": ["6k1/p4pp1/4p2p/6b1/1p2q3/1P1N2Q1/P4P1P/5K2 w - - 2 43", "g6_83", ["g6_85"], "Bg5", "♗g5", "c1", "g5", true], "g6_85": ["6k1/p4pp1/3Qp2p/6b1/1p2q3/1P1N4/P4P1P/5K2 b - - 3 43", "g6_84", ["g6_86"], "Qd6", "♕d6", "g3", "d6", true], "g6_86": ["6k1/p3bpp1/3Qp2p/8/1p2q3/1P1N4/P4P1P/5K2 w - - 4 44", "g6_85", ["g6_87"], "Be7", "♗e7", "g5", "e7", true], "g6_87": ["1Q4k1/p3bpp1/4p2p/8/1p2q3/1P1N4/P4P1P/5K2 b - - 5 44", "g6_86", ["g6_88"], "Qb8+", "♕b8+", "d6", "b8", true], "g6_88": ["1Q6/p3bppk/4p2p/8/1p2q3/1P1N4/P4P1P/5K2 w - - 6 45", "g6_87", ["g6_89"], "Kh7", "♔h7", "g8", "h7", true], "g6_89": ["8/p3bppk/4p2p/1Q6/1p2q3/1P1N4/P4P1P/5K2 b - - 7 45", "g6_88", ["g6_90"], "Qb5", "♕b5", "b8", "b5", true], "g6_90": ["8/p4ppk/3bp2p/1Q6/1p2q3/1P1N4/P4P1P/5K2 w - - 8 46", "g6_89", ["g6_91"], "Bd6", "♗d6", "e7", "d6", true], "g6_91": ["8/p4ppk/3bp2p/8/1pQ1q3/1P1N4/P4P1P/5K2 b - - 9 46", "g6_90", ["g6_92"], "Qc4", "♕c4", "b5", "c4", true], "g6_92": ["8/p4ppk/3bp2p/8/1pQ5/1P1N4/P4P1P/5K1q w - - 10 47", "g6_91", ["g6_93"], "Qh1+", "♕h1+", "e4", "h1", true], "g6_93": ["8/p4ppk/3bp2p/8/1pQ5/1P1N4/P3KP1P/7q b - - 11 47", "g6_92", ["g6_94"], "Ke2", "♔e2", "f1", "e2", true], "g6_94": ["8/p4ppk/3bp2p/8/1pQ5/1P1N4/P3KP1q/8 w - - 0 48", "g6_93", ["g6_95"], "Qxh2", "♕xh2", "h1", "h2", true], "g6_95": ["8/p4ppk/3bp2p/8/1p2Q3/1P1N4/P3KP1q/8 b - - 1 48", "g6_94", ["g6_96"], "Qe4+", "♕e4+", "c4", "e4", true], "g6_96": ["8/p4p1k/3bp1pp/8/1p2Q3/1P1N4/P3KP1q/8 w - - 0 49", "g6_95", ["g6_97"], "g6", "g6", "g7", "g6", true], "g6_97": ["8/pQ3p1k/3bp1pp/8/1p6/1P1N4/P3KP1q/8 b - - 1 49", "g6_96", ["g6_98"], "Qb7", "♕b7", "e4", "b7", true], "g6_98": ["8/pQ3p1k/3bp1pp/7q/1p6/1P1N4/P3KP2/8 w - - 2 50", "g6_97", ["g6_99"], "Qh5+", "♕h5+", "h2", "h5", true], "g6_99": ["8/pQ3p1k/3bp1pp/7q/1p6/1P1N1P2/P3K3/8 b - - 0 50", "g6_98", ["g6_100"], "f3", "f3", "f2", "f3", true], "g6_100": ["8/pQ3p1k/3bp1pp/8/1p6/1P1N1P2/P3K2q/8 w - - 1 51", "g6_99", ["g6_101"], "Qh2+", "♕h2+", "h5", "h2", true], "g6_101": ["8/pQ3p1k/3bp1pp/8/1p6/1P1N1P2/P6q/3K4 b - - 2 51", "g6_100", ["g6_102"], "Kd1", "♔d1", "e2", "d1", true], "g6_102": ["8/pQ3p1k/3bp1pp/8/1p6/1P1N1P2/P7/3K2q1 w - - 3 52", "g6_101", ["g6_103"], "Qg1+", "♕g1+", "h2", "g1", true], "g6_103": ["8/pQ3p1k/3bp1pp/8/1p6/1P1N1P2/P2K4/6q1 b - - 4 52", "g6_102", ["g6_104"], "Kd2", "♔d2", "d1", "d2", true], "g6_104": ["8/pQ3p1k/3bp1pp/6q1/1p6/1P1N1P2/P2K4/8 w - - 5 53", "g6_103", ["g6_105"], "Qg5+", "♕g5+", "g1", "g5", true], "g6_105": ["8/pQ3p1k/3bp1pp/6q1/1p6/1P1N1P2/P3K3/8 b - - 6 53", "g6_104", ["g6_106"], "Ke2", "♔e2", "d2", "e2", true], "g6_106": ["8/pQ2qp1k/3bp1pp/8/1p6/1P1N1P2/P3K3/8 w - - 7 54", "g6_105", [], "Qe7", "♕e7", "g5", "e7", true]};
 const GAME_ROOTS = ["g0_0", "g1_0", "g2_0", "g3_0", "g4_0", "g5_0", "g6_0"];
 function adjFs(d){var r=document.documentElement,fs=parseFloat(getComputedStyle(r).getPropertyValue('--fs')||'21');r.style.setProperty('--fs',(fs+d*1.5)+'px');try{localStorage.setItem('gw_fs',fs+d*1.5)}catch(e){}}

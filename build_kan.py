@@ -660,6 +660,9 @@ def build_html(pgn_file, out_html, template_file, settings):
 </aside>
 </div>
 <script>
+{script_before}
+</script>
+<script>
 const NODES = {nodes_json};
 const GAME_ROOTS = {roots_json};
 function adjFs(d){{var r=document.documentElement,fs=parseFloat(getComputedStyle(r).getPropertyValue('--fs')||'21');r.style.setProperty('--fs',(fs+d*1.5)+'px');try{{localStorage.setItem('gw_fs',fs+d*1.5)}}catch(e){{}}}}
