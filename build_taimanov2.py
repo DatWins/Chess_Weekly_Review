@@ -491,7 +491,21 @@ def extract_template_parts(html):
     for s in scripts:
         if 'function ChessGame' in s or 'Chess.js' in s or 'var Chess' in s or 'this.load' in s:
             chess_js_found = True
+            if not script_before:
+                script_before = s
+            continue
         if 'const NODES' in s:
+            # Strip the NODES/GAME_ROOTS data, keep the renderer code that follows
+            # The renderer starts after the last const GAME_ROOTS = ...; line
+            m = re.search(r'const GAME_ROOTS\s*=\s*\[.*?\];', s, re.DOTALL)
+            if m:
+                renderer_part = s[m.end():].strip()
+            else:
+                # Fallback: strip everything before the first (function(){ block
+                m2 = re.search(r'\(function\(\)', s)
+                renderer_part = s[m2.start():].strip() if m2 else ''
+            if renderer_part:
+                script_after = renderer_part
             continue
         if 'addEventListener' in s or 'goNode' in s or 'renderBoard' in s or 'bStart' in s:
             script_after = s
@@ -572,7 +586,7 @@ def build_html(pgn_file, out_html, template_file, settings):
         if date_str and date_str not in event_str:
             gamehead += f'\n<div>{date_str}</div>'
 
-        section = f'''<h2>{heading}</h2>
+        section = f'''<h2 id="game{gi+1}">{heading}</h2>
 <div class="gamehead">{gamehead}</div>
 <p class="ml">{ml_html}</p>
 <p>{narrative}</p>
@@ -590,6 +604,12 @@ def build_html(pgn_file, out_html, template_file, settings):
     byline = settings['ARTICLE_BYLINE']
     intro = settings['ARTICLE_INTRO']
 
+    # Build TOC links from game summaries
+    toc_links = ''
+    for gi, summary in enumerate(settings['GAME_SUMMARIES']):
+        heading = summary[0]
+        toc_links += f'<a id="toc-game{gi+1}" onclick="goTo(\'game{gi+1}\')">{gi+1}. {heading}</a>\n'
+
     html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -599,7 +619,18 @@ def build_html(pgn_file, out_html, template_file, settings):
 <style>{style}</style>
 </head>
 <body>
-<nav class="sitenav"><a href="../../index.html">← Chess Weekly Review</a></nav>
+<div class="top">
+  <a class="lib" href="../../index.html">◂ Library</a>
+  <span class="t">{page_title}</span>
+  <button onclick="adjFs(-1)" title="Smaller text">A−</button>
+  <button onclick="adjFs(1)" title="Larger text">A+</button>
+  <button id="dkbtn" onclick="toggleDark()">Dark</button>
+</div>
+<div class="wrap">
+<nav class="toc" id="toc">
+  <div class="h">Contents</div>
+  {toc_links}
+</nav>
 <main id="main">
 <article>
 <header class="art-head" id="top">
@@ -629,9 +660,13 @@ def build_html(pgn_file, out_html, template_file, settings):
   <div class="msg" id="msg"></div>
   <div class="path" id="path"></div>
 </aside>
+</div>
 <script>
 const NODES = {nodes_json};
 const GAME_ROOTS = {roots_json};
+function adjFs(d){{var r=document.documentElement,fs=parseFloat(getComputedStyle(r).getPropertyValue('--fs')||'21');r.style.setProperty('--fs',(fs+d*1.5)+'px');try{{localStorage.setItem('gw_fs',fs+d*1.5)}}catch(e){{}}}}
+function toggleDark(){{document.body.classList.toggle('dark');var dk=document.body.classList.contains('dark');document.getElementById('dkbtn').textContent=dk?'Light':'Dark';try{{localStorage.setItem('gw_dk',dk?'1':'0')}}catch(e){{}}}}
+(function(){{try{{var fs=localStorage.getItem('gw_fs');if(fs)document.documentElement.style.setProperty('--fs',fs+'px');var dk=localStorage.getItem('gw_dk');if(dk==='1'){{document.body.classList.add('dark');var b=document.getElementById('dkbtn');if(b)b.textContent='Light';}}}}catch(e){{}}}})();
 {script_after}
 </script>
 </body>
