@@ -64,6 +64,60 @@ CONFIGS = {
              'thematic kingside attack that breaks through decisively.'),
         ],
     },
+    'taimanov': {
+        'pgn_file':   'issues/twic1668_taimanov/twic1668_taimanov.pgn',
+        'out_epub':   'issues/twic1668_taimanov/twic1668_taimanov.epub',
+        'uid':        'twic1668-taimanov',
+        'title':      'TWIC 1668 — Taimanov Sicilian: Seven Key Games',
+        'subtitle':   'The Flexible Taimanov',
+        'hed':        'Seven games from the 41st European Club Championship and Titled Tuesday, October 2026',
+        'date':       '2026-10-26',
+        'twic_num':   'TWIC 1668',
+        'games': [
+            ('Boci,Mateu – Hracek,Z',
+             'B46 · Sicilian Taimanov · 0–1',
+             '5…a6 Taimanov with …Qc7 and …d5',
+             'Hracek steers into a sharp IQP battle. After White\'s kingside sortie '
+             'with f4-f5 fails to break through, Black emerges with a passed d-pawn '
+             'and converts methodically in the rook endgame.'),
+            ('Ivanytska,Liudmyla – Matlakov,M',
+             'B46 · Sicilian Taimanov · 0–1',
+             '5…a6 6.a3 Qc7 with …b5',
+             'Matlakov allows the g4-g5 thrust and then sacrifices on e3 to tear open '
+             'the kingside. After a stunning queen infiltration, White\'s defence collapses '
+             'in a game that lasts nearly 100 moves.'),
+            ('Salemgareev,Tagir – Matlakov,M',
+             'B46 · Sicilian Taimanov · 0–1',
+             '5…a6 6.Nxc6 bxc6 with …d5',
+             'Matlakov equalises with the …d5 break and then outplays his opponent in '
+             'a technical endgame, using active rooks to create a decisive passed pawn '
+             'on the queenside.'),
+            ('Lyakh,Vasiliy – Canli,Ismail Berk',
+             'B46 · Sicilian Taimanov · 1–0',
+             '5…a6 — piece activity vs pawn structure',
+             'White gains the bishop pair and exploits weaknesses on both wings. '
+             'Canli\'s queenside play comes too late, and Lyakh converts a '
+             'technically clean endgame.'),
+            ('Belov,Alexe – Salemgareev,Tagir',
+             'B46 · Sicilian Taimanov · 1–0',
+             '5…a6 — central control and attack',
+             'Belov maintains a space advantage throughout and launches a '
+             'timely kingside attack. The resulting tactics favour White, who '
+             'converts with precise piece coordination.'),
+            ('Sahib,Singh – Matlakov,M',
+             'B46 · Sicilian Taimanov · 0–1',
+             '5…a6 — GM technique on display',
+             'Matlakov demonstrates his mastery of the Taimanov for the third time '
+             'this week, calmly navigating the middlegame and outplaying his opponent '
+             'in a rook-and-pawn endgame.'),
+            ('Alaghehmand,Arshia – Movahed,Sina',
+             'B46 · Sicilian Taimanov · 0–1',
+             '5…a6 — dynamic play for Black',
+             'Movahed generates queenside counterplay in the typical Taimanov fashion. '
+             'As White overextends, Black\'s pieces become dominant and the game '
+             'is decided by a strong knight outpost.'),
+        ],
+    },
     'kan': {
         'pgn_file':   'issues/twic1667_kan/twic1667_kan.pgn',
         'out_epub':   'issues/twic1667_kan/twic1667_kan.epub',
