@@ -194,13 +194,13 @@ main p b a.mv,main p b{color:var(--main);font-weight:700}figure.pic{margin:1.4em
 <nav class="toc">
   <h2>Games</h2>
   <ol>
-    <li><a href="#game1">Boci,Mateu – Hracek,Z (0-1)</a></li>
-    <li><a href="#game2">Ivanytska,Liudmyla – Matlakov,M (0-1)</a></li>
-    <li><a href="#game3">Salemgareev,Tagir – Matlakov,M (0-1)</a></li>
-    <li><a href="#game4">Lyakh,Vasiliy – Canli,Ismail Berk (1-0)</a></li>
-    <li><a href="#game5">Belov,Alexe – Salemgareev,Tagir (1-0)</a></li>
-    <li><a href="#game6">Sahib,Singh – Matlakov,M (0-1)</a></li>
-    <li><a href="#game7">Alaghehmand,Arshia – Movahed,Sina (0-1)</a></li>
+    <li><a href="#game1" data-t="game1">Boci,Mateu – Hracek,Z (0-1)</a></li>
+    <li><a href="#game2" data-t="game2">Ivanytska,Liudmyla – Matlakov,M (0-1)</a></li>
+    <li><a href="#game3" data-t="game3">Salemgareev,Tagir – Matlakov,M (0-1)</a></li>
+    <li><a href="#game4" data-t="game4">Lyakh,Vasiliy – Canli,Ismail Berk (1-0)</a></li>
+    <li><a href="#game5" data-t="game5">Belov,Alexe – Salemgareev,Tagir (1-0)</a></li>
+    <li><a href="#game6" data-t="game6">Sahib,Singh – Matlakov,M (0-1)</a></li>
+    <li><a href="#game7" data-t="game7">Alaghehmand,Arshia – Movahed,Sina (0-1)</a></li>
   </ol>
 </nav>
 
@@ -2766,6 +2766,138 @@ if (typeof define !== 'undefined')
     return Chess
   })
 
+</script>
+<script>
+const FIRST="g0_0";
+const SLUG="twic1668-taimanov";
+const ROOTS={"g0_0":["Boci,Mateu – Hracek,Z",""],"g1_0":["Ivanytska,Liudmyla – Matlakov,M",""],"g2_0":["Salemgareev,Tagir – Matlakov,M",""],"g3_0":["Lyakh,Vasiliy – Canli,Ismail Berk",""],"g4_0":["Belov,Alexe – Salemgareev,Tagir",""],"g5_0":["Sahib,Singh – Matlakov,M",""],"g6_0":["Alaghehmand,Arshia – Movahed,Sina",""]};
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem('gw_'+k)}catch(e){return null}},set(k,v){try{localStorage.setItem('gw_'+k,v)}catch(e){}}};
+// node fields
+const F=0,PAR=1,CH=2,SAN=3,LAB=4,FROM=5,TO=6,W=7;
+let cur=FIRST, flipped=store.get('flip')==='1', sel=null, uSeq=0;
+const rootOf=id=>{while(NODES[id][PAR])id=NODES[id][PAR];return id};
+const files='abcdefgh';
+
+function boardHTML(fen,opt={}){
+  const rows=fen.split(' ')[0].split('/'); const grid=[];
+  rows.forEach((r,ri)=>{let c=0;for(const ch of r){if(/\d/.test(ch))c+=+ch;else{grid[ri*8+c]=ch;c++}}});
+  const fl=opt.flip; let sq='';
+  for(let i=0;i<64;i++){
+    const r=fl?7-Math.floor(i/8):Math.floor(i/8), c=fl?7-i%8:i%8;
+    const name=files[c]+(8-r), p=grid[r*8+c];
+    const cls=((r+c)%2?'d':'l')+((opt.lm||[]).includes(name)?' lm':'')+(opt.sel===name?' sel':'')+((opt.tg||[]).includes(name)?' tg':'');
+    sq+=`<div class="sq ${cls}" data-sq="${name}">${p?`<div class="pc ${p===p.toUpperCase()?'w':'b'}${p.toUpperCase()}"></div>`:''}</div>`;
+  }
+  const rk=[...Array(8)].map((_,i)=>`<span>${fl?i+1:8-i}</span>`).join('');
+  const fs=[...Array(8)].map((_,i)=>`<span>${files[fl?7-i:i]}</span>`).join('');
+  return `<div class="bwrap"><div class="rk">${rk}</div><div class="bd">${sq}</div><div class="fl">${fs}</div></div>`;
+}
+// static diagrams
+$$('.sb').forEach(el=>el.innerHTML=boardHTML(el.dataset.fen));
+$$('figure.dia').forEach(f=>f.addEventListener('click',()=>go(f.dataset.id,true)));
+
+function render(){
+  const n=NODES[cur], game=new Chess(n[F]);
+  let tg=[];
+  if(sel) tg=game.moves({square:sel,verbose:true}).map(m=>m.to);
+  $('#live').innerHTML=boardHTML(n[F],{flip:flipped,lm:n[FROM]?[n[FROM],n[TO]]:[],sel,tg});
+  const r=rootOf(cur);
+  $('#who').textContent=(ROOTS[r]||[''])[0];
+  $('#cur').textContent=n[LAB]||(ROOTS[r]||['',''])[1]||'Start position';
+  const side=n[F].split(' ')[1]==='w'?'White':'Black';
+  let m='';
+  if(game.in_checkmate())m='Checkmate.';else if(game.in_stalemate())m='Stalemate.';else if(game.in_draw())m='Draw.';
+  $('#msg').textContent=m||(side+' to move · click a piece to try your own move');
+  // choices
+  const ch=n[CH];
+  $('#choose').innerHTML=ch.length>1?'Choose a line: '+ch.map((c,i)=>`<button class="${i?'':'mainc'}" data-id="${c}">${NODES[c][LAB]}</button>`).join(''):'';
+  // path
+  const path=[];let x=cur;while(NODES[x][PAR]){path.unshift(x);x=NODES[x][PAR]}
+  $('#path').innerHTML=path.map((id,i)=>{const z=NODES[id];const t=(z[W]||i===0)?z[LAB]:z[SAN];return `<a class="mv${id[0]==='u'?' u':''}${id===cur?' cur':''}" data-id="${id}">${t}</a>`}).join(' ');
+  $('#bPrev').disabled=$('#bStart').disabled=!n[PAR];
+  $('#bNext').disabled=$('#bEnd').disabled=!ch.length;
+  // highlight in text
+  $$('main a.mv.cur').forEach(a=>a.classList.remove('cur'));
+  const t=$$(`main a.mv[data-id="${cur}"]`);
+  t.forEach(a=>a.classList.add('cur'));
+  return t[0];
+}
+function go(id,fromText){
+  if(!NODES[id])return; cur=id; sel=null;
+  const a=render();
+  if(a&&!fromText){const r=a.getBoundingClientRect(); const bp=document.querySelector('aside.bp'),bb=bp.getBoundingClientRect(),pb=(bb.width>innerWidth*0.9)?bb.bottom:80; if(r.top<pb+8||r.bottom>innerHeight-20)scrollBy({top:r.top-(pb+innerHeight)/2+r.height/2,behavior:'smooth'})}
+  if(id[0]!=='u')store.set('pos_'+SLUG,id);
+}
+const next=()=>{const c=NODES[cur][CH];if(c.length)go(c[0])};
+const prev=()=>{const p=NODES[cur][PAR];if(p)go(p)};
+const start=()=>go(rootOf(cur));
+const end=()=>{let x=cur;while(NODES[x][CH].length)x=NODES[x][CH][0];go(x)};
+const flip=()=>{flipped=!flipped;store.set('flip',flipped?'1':'0');render()};
+$('#bNext').onclick=next;$('#bPrev').onclick=prev;$('#bStart').onclick=start;$('#bEnd').onclick=end;$('#bFlip').onclick=flip;
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a.mv, #choose button'); if(a){go(a.dataset.id,a.closest('main')!==null);return}
+  const t=e.target.closest('nav.toc a'); if(t){document.getElementById(t.dataset.t).scrollIntoView({behavior:'smooth'})}
+});
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  const k=e.key;
+  if(k==='ArrowRight'){next();e.preventDefault()}else if(k==='ArrowLeft'){prev();e.preventDefault()}
+  else if(k==='Home'){start();e.preventDefault()}else if(k==='End'){end();e.preventDefault()}
+  else if(k==='f'||k==='F')flip();
+});
+// try-your-own-move on the live board
+$('#live').addEventListener('click',e=>{
+  const s=e.target.closest('.sq'); if(!s)return; const sq=s.dataset.sq;
+  const n=NODES[cur], game=new Chess(n[F]);
+  if(sel){
+    const mv=game.moves({square:sel,verbose:true}).find(m=>m.to===sq);
+    if(mv){
+      const res=game.move({from:sel,to:sq,promotion:'q'});
+      const ex=n[CH].find(c=>NODES[c][FROM]===res.from&&NODES[c][TO]===res.to&&NODES[c][SAN].replace(/[!?]+$/,'')===res.san);
+      if(ex){go(ex);return}
+      const parts=n[F].split(' '),num=+parts[5],w=parts[1]==='w';
+      const id='u'+(++uSeq);
+      NODES[id]=[game.fen(),cur,[],res.san,(w?num+'.':num+'...')+res.san,res.from,res.to,w?1:0];
+      n[CH].push(id); go(id); return;
+    }
+  }
+  const p=game.get(sq);
+  sel=(p&&p.color===game.turn()&&sel!==sq)?sq:null; render();
+});
+// text size & dark mode
+let fs=+store.get('fs')||21;
+const setFs=v=>{fs=Math.max(15,Math.min(34,v));document.documentElement.style.setProperty('--fs',fs+'px');store.set('fs',fs)};
+$('#fplus').onclick=()=>setFs(fs+2);$('#fminus').onclick=()=>setFs(fs-2);setFs(fs);
+const setDark=d=>{document.documentElement.dataset.theme=d?'dark':'light';$('#dark').textContent=d?'Light':'Dark';store.set('dark',d?'1':'0')};
+let dk=store.get('dark')==='1';setDark(dk);$('#dark').onclick=()=>{dk=!dk;setDark(dk)};
+// contents highlight
+const secs=$$('nav.toc a').map(a=>document.getElementById(a.dataset.t));
+addEventListener('scroll',()=>{let on=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<160)on=i});$$('nav.toc a').forEach((a,i)=>a.classList.toggle('on',i===on))},{passive:true});
+const saved=store.get('pos_'+SLUG); go(saved&&NODES[saved]?saved:FIRST,true);
+})();
+
+// Extra: scroll active TOC item into view
+function goTo(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  // activate toc
+  document.querySelectorAll('.toc a').forEach(a=>a.classList.remove('on'));
+  const ta=document.getElementById('toc-'+id);
+  if(ta)ta.classList.add('on');
+}
+// Set initial position to game 1 start
+document.addEventListener('DOMContentLoaded',()=>{
+  if(typeof goNode==='function' && GAME_ROOTS[0] && NODES[GAME_ROOTS[0]]){
+    const children=NODES[GAME_ROOTS[0]][2];
+    if(children&&children[0]) goNode(children[0]); else goNode(GAME_ROOTS[0]);
+  }
+  // dark mode
+  try{if(localStorage.getItem('dk')==='1')document.documentElement.setAttribute('data-theme','dark');}catch(e){}
+  const btn=document.getElementById('dkbtn');
+  if(btn)btn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';
+});
 </script>
 </body>
 </html>
