@@ -12,17 +12,14 @@ Output:
     tree.html written next to the PGN file (e.g. issues/twic1668_taimanov/tree.html)
 
 Requirements:
-    pip install python-chess cairosvg graphviz Pillow
-    Graphviz binary must also be installed: https://graphviz.org/download/
+    pip install python-chess
+    (No other packages needed — no cairosvg, no graphviz, no Pillow)
 """
 
-import argparse, base64, math, os, re, sys, tempfile
+import argparse, math, os, sys
 import chess, chess.pgn, chess.svg
-import cairosvg
-from graphviz import Digraph
-from PIL import Image
 
-# ── board colours (matches what_ya_playing / Chess Weekly Review style) ──────
+# ── board colours (matches Chess Weekly Review style) ────────────────────────
 COLORS = {"square light": "#DEE3E6", "square dark": "#8CA2AD", "margin": "#5B6F79"}
 
 # ── Node ─────────────────────────────────────────────────────────────────────
@@ -83,7 +80,7 @@ def build_tree(games, max_plies=40):
     return root
 
 
-# ── tree drawing ──────────────────────────────────────────────────────────────
+# ── tree filtering ────────────────────────────────────────────────────────────
 def pick(node, min_games, max_plies, base_ply):
     if node.ply - base_ply >= max_plies:
         return []
@@ -105,61 +102,155 @@ def auto_min(root, max_plies, cap, start=1):
     return m
 
 
-def board_png(board, last_move, img_dir, size=260):
-    arrows = ([chess.svg.Arrow(last_move.from_square, last_move.to_square, color="#15781B")]
+# ── SVG tree layout ───────────────────────────────────────────────────────────
+BOARD_SZ = 180      # px per board square × 8
+BOARD_PAD = 12      # extra px around board SVG (chess.svg margin)
+H_GAP = 60          # horizontal gap between board centres
+V_GAP = 60          # vertical gap between levels
+LABEL_H = 46        # height reserved for move label above each board
+
+
+def board_svg_inline(board, last_move=None, size=BOARD_SZ):
+    """Return the chess.svg board as a string (already an <svg> element)."""
+    arrows = ([chess.svg.Arrow(last_move.from_square, last_move.to_square,
+                               color="#15781B")]
               if last_move else [])
-    svg = chess.svg.board(board=board, size=size, arrows=arrows, colors=COLORS).encode()
-    name = board.epd().replace("/", "_").replace(" ", "_") + (f"_{last_move.uci()}" if last_move else "") + f"_{size}.png"
-    path = os.path.abspath(os.path.join(img_dir, name))
-    if not os.path.exists(path):
-        tmp = path + ".tmp"
-        cairosvg.svg2png(bytestring=svg, write_to=tmp)
-        os.replace(tmp, path)
-    return path
+    return chess.svg.board(board=board, size=size, arrows=arrows, colors=COLORS)
 
 
-def draw_tree(root, out_png, min_games, max_plies, img_dir, board_size=260, label_pt=34):
-    os.makedirs(img_dir, exist_ok=True)
-    dot = Digraph(
-        graph_attr={"splines": "ortho", "ranksep": "1.3", "nodesep": "1.0",
-                    "bgcolor": "white", "forcelabels": "true", "ordering": "out"},
-        node_attr={"shape": "none"},
-        edge_attr={"color": "#2b3a44", "arrowsize": "0.9"},
-    )
+# ── layout engine: compute (col, row) for every node ─────────────────────────
+def layout(root, min_games, max_plies):
+    """
+    Assign integer (col, row) positions using a simple recursive algorithm:
+    each leaf gets its own column; parents centre over their children.
+    Returns: list of (node, board, last_move, col, row)
+    """
+    items = []   # (node, board, last_move)
+    # DFS to collect nodes + replay board
+    def collect(node, board, last_move, depth):
+        children = pick(node, min_games, max_plies, root.ply)
+        items.append((node, board.copy(), last_move, depth))
+        for kid in children:
+            nb = board.copy()
+            mv = nb.parse_san(kid.san)
+            nb.push(mv)
+            collect(kid, nb, mv, depth + 1)
+    collect(root, chess.Board(), None, 0)
+
+    # assign columns via post-order leaf-counting
+    node_col = {}
+    next_leaf = [0]
+
+    def assign_col(node, depth):
+        children = pick(node, min_games, max_plies, root.ply)
+        if not children:
+            node_col[id(node)] = next_leaf[0]
+            next_leaf[0] += 1
+        else:
+            for kid in children:
+                assign_col(kid, depth + 1)
+            cols = [node_col[id(k)] for k in children]
+            node_col[id(node)] = (min(cols) + max(cols)) / 2
+
+    assign_col(root, 0)
+
+    result = []
+    for node, board, last_move, depth in items:
+        result.append((node, board, last_move, node_col[id(node)], depth))
+    return result, next_leaf[0]
+
+
+def render_svg_tree(root, min_games, max_plies, title):
+    items, num_cols = layout(root, min_games, max_plies)
     top = root.n
-    ids = {}
-    def nid(x): return "n" + str(ids.setdefault(id(x), len(ids)))
-    stack = [(root, chess.Board(), None)]
-    while stack:
-        x, b, last = stack.pop()
-        dot.node(nid(x), label="", image=board_png(b, last, img_dir, board_size))
-        for k in pick(x, min_games, max_plies, root.ply):
-            nb = b.copy(); mv = nb.parse_san(k.san); nb.push(mv)
-            num = (k.ply + 1) // 2
-            mvtxt = f"{num}.{k.san}" if k.ply % 2 else f"{num}...{k.san}"
-            lab = (f'<<FONT COLOR="#1a4fd0" POINT-SIZE="{label_pt}"><B>{mvtxt}</B>&#160;&#160;&#160;&#160;</FONT><BR/>'
-                   f'<FONT COLOR="#555555" POINT-SIZE="{int(label_pt*0.72)}">'
-                   f'{k.n} game{"" if k.n == 1 else "s"} · {k.score:.0%}&#160;&#160;&#160;&#160;</FONT>>')
-            dot.edge(nid(x), nid(k), xlabel=lab, penwidth=f"{1.5 + 7*math.sqrt(k.n/top):.1f}")
-            stack.append((k, nb, mv))
-    base = os.path.splitext(out_png)[0]
-    dot.render(base, format="png", cleanup=True)
-    return base + ".png"
+
+    cell_w = BOARD_SZ + H_GAP
+    cell_h = BOARD_SZ + LABEL_H + V_GAP
+
+    # find depth range
+    max_depth = max(row for _, _, _, _, row in items)
+
+    total_w = num_cols * cell_w + H_GAP
+    total_h = (max_depth + 1) * cell_h + V_GAP + 40  # 40 for title
+
+    def cx(col): return H_GAP / 2 + col * cell_w + BOARD_SZ / 2
+    def cy_board(row): return 40 + V_GAP / 2 + row * cell_h + LABEL_H
+
+    # build a dict for fast lookup: id(node) → (col, row, cx, cy)
+    pos = {}
+    for node, board, last_move, col, row in items:
+        pos[id(node)] = (col, row, cx(col), cy_board(row))
+
+    lines = []
+    lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+                 f'width="{total_w:.0f}" height="{total_h:.0f}" '
+                 f'style="background:#dee3e6;font-family:Helvetica,Arial,sans-serif">')
+
+    # title
+    lines.append(f'  <text x="{total_w/2:.0f}" y="28" text-anchor="middle" '
+                 f'font-size="20" font-weight="bold" fill="#1a2a35">'
+                 f'{_esc(title)}</text>')
+
+    # draw edges first (so they appear behind boards)
+    # collect parent positions: traverse tree
+    def draw_edges(node, board, depth):
+        children = pick(node, min_games, max_plies, root.ply)
+        _, _, px, py = pos[id(node)]
+        board_bottom_y = py + BOARD_SZ / 2
+        for kid in children:
+            _, _, kx, ky = pos[id(kid)]
+            kid_top_y = ky - BOARD_SZ / 2 - LABEL_H
+            # edge thickness proportional to game count
+            pw = 1.5 + 6 * math.sqrt(kid.n / top)
+            # draw L-shaped connector
+            mid_y = board_bottom_y + (kid_top_y - board_bottom_y) * 0.4
+            path = (f'M {px:.1f} {board_bottom_y:.1f} '
+                    f'L {px:.1f} {mid_y:.1f} '
+                    f'L {kx:.1f} {mid_y:.1f} '
+                    f'L {kx:.1f} {kid_top_y:.1f}')
+            lines.append(f'  <path d="{path}" fill="none" stroke="#2b3a44" '
+                         f'stroke-width="{pw:.1f}" stroke-linejoin="round"/>')
+
+            # move label
+            ply = kid.ply
+            num = (ply + 1) // 2
+            mvtxt = f"{num}.{kid.san}" if ply % 2 else f"{num}…{kid.san}"
+            pct = f"{kid.score:.0%}"
+            games_txt = f"{kid.n}g · {pct}"
+            label_y = kid_top_y + 4
+            lines.append(f'  <text x="{kx:.1f}" y="{label_y:.1f}" text-anchor="middle" '
+                         f'font-size="13" font-weight="bold" fill="#1a4fd0">{_esc(mvtxt)}</text>')
+            lines.append(f'  <text x="{kx:.1f}" y="{label_y+16:.1f}" text-anchor="middle" '
+                         f'font-size="11" fill="#555">{_esc(games_txt)}</text>')
+
+            nb = board.copy()
+            mv = nb.parse_san(kid.san)
+            nb.push(mv)
+            draw_edges(kid, nb, depth + 1)
+
+    draw_edges(root, chess.Board(), 0)
+
+    # draw boards
+    for node, board, last_move, col, row in items:
+        _, _, bx, by = pos[id(node)]
+        svg_str = board_svg_inline(board, last_move, BOARD_SZ)
+        # strip the outer <?xml ...?> and wrap in a <g> with translate
+        svg_str = svg_str.replace('<?xml version="1.0" encoding="utf-8"?>', '').strip()
+        x_off = bx - BOARD_SZ / 2
+        y_off = by - BOARD_SZ / 2
+        lines.append(f'  <g transform="translate({x_off:.1f},{y_off:.1f})">')
+        lines.append('  ' + svg_str)
+        lines.append('  </g>')
+
+    lines.append('</svg>')
+    return '\n'.join(lines)
 
 
-# ── quantise + base64 ─────────────────────────────────────────────────────────
-def quantise_png(src, colors=64):
-    im = Image.open(src).convert("RGB")
-    q = im.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-    pal = q.getpalette()[:colors * 3]
-    bright = max(range(colors), key=lambda k: sum(pal[3*k:3*k+3]))
-    pal[3*bright:3*bright+3] = [255, 255, 255]
-    q.putpalette(pal)
-    out = src.replace(".png", ".q.png")
-    q.save(out, optimize=True)
-    return out
+def _esc(s):
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
 
 
+# ── HTML template ─────────────────────────────────────────────────────────────
 VIEWER_TEMPLATE = """\
 <!doctype html>
 <html lang="en">
@@ -182,7 +273,7 @@ VIEWER_TEMPLATE = """\
   #zoomLabel { min-width:56px; text-align:center; font-size:15px; }
   #stage { position:absolute; top:52px; left:0; right:0; bottom:0; overflow:hidden; cursor:grab; touch-action:none; }
   #stage.dragging { cursor:grabbing; }
-  #tree { position:absolute; top:0; left:0; transform-origin:0 0; user-select:none; -webkit-user-drag:none; }
+  #tree { position:absolute; top:0; left:0; transform-origin:0 0; user-select:none; }
   #hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:rgba(31,42,51,.9);
           color:#dee3e6; padding:8px 14px; border-radius:6px; font-size:14px; transition:opacity 1s; pointer-events:none; }
   .info { position:fixed; bottom:48px; left:50%; transform:translateX(-50%);
@@ -200,29 +291,32 @@ VIEWER_TEMPLATE = """\
 <header>
   <a href="__BACK__" class="back">&#8592; __BACKTXT__</a>
   <h1>__TITLE__</h1>
-  <button id="out">−</button>
+  <button id="out">&#8722;</button>
   <span id="zoomLabel">100%</span>
   <button id="in">+</button>
   <button id="fit">Fit</button>
   <button id="actual">1:1</button>
 </header>
-<div id="stage"><img id="tree" src="__IMG__" alt="__TITLE__" draggable="false"></div>
+<div id="stage">
+  <div id="tree">__SVG__</div>
+</div>
 <p class="info">__INFO__</p>
-<div id="hint">Scroll or pinch to zoom · drag to pan · double-click to zoom in</div>
+<div id="hint">Scroll or pinch to zoom &middot; drag to pan &middot; double-click to zoom in</div>
 <script>
 (function(){
-  const stage=document.getElementById('stage'),img=document.getElementById('tree'),label=document.getElementById('zoomLabel');
+  const stage=document.getElementById('stage'),tree=document.getElementById('tree'),
+        label=document.getElementById('zoomLabel');
   let scale=1,x=0,y=0,minScale=0.05,maxScale=4;
-  function apply(){img.style.transform=`translate(${x}px,${y}px) scale(${scale})`;label.textContent=Math.round(scale*100)+'%';}
+  function apply(){tree.style.transform=`translate(${x}px,${y}px) scale(${scale})`;label.textContent=Math.round(scale*100)+'%';}
+  function svgSize(){const s=tree.querySelector('svg');return s?[+s.getAttribute('width'),+s.getAttribute('height')]:[800,600];}
+  function fit(){const [sw,sh]=svgSize(),w=stage.clientWidth,h=stage.clientHeight;
+    scale=Math.min(w/sw,h/sh)*0.98;minScale=scale*0.5;x=(w-sw*scale)/2;y=(h-sh*scale)/2;apply();}
   function zoomAt(f,cx,cy){const ns=Math.min(maxScale,Math.max(minScale,scale*f));f=ns/scale;x=cx-(cx-x)*f;y=cy-(cy-y)*f;scale=ns;apply();}
-  function fit(){const w=stage.clientWidth,h=stage.clientHeight;scale=Math.min(w/img.naturalWidth,h/img.naturalHeight)*0.98;
-    minScale=scale*0.5;x=(w-img.naturalWidth*scale)/2;y=(h-img.naturalHeight*scale)/2;apply();}
-  img.complete?fit():img.addEventListener('load',fit);
-  window.addEventListener('resize',fit);
+  window.addEventListener('load',fit);window.addEventListener('resize',fit);
   document.getElementById('fit').onclick=fit;
   document.getElementById('actual').onclick=()=>{scale=1;x=0;y=0;apply();};
-  document.getElementById('out').onclick=()=>{const c=[stage.clientWidth/2,stage.clientHeight/2];zoomAt(1/1.3,c[0],c[1]);};
-  document.getElementById('in').onclick=()=>{const c=[stage.clientWidth/2,stage.clientHeight/2];zoomAt(1.3,c[0],c[1]);};
+  document.getElementById('out').onclick=()=>zoomAt(1/1.3,...[stage.clientWidth/2,stage.clientHeight/2]);
+  document.getElementById('in').onclick=()=>zoomAt(1.3,...[stage.clientWidth/2,stage.clientHeight/2]);
   stage.addEventListener('wheel',e=>{e.preventDefault();const r=stage.getBoundingClientRect();
     zoomAt(e.deltaY<0?1.15:1/1.15,e.clientX-r.left,e.clientY-r.top);},{passive:false});
   stage.addEventListener('dblclick',e=>{const r=stage.getBoundingClientRect();zoomAt(2,e.clientX-r.left,e.clientY-r.top);});
@@ -231,11 +325,11 @@ VIEWER_TEMPLATE = """\
   stage.addEventListener('pointermove',e=>{if(!drag)return;x=drag.ox+(e.clientX-drag.px);y=drag.oy+(e.clientY-drag.py);apply();});
   stage.addEventListener('pointerup',()=>{drag=null;stage.classList.remove('dragging');});
   let pDist=null;
-  stage.addEventListener('touchstart',e=>{if(e.touches.length===2){pDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}},{passive:true});
+  stage.addEventListener('touchstart',e=>{if(e.touches.length===2)pDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);},{passive:true});
   stage.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     if(pDist){const mx=(e.touches[0].clientX+e.touches[1].clientX)/2,my=(e.touches[0].clientY+e.touches[1].clientY)/2;
       const r=stage.getBoundingClientRect();zoomAt(d/pDist,mx-r.left,my-r.top);}pDist=d;}},{passive:true});
-  setTimeout(()=>{const h=document.getElementById('hint');h.style.opacity='0';},3000);
+  setTimeout(()=>{const h=document.getElementById('hint');if(h)h.style.opacity='0';},3000);
 })();
 </script>
 </body>
@@ -249,7 +343,6 @@ def build(pgn_path, title=None, max_plies=12, min_games=None, cap=80):
     stem = os.path.splitext(os.path.basename(pgn_path))[0]
 
     if title is None:
-        # derive from folder name: "twic1668_taimanov" -> "TWIC 1668 — Taimanov"
         parts = stem.split("_", 1)
         title = parts[0].upper() + (" — " + parts[1].replace("_", " ").title() if len(parts) > 1 else "")
         title += " — Opening Tree"
@@ -267,38 +360,23 @@ def build(pgn_path, title=None, max_plies=12, min_games=None, cap=80):
     nodes = count_nodes(root, min_games, max_plies)
     print(f"  min_games={min_games}  max_plies={max_plies}  nodes={nodes}", flush=True)
 
-    with tempfile.TemporaryDirectory() as tmp:
-        img_dir = os.path.join(tmp, "boards")
-        raw_png = os.path.join(tmp, "tree.png")
-
-        for depth in (max_plies, 10, 8, 6):
-            try:
-                draw_tree(root, raw_png, min_games, depth, img_dir)
-                break
-            except Exception as e:
-                print(f"  draw failed at depth {depth} ({e}), retrying shallower", flush=True)
-        else:
-            sys.exit("Could not draw tree.")
-
-        q_png = quantise_png(raw_png)
-        b64 = "data:image/png;base64," + base64.b64encode(open(q_png, "rb").read()).decode()
-        kb = os.path.getsize(q_png) // 1024
-        print(f"  PNG: {kb} KB", flush=True)
+    print("  Rendering SVG tree ...", flush=True)
+    svg = render_svg_tree(root, min_games, max_plies, title)
 
     info = f"{len(games)} games · min {min_games} per branch · up to {max_plies} plies"
     back_file = stem + ".html"
     html = (VIEWER_TEMPLATE
             .replace("__TITLE__", title)
-            .replace("__IMG__", b64)
+            .replace("__SVG__", svg)
             .replace("__BACK__", back_file)
-            .replace("__BACKTXT__", "← Games")
+            .replace("__BACKTXT__", "Games")
             .replace("__INFO__", info))
 
     out_html = os.path.join(out_dir, "tree.html")
-    open(out_html, "w", encoding="utf-8").write(html)
-    print(f"\nDone! → {out_html}", flush=True)
-    print(f'Now add this link to the game viewer HTML near the top of the article:', flush=True)
-    print(f'  <p><a href="tree.html">📊 View opening tree →</a></p>', flush=True)
+    with open(out_html, "w", encoding="utf-8") as f:
+        f.write(html)
+    kb = len(html.encode()) // 1024
+    print(f"\nDone! → {out_html}  ({kb} KB)", flush=True)
 
 
 if __name__ == "__main__":
